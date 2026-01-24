@@ -1,0 +1,36 @@
+{
+  "name": "termlauncher",
+  "version": "1.0.0",
+  "description": "TermLauncher - 快速開啟終端進入指定目錄",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable",
+    "build:installer": "electron-builder --win nsis",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "author": "User",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^24.9.1",
+    "prettier": "^3.8.1"
+  },
+  "build": {
+    "appId": "com.termlauncher.app",
+    "productName": "TermLauncher",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "icon.ico"
+    },
+    "portable": {
+      "artifactName": "TermLauncher-Portable.exe"
+    }
+  }
+}

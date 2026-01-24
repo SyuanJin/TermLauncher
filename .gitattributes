@@ -1,0 +1,23 @@
+# 預設：所有檔案使用 Windows 換行符 (CRLF)
+* text=auto eol=crlf
+
+# Linux/Unix 腳本保持 LF
+*.sh text eol=lf
+*.bash text eol=lf
+
+# 其他需要 LF 的檔案
+.gitignore text eol=lf
+.gitattributes text eol=lf
+Makefile text eol=lf
+Dockerfile text eol=lf
+
+# 二進位檔案不處理
+*.png binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
