@@ -1,0 +1,25 @@
+/**
+ * Preload 腳本
+ * 透過 contextBridge 安全暴露 API 給渲染進程
+ */
+const { contextBridge, ipcRenderer } = require('electron');
+
+// 暴露安全的 API 給渲染進程
+contextBridge.exposeInMainWorld('electronAPI', {
+  // 配置管理
+  getConfig: () => ipcRenderer.invoke('get-config'),
+  saveConfig: config => ipcRenderer.invoke('save-config', config),
+
+  // 終端操作
+  openTerminal: dir => ipcRenderer.invoke('open-terminal', dir),
+
+  // 檔案操作
+  selectFolder: () => ipcRenderer.invoke('select-folder'),
+  exportConfig: () => ipcRenderer.invoke('export-config'),
+  importConfig: () => ipcRenderer.invoke('import-config'),
+
+  // 視窗控制
+  minimizeWindow: () => ipcRenderer.send('minimize-window'),
+  maximizeWindow: () => ipcRenderer.send('maximize-window'),
+  closeWindow: () => ipcRenderer.send('close-window'),
+});

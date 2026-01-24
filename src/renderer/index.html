@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self';" />
+    <title>TermLauncher</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+  </head>
+  <body>
+    <!-- 標題欄 -->
+    <div class="titlebar">
+      <div class="titlebar-title"><span>🚀</span> TermLauncher</div>
+      <div class="titlebar-buttons">
+        <button class="titlebar-btn" id="btnMinimize">─</button>
+        <button class="titlebar-btn close" id="btnClose">✕</button>
+      </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+      <!-- 分頁標籤 -->
+      <div class="tabs">
+        <button class="tab active" data-tab="directories">📁 目錄</button>
+        <button class="tab" data-tab="settings">⚙️ 設定</button>
+      </div>
+
+      <!-- 內容區 -->
+      <div class="content">
+        <!-- 目錄分頁 -->
+        <div class="tab-content active" id="directories-tab">
+          <!-- 搜尋列 -->
+          <div class="search-bar">
+            <div class="search-input-wrapper">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input type="text" class="search-input" id="searchInput" placeholder="搜尋目錄..." />
+            </div>
+            <select class="filter-select" id="groupFilter">
+              <option value="">所有群組</option>
+            </select>
+          </div>
+
+          <!-- 新增目錄區塊 -->
+          <div class="add-section">
+            <div class="section-header">
+              <div class="section-title">➕ 新增目錄</div>
+              <button class="toggle-btn" id="btnToggleAddForm">展開</button>
+            </div>
+            <div class="add-form" id="addForm">
+              <div class="input-row">
+                <div class="input-group">
+                  <label>名稱</label>
+                  <input type="text" id="dirName" placeholder="例如：我的專案" />
+                </div>
+                <div class="input-group" style="max-width: 150px">
+                  <label>類型</label>
+                  <select id="dirType">
+                    <option value="wsl">WSL Ubuntu</option>
+                    <option value="powershell">PowerShell</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>路徑</label>
+                <div class="path-input-wrapper">
+                  <input type="text" id="dirPath" placeholder="例如：D:\Projects\my-app" />
+                  <button class="browse-btn" id="btnBrowsePath">瀏覽...</button>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>群組</label>
+                <select id="dirGroup"></select>
+              </div>
+              <button class="btn btn-primary" id="btnAddDirectory">➕ 新增目錄</button>
+            </div>
+          </div>
+
+          <!-- 最近使用區塊 -->
+          <div class="recent-section" id="recentSection" style="display: none">
+            <h3>🕐 最近使用</h3>
+            <div class="recent-list" id="recentList"></div>
+          </div>
+
+          <!-- 目錄群組列表 -->
+          <div id="directoryGroups"></div>
+        </div>
+
+        <!-- 設定分頁 -->
+        <div class="tab-content" id="settings-tab">
+          <!-- 一般設定 -->
+          <div class="settings-section">
+            <h3>⚙️ 一般設定</h3>
+            <div class="setting-item">
+              <div class="setting-label">
+                <span>啟動時最小化</span>
+                <small>程式啟動時自動最小化到系統托盤</small>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="startMinimized" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <span>關閉時最小化到托盤</span>
+                <small>點擊關閉按鈕時最小化而非結束</small>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="minimizeToTray" checked />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-label">
+                <span>全域快捷鍵</span>
+                <small>按下快捷鍵顯示/隱藏視窗</small>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0">
+                <input
+                  type="text"
+                  class="shortcut-input"
+                  id="globalShortcut"
+                  value="Alt+Space"
+                />
+                <button class="btn-icon" id="btnRecordShortcut" title="按鍵錄製">🎹</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 群組管理 -->
+          <div class="settings-section">
+            <h3>🏷️ 群組管理</h3>
+            <div class="groups-list" id="groupsList"></div>
+            <div class="add-group-form">
+              <input type="text" id="newGroupName" placeholder="新群組名稱" />
+              <button class="btn btn-primary" id="btnAddGroup">新增</button>
+            </div>
+          </div>
+
+          <!-- 資料管理 -->
+          <div class="settings-section">
+            <h3>💾 資料管理</h3>
+            <div class="import-export-buttons">
+              <button class="btn-secondary" id="btnExportConfig">📤 匯出設定</button>
+              <button class="btn-secondary" id="btnImportConfig">📥 匯入設定</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast" id="toast">
+      <span class="toast-icon">✓</span>
+      <span class="toast-text" id="toastText"></span>
+    </div>
+
+    <!-- 載入應用程式腳本 -->
+    <script type="module" src="scripts/app.js"></script>
+  </body>
+</html>
