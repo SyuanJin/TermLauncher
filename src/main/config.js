@@ -19,6 +19,7 @@ const defaultConfig = {
     startMinimized: false,
     minimizeToTray: true,
     globalShortcut: 'Alt+Space',
+    theme: 'dark',
   },
 };
 

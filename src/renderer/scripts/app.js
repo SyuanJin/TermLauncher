@@ -2,7 +2,7 @@
  * 應用程式入口
  * 初始化並整合所有模組
  */
-import { loadConfig } from './state.js';
+import { loadConfig, getConfig } from './state.js';
 import { api } from './api.js';
 import { setupTabs } from './ui/tabs.js';
 import {
@@ -22,6 +22,7 @@ import {
   exportConfig,
   importConfig,
   setupSettingsEvents,
+  applyTheme,
 } from './ui/settings.js';
 import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
 
@@ -78,6 +79,11 @@ function setupEventListeners() {
  */
 async function init() {
   await loadConfig();
+
+  // 應用保存的主題設定
+  const config = getConfig();
+  applyTheme(config.settings?.theme || 'dark');
+
   renderAll();
   setupEventListeners();
 }

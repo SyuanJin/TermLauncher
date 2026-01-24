@@ -8,10 +8,31 @@ import { showToast } from './toast.js';
 import { renderGroupFilter, renderGroupSelect, renderDirectories, renderRecentList } from './directories.js';
 
 /**
+ * 應用主題
+ * @param {string} theme - 主題名稱 ('dark' 或 'light')
+ */
+export function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme || 'dark');
+}
+
+/**
+ * 變更主題
+ */
+export async function changeTheme() {
+  const config = getConfig();
+  const theme = document.getElementById('themeSelect').value;
+  config.settings.theme = theme;
+  applyTheme(theme);
+  await saveConfig();
+  showToast(theme === 'dark' ? '已切換至深色主題' : '已切換至淺色主題', 'success');
+}
+
+/**
  * 渲染設定項目
  */
 export function renderSettings() {
   const config = getConfig();
+  document.getElementById('themeSelect').value = config.settings.theme || 'dark';
   document.getElementById('startMinimized').checked = config.settings.startMinimized;
   document.getElementById('minimizeToTray').checked = config.settings.minimizeToTray;
   document.getElementById('globalShortcut').value = config.settings.globalShortcut || 'Alt+Space';
@@ -157,6 +178,7 @@ export async function importConfig() {
  * 設定設定頁面的事件監聽
  */
 export function setupSettingsEvents() {
+  document.getElementById('themeSelect').addEventListener('change', changeTheme);
   document.getElementById('startMinimized').addEventListener('change', saveSettings);
   document.getElementById('minimizeToTray').addEventListener('change', saveSettings);
   document.getElementById('newGroupName').addEventListener('keypress', e => {

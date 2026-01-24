@@ -428,6 +428,24 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
+/* 主題選擇器 */
+.theme-select {
+  padding: 10px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.theme-select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
 /* Toast 通知 */
 .toast {
   position: fixed;

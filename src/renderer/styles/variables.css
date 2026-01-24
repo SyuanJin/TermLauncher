@@ -1,8 +1,12 @@
 /**
  * CSS 變數定義
  * 統一管理顏色、間距等設計變數
+ * 支援深色/淺色主題切換
  */
-:root {
+
+/* 深色主題（預設） */
+:root,
+:root[data-theme='dark'] {
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
   --bg-tertiary: #21262d;
@@ -13,4 +17,18 @@
   --accent-green: #3fb950;
   --accent-orange: #d29922;
   --accent-red: #f85149;
+}
+
+/* 淺色主題 */
+:root[data-theme='light'] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-tertiary: #eaeef2;
+  --border-color: #d0d7de;
+  --text-primary: #1f2328;
+  --text-secondary: #656d76;
+  --accent-blue: #0969da;
+  --accent-green: #1a7f37;
+  --accent-orange: #9a6700;
+  --accent-red: #cf222e;
 }
