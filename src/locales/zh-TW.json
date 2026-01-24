@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "code": "zh-TW",
+    "name": "Traditional Chinese",
+    "nativeName": "繁體中文"
+  },
+  "ui": {
+    "titlebar": {
+      "minimize": "最小化視窗",
+      "close": "關閉視窗"
+    },
+    "tabs": {
+      "directories": "📁 目錄",
+      "settings": "⚙️ 設定"
+    },
+    "search": {
+      "placeholder": "搜尋目錄...",
+      "allGroups": "所有群組"
+    },
+    "addDirectory": {
+      "sectionTitle": "➕ 新增目錄",
+      "expand": "展開",
+      "collapse": "收起",
+      "name": "名稱",
+      "namePlaceholder": "例如：我的專案",
+      "type": "類型",
+      "typeWsl": "WSL Ubuntu",
+      "typePowershell": "PowerShell",
+      "path": "路徑",
+      "pathPlaceholder": "例如：D:\\Projects\\my-app",
+      "browse": "瀏覽...",
+      "group": "群組",
+      "addButton": "➕ 新增目錄"
+    },
+    "recent": {
+      "title": "🕐 最近使用"
+    },
+    "directory": {
+      "emptyFiltered": "沒有符合條件的目錄",
+      "emptyAll": "尚未新增任何目錄",
+      "delete": "刪除",
+      "openTerminal": "開啟 {name} 終端機",
+      "deleteItem": "刪除 {name}"
+    },
+    "settings": {
+      "general": {
+        "title": "⚙️ 一般設定",
+        "theme": "主題",
+        "themeDesc": "切換介面的外觀主題",
+        "themeDark": "🌙 深色",
+        "themeLight": "☀️ 淺色",
+        "language": "語言",
+        "languageDesc": "選擇介面顯示語言",
+        "startMinimized": "啟動時最小化",
+        "startMinimizedDesc": "程式啟動時自動最小化到系統托盤",
+        "minimizeToTray": "關閉時最小化到托盤",
+        "minimizeToTrayDesc": "點擊關閉按鈕時最小化而非結束",
+        "globalShortcut": "全域快捷鍵",
+        "globalShortcutDesc": "按下快捷鍵顯示/隱藏視窗",
+        "recordShortcut": "按鍵錄製"
+      },
+      "groups": {
+        "title": "🏷️ 群組管理",
+        "newGroupPlaceholder": "新群組名稱",
+        "add": "新增",
+        "deleteGroup": "刪除群組 {name}"
+      },
+      "data": {
+        "title": "💾 資料管理",
+        "export": "📤 匯出設定",
+        "import": "📥 匯入設定"
+      }
+    }
+  },
+  "toast": {
+    "fillNameAndPath": "請填寫名稱和路徑",
+    "directoryAdded": "目錄已新增",
+    "directoryDeleted": "目錄已刪除",
+    "openingDirectory": "正在開啟 {name}...",
+    "openFailed": "開啟失敗: {error}",
+    "themeDark": "已切換至深色主題",
+    "themeLight": "已切換至淺色主題",
+    "enterGroupName": "請輸入群組名稱",
+    "groupExists": "群組已存在",
+    "groupAdded": "群組已新增",
+    "groupDeleted": "群組已刪除",
+    "configExported": "設定已匯出",
+    "configImported": "設定已匯入",
+    "importFailed": "匯入失敗: {error}",
+    "pressShortcut": "請按下快捷鍵...",
+    "shortcutUpdated": "快捷鍵已更新為 {shortcut}",
+    "shortcutNeedsModifier": "快捷鍵需要包含 Ctrl、Alt 或 Shift",
+    "shortcutFormatError": "快捷鍵格式錯誤，需要包含 Ctrl、Alt 或 Shift",
+    "languageChanged": "語言已變更，部分項目需重啟生效"
+  },
+  "tray": {
+    "showWindow": "顯示視窗",
+    "quit": "結束"
+  },
+  "dialog": {
+    "exportTitle": "匯出設定",
+    "importTitle": "匯入設定",
+    "selectFolder": "選擇資料夾"
+  },
+  "common": {
+    "default": "預設"
+  }
+}

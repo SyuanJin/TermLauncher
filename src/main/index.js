@@ -7,12 +7,18 @@ const { createWindow } = require('./window');
 const { createTray } = require('./tray');
 const { registerShortcut, unregisterAllShortcuts } = require('./shortcuts');
 const { setupIpcHandlers } = require('./ipc-handlers');
+const { loadLocale } = require('./i18n');
+const { loadConfig } = require('./config');
 
 // 設定 IPC 事件處理器
 setupIpcHandlers();
 
 // App 事件
 app.whenReady().then(() => {
+  // 載入配置並初始化語系
+  const config = loadConfig();
+  loadLocale(config.settings?.language || 'zh-TW');
+
   createWindow();
   createTray();
   registerShortcut();

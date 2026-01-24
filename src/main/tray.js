@@ -4,9 +4,34 @@
  */
 const { Tray, Menu, nativeImage, app } = require('electron');
 const { getMainWindow } = require('./window');
+const { t } = require('./i18n');
 const path = require('path');
 
 let tray = null;
+
+/**
+ * 建立托盤選單
+ * @returns {Menu} 托盤選單
+ */
+function buildTrayMenu() {
+  return Menu.buildFromTemplate([
+    {
+      label: t('tray.showWindow'),
+      click: () => {
+        const mainWindow = getMainWindow();
+        if (mainWindow) mainWindow.show();
+      },
+    },
+    { type: 'separator' },
+    {
+      label: t('tray.quit'),
+      click: () => {
+        app.isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+}
 
 /**
  * 建立系統托盤
@@ -18,26 +43,8 @@ function createTray() {
 
   tray = new Tray(icon);
 
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: '顯示視窗',
-      click: () => {
-        const mainWindow = getMainWindow();
-        if (mainWindow) mainWindow.show();
-      },
-    },
-    { type: 'separator' },
-    {
-      label: '結束',
-      click: () => {
-        app.isQuitting = true;
-        app.quit();
-      },
-    },
-  ]);
-
   tray.setToolTip('TermLauncher');
-  tray.setContextMenu(contextMenu);
+  tray.setContextMenu(buildTrayMenu());
 
   tray.on('double-click', () => {
     const mainWindow = getMainWindow();
@@ -45,6 +52,15 @@ function createTray() {
   });
 
   return tray;
+}
+
+/**
+ * 更新托盤選單（語言變更時呼叫）
+ */
+function updateTrayMenu() {
+  if (tray) {
+    tray.setContextMenu(buildTrayMenu());
+  }
 }
 
 /**
@@ -58,4 +74,5 @@ function getTray() {
 module.exports = {
   createTray,
   getTray,
+  updateTrayMenu,
 };

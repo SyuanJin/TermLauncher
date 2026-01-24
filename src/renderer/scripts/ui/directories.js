@@ -5,6 +5,7 @@
 import { getConfig, saveConfig, loadConfig } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
+import { t } from '../i18n.js';
 
 /**
  * 渲染群組篩選下拉選單
@@ -12,9 +13,17 @@ import { showToast } from './toast.js';
 export function renderGroupFilter() {
   const config = getConfig();
   const select = document.getElementById('groupFilter');
+  const defaultGroupName = t('common.default');
   select.innerHTML =
-    '<option value="">所有群組</option>' +
-    config.groups.map(g => '<option value="' + g + '">' + g + '</option>').join('');
+    '<option value="">' +
+    t('ui.search.allGroups') +
+    '</option>' +
+    config.groups
+      .map(
+        g =>
+          '<option value="' + g + '">' + (g === '預設' ? defaultGroupName : g) + '</option>'
+      )
+      .join('');
 }
 
 /**
@@ -22,8 +31,9 @@ export function renderGroupFilter() {
  */
 export function renderGroupSelect() {
   const config = getConfig();
+  const defaultGroupName = t('common.default');
   document.getElementById('dirGroup').innerHTML = config.groups
-    .map(g => '<option value="' + g + '">' + g + '</option>')
+    .map(g => '<option value="' + g + '">' + (g === '預設' ? defaultGroupName : g) + '</option>')
     .join('');
 }
 
@@ -47,12 +57,13 @@ export function renderDirectories() {
   if (dirs.length === 0) {
     container.innerHTML =
       '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><p>' +
-      (search || groupFilter ? '沒有符合條件的目錄' : '尚未新增任何目錄') +
+      (search || groupFilter ? t('ui.directory.emptyFiltered') : t('ui.directory.emptyAll')) +
       '</p></div>';
     return;
   }
 
   const grouped = {};
+  const defaultGroupName = t('common.default');
   dirs.forEach(d => {
     const g = d.group || '預設';
     if (!grouped[g]) grouped[g] = [];
@@ -63,7 +74,7 @@ export function renderDirectories() {
     .map(
       ([group, items]) =>
         '<div class="group-section"><div class="group-header"><h3>' +
-        group +
+        (group === '預設' ? defaultGroupName : group) +
         '</h3><span class="group-count">' +
         items.length +
         '</span></div><div class="directory-list">' +
@@ -72,9 +83,9 @@ export function renderDirectories() {
             dir =>
               '<div class="directory-item" data-id="' +
               dir.id +
-              '" tabindex="0" role="button" aria-label="開啟 ' +
-              dir.name +
-              ' 終端機"><div class="dir-icon ' +
+              '" tabindex="0" role="button" aria-label="' +
+              t('ui.directory.openTerminal', { name: dir.name }) +
+              '"><div class="dir-icon ' +
               dir.type +
               '">' +
               (dir.type === 'wsl' ? '🐧' : '⚡') +
@@ -88,8 +99,10 @@ export function renderDirectories() {
               dir.path +
               '</div></div><div class="dir-actions"><button class="btn-icon delete" data-delete-id="' +
               dir.id +
-              '" title="刪除" aria-label="刪除 ' +
-              dir.name +
+              '" title="' +
+              t('ui.directory.delete') +
+              '" aria-label="' +
+              t('ui.directory.deleteItem', { name: dir.name }) +
               '">🗑️</button></div></div>'
           )
           .join('') +
@@ -169,9 +182,9 @@ export function renderRecentList() {
       d =>
         '<div class="recent-item" data-recent-id="' +
         d.id +
-        '" tabindex="0" role="button" aria-label="開啟 ' +
-        d.name +
-        ' 終端機"><span>' +
+        '" tabindex="0" role="button" aria-label="' +
+        t('ui.directory.openTerminal', { name: d.name }) +
+        '"><span>' +
         (d.type === 'wsl' ? '🐧' : '⚡') +
         '</span><span>' +
         d.name +
@@ -206,7 +219,9 @@ export function toggleAddForm() {
   const btn = document.getElementById('btnToggleAddForm');
   form.classList.toggle('show');
   const isExpanded = form.classList.contains('show');
-  btn.textContent = isExpanded ? '收起' : '展開';
+  btn.textContent = isExpanded
+    ? t('ui.addDirectory.collapse')
+    : t('ui.addDirectory.expand');
   btn.setAttribute('aria-expanded', isExpanded.toString());
 }
 
@@ -231,7 +246,7 @@ export async function addDirectory() {
   const group = document.getElementById('dirGroup').value;
 
   if (!name || !path) {
-    showToast('請填寫名稱和路徑', 'error');
+    showToast(t('toast.fillNameAndPath'), 'error');
     return;
   }
 
@@ -248,7 +263,7 @@ export async function addDirectory() {
   document.getElementById('dirName').value = '';
   document.getElementById('dirPath').value = '';
 
-  showToast('目錄已新增', 'success');
+  showToast(t('toast.directoryAdded'), 'success');
 }
 
 /**
@@ -266,7 +281,7 @@ export async function deleteDirectory(id) {
   renderDirectories();
   renderRecentList();
 
-  showToast('目錄已刪除', 'success');
+  showToast(t('toast.directoryDeleted'), 'success');
 }
 
 /**
@@ -280,12 +295,12 @@ export async function openTerminal(id) {
 
   const result = await api.openTerminal(dir);
   if (result.success) {
-    showToast('正在開啟 ' + dir.name + '...', 'success');
+    showToast(t('toast.openingDirectory', { name: dir.name }), 'success');
     // 重新載入配置以更新最近使用時間
     await loadConfig();
     renderRecentList();
   } else {
-    showToast('開啟失敗: ' + result.error, 'error');
+    showToast(t('toast.openFailed', { error: result.error }), 'error');
   }
 }
 

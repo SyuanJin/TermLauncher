@@ -22,4 +22,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   minimizeWindow: () => ipcRenderer.send('minimize-window'),
   maximizeWindow: () => ipcRenderer.send('maximize-window'),
   closeWindow: () => ipcRenderer.send('close-window'),
+
+  // 國際化
+  getAvailableLocales: () => ipcRenderer.invoke('get-available-locales'),
+  loadLocale: localeCode => ipcRenderer.invoke('load-locale', localeCode),
 });

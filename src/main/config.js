@@ -20,6 +20,7 @@ const defaultConfig = {
     minimizeToTray: true,
     globalShortcut: 'Alt+Space',
     theme: 'dark',
+    language: 'zh-TW',
   },
 };
 

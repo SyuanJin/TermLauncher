@@ -4,6 +4,7 @@
  */
 import { getConfig, saveConfig } from '../state.js';
 import { showToast } from '../ui/toast.js';
+import { t } from '../i18n.js';
 
 // 按鍵映射表：將 JavaScript 按鍵名稱轉換為 Electron globalShortcut 格式
 const keyMap = {
@@ -30,7 +31,7 @@ const keyMap = {
  */
 export function recordShortcut(input) {
   const originalValue = input.value;
-  input.value = '請按下快捷鍵...';
+  input.value = t('toast.pressShortcut');
 
   // 清理所有事件監聽器的函數
   const cleanup = () => {
@@ -77,11 +78,11 @@ export function recordShortcut(input) {
       const config = getConfig();
       config.settings.globalShortcut = shortcut;
       await saveConfig();
-      showToast('快捷鍵已更新為 ' + shortcut, 'success');
+      showToast(t('toast.shortcutUpdated', { shortcut }), 'success');
     } else {
       // 沒有修飾鍵，恢復原值
       input.value = originalValue;
-      showToast('快捷鍵需要包含 Ctrl、Alt 或 Shift', 'error');
+      showToast(t('toast.shortcutNeedsModifier'), 'error');
     }
     cleanup();
   };
@@ -119,7 +120,7 @@ export async function saveShortcutFromInput(input) {
   const hasModifier = parts.some(p => modifiers.includes(p));
 
   if (!hasModifier || parts.length < 2) {
-    showToast('快捷鍵格式錯誤，需要包含 Ctrl、Alt 或 Shift', 'error');
+    showToast(t('toast.shortcutFormatError'), 'error');
     input.value = config.settings.globalShortcut || 'Alt+Space';
     return;
   }
@@ -134,6 +135,6 @@ export async function saveShortcutFromInput(input) {
     config.settings.globalShortcut = normalizedShortcut;
     input.value = normalizedShortcut;
     await saveConfig();
-    showToast('快捷鍵已更新為 ' + normalizedShortcut, 'success');
+    showToast(t('toast.shortcutUpdated', { shortcut: normalizedShortcut }), 'success');
   }
 }

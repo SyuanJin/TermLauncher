@@ -8,6 +8,8 @@ const { loadConfig, saveConfig } = require('./config');
 const { openTerminal } = require('./terminal');
 const { registerShortcut } = require('./shortcuts');
 const { getMainWindow } = require('./window');
+const { getAvailableLocales, loadLocale } = require('./i18n');
+const { updateTrayMenu } = require('./tray');
 
 /**
  * 設定所有 IPC 事件處理器
@@ -90,6 +92,19 @@ function setupIpcHandlers() {
       return { success: true, path: result.filePaths[0] };
     }
     return { success: false };
+  });
+
+  // 取得可用語系列表
+  ipcMain.handle('get-available-locales', () => {
+    return getAvailableLocales();
+  });
+
+  // 載入語系
+  ipcMain.handle('load-locale', (event, localeCode) => {
+    const locale = loadLocale(localeCode);
+    // 更新托盤選單語言
+    updateTrayMenu();
+    return locale;
   });
 
   // 視窗控制

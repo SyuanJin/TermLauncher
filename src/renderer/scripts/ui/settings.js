@@ -5,6 +5,7 @@
 import { getConfig, saveConfig, setConfig } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
+import { t, changeLocale, getAvailableLocales, applyTranslations } from '../i18n.js';
 import {
   renderGroupFilter,
   renderGroupSelect,
@@ -29,7 +30,27 @@ export async function changeTheme() {
   config.settings.theme = theme;
   applyTheme(theme);
   await saveConfig();
-  showToast(theme === 'dark' ? '已切換至深色主題' : '已切換至淺色主題', 'success');
+  showToast(theme === 'dark' ? t('toast.themeDark') : t('toast.themeLight'), 'success');
+}
+
+/**
+ * 變更語言
+ */
+export async function changeLanguage() {
+  const config = getConfig();
+  const language = document.getElementById('languageSelect').value;
+  config.settings.language = language;
+  await saveConfig();
+  await changeLocale(language);
+
+  // 重新渲染動態內容
+  renderGroupFilter();
+  renderGroupSelect();
+  renderDirectories();
+  renderRecentList();
+  renderGroupsList();
+
+  showToast(t('toast.languageChanged'), 'success');
 }
 
 /**
@@ -41,6 +62,24 @@ export function renderSettings() {
   document.getElementById('startMinimized').checked = config.settings.startMinimized;
   document.getElementById('minimizeToTray').checked = config.settings.minimizeToTray;
   document.getElementById('globalShortcut').value = config.settings.globalShortcut || 'Alt+Space';
+
+  // 渲染語言選擇器
+  const languageSelect = document.getElementById('languageSelect');
+  const availableLocales = getAvailableLocales();
+  const currentLanguage = config.settings.language || 'zh-TW';
+
+  languageSelect.innerHTML = availableLocales
+    .map(
+      locale =>
+        '<option value="' +
+        locale.code +
+        '"' +
+        (locale.code === currentLanguage ? ' selected' : '') +
+        '>' +
+        locale.nativeName +
+        '</option>'
+    )
+    .join('');
 }
 
 /**
@@ -48,16 +87,17 @@ export function renderSettings() {
  */
 export function renderGroupsList() {
   const config = getConfig();
+  const defaultGroupName = t('common.default');
   document.getElementById('groupsList').innerHTML = config.groups
     .map(
       g =>
         '<div class="group-tag">' +
-        g +
+        (g === '預設' ? defaultGroupName : g) +
         (g !== '預設'
           ? '<button class="delete-group" data-group="' +
             g +
-            '" aria-label="刪除群組 ' +
-            g +
+            '" aria-label="' +
+            t('ui.settings.groups.deleteGroup', { name: g }) +
             '">✕</button>'
           : '') +
         '</div>'
@@ -100,12 +140,12 @@ export async function addGroup() {
   const name = document.getElementById('newGroupName').value.trim();
 
   if (!name) {
-    showToast('請輸入群組名稱', 'error');
+    showToast(t('toast.enterGroupName'), 'error');
     return;
   }
 
   if (config.groups.includes(name)) {
-    showToast('群組已存在', 'error');
+    showToast(t('toast.groupExists'), 'error');
     return;
   }
 
@@ -118,7 +158,7 @@ export async function addGroup() {
   renderGroupsList();
 
   document.getElementById('newGroupName').value = '';
-  showToast('群組已新增', 'success');
+  showToast(t('toast.groupAdded'), 'success');
 }
 
 /**
@@ -144,7 +184,7 @@ export async function deleteGroup(name) {
   renderDirectories();
   renderGroupsList();
 
-  showToast('群組已刪除', 'success');
+  showToast(t('toast.groupDeleted'), 'success');
 }
 
 /**
@@ -153,7 +193,7 @@ export async function deleteGroup(name) {
 export async function exportConfig() {
   const result = await api.exportConfig();
   if (result.success) {
-    showToast('設定已匯出', 'success');
+    showToast(t('toast.configExported'), 'success');
   }
 }
 
@@ -173,9 +213,9 @@ export async function importConfig() {
     renderSettings();
     renderGroupsList();
 
-    showToast('設定已匯入', 'success');
+    showToast(t('toast.configImported'), 'success');
   } else if (result.error) {
-    showToast('匯入失敗: ' + result.error, 'error');
+    showToast(t('toast.importFailed', { error: result.error }), 'error');
   }
 }
 
@@ -184,6 +224,7 @@ export async function importConfig() {
  */
 export function setupSettingsEvents() {
   document.getElementById('themeSelect').addEventListener('change', changeTheme);
+  document.getElementById('languageSelect').addEventListener('change', changeLanguage);
   document.getElementById('startMinimized').addEventListener('change', saveSettings);
   document.getElementById('minimizeToTray').addEventListener('change', saveSettings);
   document.getElementById('newGroupName').addEventListener('keypress', e => {

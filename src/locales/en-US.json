@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "code": "en-US",
+    "name": "English",
+    "nativeName": "English"
+  },
+  "ui": {
+    "titlebar": {
+      "minimize": "Minimize window",
+      "close": "Close window"
+    },
+    "tabs": {
+      "directories": "📁 Directories",
+      "settings": "⚙️ Settings"
+    },
+    "search": {
+      "placeholder": "Search directories...",
+      "allGroups": "All groups"
+    },
+    "addDirectory": {
+      "sectionTitle": "➕ Add Directory",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "name": "Name",
+      "namePlaceholder": "e.g., My Project",
+      "type": "Type",
+      "typeWsl": "WSL Ubuntu",
+      "typePowershell": "PowerShell",
+      "path": "Path",
+      "pathPlaceholder": "e.g., D:\\Projects\\my-app",
+      "browse": "Browse...",
+      "group": "Group",
+      "addButton": "➕ Add Directory"
+    },
+    "recent": {
+      "title": "🕐 Recent"
+    },
+    "directory": {
+      "emptyFiltered": "No matching directories",
+      "emptyAll": "No directories added yet",
+      "delete": "Delete",
+      "openTerminal": "Open {name} terminal",
+      "deleteItem": "Delete {name}"
+    },
+    "settings": {
+      "general": {
+        "title": "⚙️ General Settings",
+        "theme": "Theme",
+        "themeDesc": "Switch the interface appearance",
+        "themeDark": "🌙 Dark",
+        "themeLight": "☀️ Light",
+        "language": "Language",
+        "languageDesc": "Select interface language",
+        "startMinimized": "Start minimized",
+        "startMinimizedDesc": "Minimize to system tray on startup",
+        "minimizeToTray": "Minimize to tray on close",
+        "minimizeToTrayDesc": "Minimize instead of quit when closing",
+        "globalShortcut": "Global shortcut",
+        "globalShortcutDesc": "Press to show/hide window",
+        "recordShortcut": "Record shortcut"
+      },
+      "groups": {
+        "title": "🏷️ Group Management",
+        "newGroupPlaceholder": "New group name",
+        "add": "Add",
+        "deleteGroup": "Delete group {name}"
+      },
+      "data": {
+        "title": "💾 Data Management",
+        "export": "📤 Export Settings",
+        "import": "📥 Import Settings"
+      }
+    }
+  },
+  "toast": {
+    "fillNameAndPath": "Please enter name and path",
+    "directoryAdded": "Directory added",
+    "directoryDeleted": "Directory deleted",
+    "openingDirectory": "Opening {name}...",
+    "openFailed": "Failed to open: {error}",
+    "themeDark": "Switched to dark theme",
+    "themeLight": "Switched to light theme",
+    "enterGroupName": "Please enter group name",
+    "groupExists": "Group already exists",
+    "groupAdded": "Group added",
+    "groupDeleted": "Group deleted",
+    "configExported": "Settings exported",
+    "configImported": "Settings imported",
+    "importFailed": "Import failed: {error}",
+    "pressShortcut": "Press a shortcut key...",
+    "shortcutUpdated": "Shortcut updated to {shortcut}",
+    "shortcutNeedsModifier": "Shortcut must include Ctrl, Alt or Shift",
+    "shortcutFormatError": "Invalid shortcut format, must include Ctrl, Alt or Shift",
+    "languageChanged": "Language changed, some items require restart"
+  },
+  "tray": {
+    "showWindow": "Show Window",
+    "quit": "Quit"
+  },
+  "dialog": {
+    "exportTitle": "Export Settings",
+    "importTitle": "Import Settings",
+    "selectFolder": "Select Folder"
+  },
+  "common": {
+    "default": "Default"
+  }
+}

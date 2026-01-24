@@ -56,4 +56,17 @@ export const api = {
    * 關閉視窗
    */
   closeWindow: () => window.electronAPI.closeWindow(),
+
+  /**
+   * 取得可用語系列表
+   * @returns {Promise<Array>} 語系列表
+   */
+  getAvailableLocales: () => window.electronAPI.getAvailableLocales(),
+
+  /**
+   * 載入語系
+   * @param {string} localeCode - 語系代碼
+   * @returns {Promise<Object>} 語系資料
+   */
+  loadLocale: localeCode => window.electronAPI.loadLocale(localeCode),
 };

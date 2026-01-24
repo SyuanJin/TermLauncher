@@ -4,6 +4,7 @@
  */
 import { loadConfig, getConfig } from './state.js';
 import { api } from './api.js';
+import { initI18n } from './i18n.js';
 import { setupTabs } from './ui/tabs.js';
 import {
   renderGroupFilter,
@@ -85,6 +86,9 @@ async function init() {
   // 應用保存的主題設定
   const config = getConfig();
   applyTheme(config.settings?.theme || 'dark');
+
+  // 初始化 i18n
+  await initI18n(config.settings?.language || 'zh-TW');
 
   renderAll();
   setupEventListeners();
