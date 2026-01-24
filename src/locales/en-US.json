@@ -23,9 +23,7 @@
       "collapse": "Collapse",
       "name": "Name",
       "namePlaceholder": "e.g., My Project",
-      "type": "Type",
-      "typeWsl": "WSL Ubuntu",
-      "typePowershell": "PowerShell",
+      "type": "Terminal Type",
       "path": "Path",
       "pathPlaceholder": "e.g., D:\\Projects\\my-app",
       "browse": "Browse...",
@@ -61,6 +59,27 @@
         "globalShortcutDesc": "Press to show/hide window",
         "recordShortcut": "Record shortcut"
       },
+      "terminals": {
+        "title": "🖥️ Terminal Management",
+        "builtin": "Built-in",
+        "addNew": "Add Custom Terminal",
+        "editExisting": "Edit Terminal",
+        "name": "Name",
+        "namePlaceholder": "e.g., Git Bash",
+        "icon": "Icon",
+        "command": "Launch Command",
+        "commandPlaceholder": "e.g., \"C:\\Program Files\\Git\\bin\\bash.exe\" --cd {path}",
+        "commandHint": "Use {path} as path placeholder",
+        "pathFormat": "Path Format",
+        "pathWindows": "Windows (C:\\path)",
+        "pathUnix": "WSL (/mnt/c/path)",
+        "save": "Save Terminal",
+        "update": "Update Terminal",
+        "edit": "Edit",
+        "delete": "Delete",
+        "editTerminal": "Edit terminal {name}",
+        "deleteTerminal": "Delete terminal {name}"
+      },
       "groups": {
         "title": "🏷️ Group Management",
         "newGroupPlaceholder": "New group name",
@@ -95,7 +114,13 @@
     "shortcutFormatError": "Invalid shortcut format, must include Ctrl, Alt or Shift",
     "languageChanged": "Language changed, some items require restart",
     "autoLaunchEnabled": "Auto-launch enabled",
-    "autoLaunchDisabled": "Auto-launch disabled"
+    "autoLaunchDisabled": "Auto-launch disabled",
+    "terminalNameRequired": "Please enter terminal name",
+    "terminalCommandRequired": "Please enter launch command",
+    "terminalCommandNeedsPath": "Command must include {path} placeholder",
+    "terminalAdded": "Terminal added",
+    "terminalUpdated": "Terminal updated",
+    "terminalDeleted": "Terminal deleted"
   },
   "tray": {
     "showWindow": "Show Window",

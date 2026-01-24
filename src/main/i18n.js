@@ -38,12 +38,12 @@ function getAvailableLocales() {
             });
           }
         } catch (err) {
-          console.error(`無法讀取語系檔案 ${file}:`, err);
+          console.error(`[i18n] Failed to read locale file ${file}:`, err);
         }
       }
     }
   } catch (err) {
-    console.error('無法掃描語系目錄:', err);
+    console.error('[i18n] Failed to scan locales:', err);
   }
 
   return locales;
@@ -72,7 +72,7 @@ function loadLocale(localeCode) {
       return data;
     }
   } catch (err) {
-    console.error(`無法載入語系 ${localeCode}:`, err);
+    console.error(`[i18n] Failed to load locale ${localeCode}:`, err);
   }
 
   // 如果找不到指定語系，嘗試載入預設語系

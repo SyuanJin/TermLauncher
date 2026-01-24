@@ -92,9 +92,7 @@
           <!-- 新增目錄區塊 -->
           <div class="add-section">
             <div class="section-header">
-              <div class="section-title" data-i18n="ui.addDirectory.sectionTitle">
-                ➕ 新增目錄
-              </div>
+              <div class="section-title" data-i18n="ui.addDirectory.sectionTitle">➕ 新增目錄</div>
               <button
                 class="toggle-btn"
                 id="btnToggleAddForm"
@@ -116,13 +114,10 @@
                     data-i18n-placeholder="ui.addDirectory.namePlaceholder"
                   />
                 </div>
-                <div class="input-group" style="max-width: 150px">
-                  <label data-i18n="ui.addDirectory.type">類型</label>
+                <div class="input-group" style="max-width: 180px">
+                  <label data-i18n="ui.addDirectory.type">終端類型</label>
                   <select id="dirType">
-                    <option value="wsl" data-i18n="ui.addDirectory.typeWsl">WSL Ubuntu</option>
-                    <option value="powershell" data-i18n="ui.addDirectory.typePowershell">
-                      PowerShell
-                    </option>
+                    <!-- 動態渲染終端選項 -->
                   </select>
                 </div>
               </div>
@@ -197,9 +192,7 @@
             <div class="setting-item">
               <div class="setting-label">
                 <span data-i18n="ui.settings.general.autoLaunch">開機自動啟動</span>
-                <small data-i18n="ui.settings.general.autoLaunchDesc"
-                  >系統開機時自動啟動程式</small
-                >
+                <small data-i18n="ui.settings.general.autoLaunchDesc">系統開機時自動啟動程式</small>
               </div>
               <label class="switch">
                 <input
@@ -274,6 +267,82 @@
                   🎹
                 </button>
               </div>
+            </div>
+          </div>
+
+          <!-- 終端管理 -->
+          <div class="settings-section">
+            <h3 data-i18n="ui.settings.terminals.title">🖥️ 終端管理</h3>
+            <div class="terminals-list" id="terminalsList"></div>
+            <div class="terminal-form" id="terminalForm">
+              <div class="terminal-form-header">
+                <span id="terminalFormTitle" data-i18n="ui.settings.terminals.addNew"
+                  >新增自訂終端</span
+                >
+                <button
+                  class="btn-icon"
+                  id="btnCancelTerminal"
+                  title="取消"
+                  aria-label="取消編輯"
+                  style="display: none"
+                >
+                  ✕
+                </button>
+              </div>
+              <input type="hidden" id="terminalEditId" value="" />
+              <div class="input-row">
+                <div class="input-group">
+                  <label data-i18n="ui.settings.terminals.name">名稱</label>
+                  <input
+                    type="text"
+                    id="terminalName"
+                    placeholder="例如：Git Bash"
+                    data-i18n-placeholder="ui.settings.terminals.namePlaceholder"
+                  />
+                </div>
+                <div class="input-group" style="max-width: 80px">
+                  <label data-i18n="ui.settings.terminals.icon">圖示</label>
+                  <input
+                    type="text"
+                    id="terminalIcon"
+                    placeholder="🔧"
+                    maxlength="2"
+                    class="icon-input"
+                  />
+                </div>
+              </div>
+              <div class="input-group">
+                <label data-i18n="ui.settings.terminals.command">啟動指令</label>
+                <input
+                  type="text"
+                  id="terminalCommand"
+                  placeholder='例如："C:\Program Files\Git\bin\bash.exe" --cd {path}'
+                  data-i18n-placeholder="ui.settings.terminals.commandPlaceholder"
+                  class="mono-input"
+                />
+                <small class="hint" data-i18n="ui.settings.terminals.commandHint"
+                  >使用 {path} 作為路徑佔位符</small
+                >
+              </div>
+              <div class="input-group">
+                <label data-i18n="ui.settings.terminals.pathFormat">路徑格式</label>
+                <select id="terminalPathFormat">
+                  <option value="windows" data-i18n="ui.settings.terminals.pathWindows">
+                    Windows (C:\path)
+                  </option>
+                  <option value="unix" data-i18n="ui.settings.terminals.pathUnix">
+                    WSL (/mnt/c/path)
+                  </option>
+                </select>
+              </div>
+              <button
+                class="btn btn-primary"
+                id="btnSaveTerminal"
+                aria-label="儲存終端"
+                data-i18n="ui.settings.terminals.save"
+              >
+                儲存終端
+              </button>
             </div>
           </div>
 

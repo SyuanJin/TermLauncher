@@ -485,3 +485,120 @@ input:checked + .slider:before {
 .toast.error .toast-icon {
   color: var(--accent-red);
 }
+
+/* 終端管理 */
+.terminals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.terminal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.terminal-item.builtin {
+  background: var(--bg-tertiary);
+}
+
+.terminal-item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.terminal-icon {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.terminal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.terminal-name {
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.builtin-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--accent-blue);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.terminal-command {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.terminal-form {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.terminal-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.icon-input {
+  text-align: center;
+  font-size: 18px;
+}
+
+.mono-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}

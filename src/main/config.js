@@ -9,11 +9,47 @@ const fs = require('fs');
 // 配置檔路徑
 const configPath = path.join(app.getPath('userData'), 'config.json');
 
+// 預設終端列表
+const defaultTerminals = [
+  {
+    id: 'wsl-ubuntu',
+    name: 'WSL Ubuntu',
+    icon: '🐧',
+    command: 'wt.exe -w 0 new-tab wsl.exe -d Ubuntu --cd {path}',
+    pathFormat: 'unix',
+    isBuiltin: true,
+  },
+  {
+    id: 'powershell',
+    name: 'PowerShell',
+    icon: '⚡',
+    command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
+    pathFormat: 'windows',
+    isBuiltin: true,
+  },
+  {
+    id: 'git-bash',
+    name: 'Git Bash',
+    icon: '🐱',
+    command: '"C:\\Program Files\\Git\\git-bash.exe" "--cd={path}"',
+    pathFormat: 'windows',
+    isBuiltin: true,
+  },
+];
+
 // 預設配置
 const defaultConfig = {
   directories: [
-    { id: 1, name: '範例專案', path: 'C:\\Users', type: 'wsl', group: '預設', lastUsed: null },
+    {
+      id: 1,
+      name: '範例專案',
+      path: 'C:\\Users',
+      terminalId: 'wsl-ubuntu',
+      group: '預設',
+      lastUsed: null,
+    },
   ],
+  terminals: [...defaultTerminals],
   groups: ['預設'],
   settings: {
     autoLaunch: false,
@@ -26,6 +62,52 @@ const defaultConfig = {
 };
 
 /**
+ * 遷移舊版配置
+ * 將 type 轉換為 terminalId
+ * @param {Object} config - 配置物件
+ * @returns {Object} 遷移後的配置
+ */
+function migrateConfig(config) {
+  let needsSave = false;
+
+  // 確保 terminals 陣列存在
+  if (!config.terminals) {
+    config.terminals = [...defaultTerminals];
+    needsSave = true;
+  } else {
+    // 確保內建終端存在且為最新版本
+    defaultTerminals.forEach(defaultTerm => {
+      const existingIndex = config.terminals.findIndex(t => t.id === defaultTerm.id);
+      if (existingIndex === -1) {
+        config.terminals.push(defaultTerm);
+        needsSave = true;
+      } else if (config.terminals[existingIndex].isBuiltin) {
+        // 更新內建終端的配置（保持最新）
+        config.terminals[existingIndex] = defaultTerm;
+      }
+    });
+  }
+
+  // 遷移目錄的 type 為 terminalId
+  if (config.directories) {
+    config.directories.forEach(dir => {
+      if (dir.type && !dir.terminalId) {
+        // 將舊的 type 轉換為 terminalId
+        if (dir.type === 'wsl') {
+          dir.terminalId = 'wsl-ubuntu';
+        } else if (dir.type === 'powershell') {
+          dir.terminalId = 'powershell';
+        }
+        delete dir.type;
+        needsSave = true;
+      }
+    });
+  }
+
+  return { config, needsSave };
+}
+
+/**
  * 讀取配置
  * @returns {Object} 配置物件
  */
@@ -33,10 +115,21 @@ function loadConfig() {
   try {
     if (fs.existsSync(configPath)) {
       const data = fs.readFileSync(configPath, 'utf-8');
-      return JSON.parse(data);
+      let config = JSON.parse(data);
+
+      // 執行配置遷移
+      const { config: migratedConfig, needsSave } = migrateConfig(config);
+      config = migratedConfig;
+
+      // 如果有遷移變更，儲存配置
+      if (needsSave) {
+        saveConfig(config);
+      }
+
+      return config;
     }
   } catch (err) {
-    console.error('讀取配置失敗:', err);
+    console.error('[Config] Failed to load:', err);
   }
   return defaultConfig;
 }
@@ -51,7 +144,7 @@ function saveConfig(config) {
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
     return true;
   } catch (err) {
-    console.error('儲存配置失敗:', err);
+    console.error('[Config] Failed to save:', err);
     return false;
   }
 }
@@ -60,5 +153,6 @@ module.exports = {
   loadConfig,
   saveConfig,
   defaultConfig,
+  defaultTerminals,
   configPath,
 };

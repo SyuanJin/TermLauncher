@@ -11,6 +11,7 @@ import {
   renderGroupSelect,
   renderDirectories,
   renderRecentList,
+  renderTerminalSelect,
 } from './directories.js';
 
 /**
@@ -40,10 +41,7 @@ export async function changeAutoLaunch() {
   const enabled = document.getElementById('autoLaunch').checked;
   const result = await api.setAutoLaunch(enabled);
   if (result.success) {
-    showToast(
-      enabled ? t('toast.autoLaunchEnabled') : t('toast.autoLaunchDisabled'),
-      'success'
-    );
+    showToast(enabled ? t('toast.autoLaunchEnabled') : t('toast.autoLaunchDisabled'), 'success');
   }
 }
 
@@ -60,9 +58,11 @@ export async function changeLanguage() {
   // 重新渲染動態內容
   renderGroupFilter();
   renderGroupSelect();
+  renderTerminalSelect();
   renderDirectories();
   renderRecentList();
   renderGroupsList();
+  renderTerminalsList();
 
   showToast(t('toast.languageChanged'), 'success');
 }
@@ -98,6 +98,215 @@ export async function renderSettings() {
         '</option>'
     )
     .join('');
+}
+
+/**
+ * 渲染終端列表
+ */
+export function renderTerminalsList() {
+  const config = getConfig();
+  const container = document.getElementById('terminalsList');
+  if (!container || !config.terminals) return;
+
+  container.innerHTML = config.terminals
+    .map(
+      terminal =>
+        '<div class="terminal-item' +
+        (terminal.isBuiltin ? ' builtin' : '') +
+        '" data-terminal-id="' +
+        terminal.id +
+        '"><div class="terminal-item-info"><span class="terminal-icon">' +
+        terminal.icon +
+        '</span><div class="terminal-details"><span class="terminal-name">' +
+        terminal.name +
+        (terminal.isBuiltin
+          ? '<span class="builtin-badge">' + t('ui.settings.terminals.builtin') + '</span>'
+          : '') +
+        '</span><span class="terminal-command">' +
+        escapeHtml(terminal.command) +
+        '</span></div></div><div class="terminal-actions">' +
+        (terminal.isBuiltin
+          ? ''
+          : '<button class="btn-icon edit" data-edit-terminal="' +
+            terminal.id +
+            '" title="' +
+            t('ui.settings.terminals.edit') +
+            '" aria-label="' +
+            t('ui.settings.terminals.editTerminal', { name: terminal.name }) +
+            '">✏️</button><button class="btn-icon delete" data-delete-terminal="' +
+            terminal.id +
+            '" title="' +
+            t('ui.settings.terminals.delete') +
+            '" aria-label="' +
+            t('ui.settings.terminals.deleteTerminal', { name: terminal.name }) +
+            '">🗑️</button>') +
+        '</div></div>'
+    )
+    .join('');
+
+  // 綁定編輯和刪除事件
+  bindTerminalEvents();
+}
+
+/**
+ * 跳脫 HTML 特殊字元
+ */
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+/**
+ * 綁定終端項目事件
+ */
+function bindTerminalEvents() {
+  // 編輯按鈕
+  document.querySelectorAll('[data-edit-terminal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const terminalId = btn.dataset.editTerminal;
+      editTerminal(terminalId);
+    });
+  });
+
+  // 刪除按鈕
+  document.querySelectorAll('[data-delete-terminal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const terminalId = btn.dataset.deleteTerminal;
+      deleteTerminal(terminalId);
+    });
+  });
+}
+
+/**
+ * 編輯終端
+ * @param {string} terminalId - 終端 ID
+ */
+export function editTerminal(terminalId) {
+  const config = getConfig();
+  const terminal = config.terminals?.find(t => t.id === terminalId);
+  if (!terminal || terminal.isBuiltin) return;
+
+  // 填入表單
+  document.getElementById('terminalEditId').value = terminal.id;
+  document.getElementById('terminalName').value = terminal.name;
+  document.getElementById('terminalIcon').value = terminal.icon;
+  document.getElementById('terminalCommand').value = terminal.command;
+  document.getElementById('terminalPathFormat').value = terminal.pathFormat;
+
+  // 更新表單標題和顯示取消按鈕
+  document.getElementById('terminalFormTitle').textContent = t(
+    'ui.settings.terminals.editExisting'
+  );
+  document.getElementById('btnCancelTerminal').style.display = 'flex';
+  document.getElementById('btnSaveTerminal').textContent = t('ui.settings.terminals.update');
+}
+
+/**
+ * 取消編輯終端
+ */
+export function cancelEditTerminal() {
+  // 清空表單
+  document.getElementById('terminalEditId').value = '';
+  document.getElementById('terminalName').value = '';
+  document.getElementById('terminalIcon').value = '';
+  document.getElementById('terminalCommand').value = '';
+  document.getElementById('terminalPathFormat').value = 'windows';
+
+  // 重置表單標題
+  document.getElementById('terminalFormTitle').textContent = t('ui.settings.terminals.addNew');
+  document.getElementById('btnCancelTerminal').style.display = 'none';
+  document.getElementById('btnSaveTerminal').textContent = t('ui.settings.terminals.save');
+}
+
+/**
+ * 儲存終端
+ */
+export async function saveTerminal() {
+  const config = getConfig();
+  const editId = document.getElementById('terminalEditId').value;
+  const name = document.getElementById('terminalName').value.trim();
+  const icon = document.getElementById('terminalIcon').value.trim();
+  const command = document.getElementById('terminalCommand').value.trim();
+  const pathFormat = document.getElementById('terminalPathFormat').value;
+
+  // 驗證
+  if (!name) {
+    showToast(t('toast.terminalNameRequired'), 'error');
+    return;
+  }
+  if (!command) {
+    showToast(t('toast.terminalCommandRequired'), 'error');
+    return;
+  }
+  if (!command.includes('{path}')) {
+    showToast(t('toast.terminalCommandNeedsPath'), 'error');
+    return;
+  }
+
+  if (editId) {
+    // 編輯現有終端
+    const terminalIndex = config.terminals.findIndex(t => t.id === editId);
+    if (terminalIndex !== -1 && !config.terminals[terminalIndex].isBuiltin) {
+      config.terminals[terminalIndex] = {
+        ...config.terminals[terminalIndex],
+        name,
+        icon: icon || '💻',
+        command,
+        pathFormat,
+      };
+      await saveConfig();
+      showToast(t('toast.terminalUpdated'), 'success');
+    }
+  } else {
+    // 新增終端
+    const newId = 'custom-' + Date.now();
+    config.terminals.push({
+      id: newId,
+      name,
+      icon: icon || '💻',
+      command,
+      pathFormat,
+      isBuiltin: false,
+    });
+    await saveConfig();
+    showToast(t('toast.terminalAdded'), 'success');
+  }
+
+  // 清空表單並重新渲染
+  cancelEditTerminal();
+  renderTerminalsList();
+  renderTerminalSelect();
+  renderDirectories();
+}
+
+/**
+ * 刪除終端
+ * @param {string} terminalId - 終端 ID
+ */
+export async function deleteTerminal(terminalId) {
+  const config = getConfig();
+  const terminal = config.terminals?.find(t => t.id === terminalId);
+  if (!terminal || terminal.isBuiltin) return;
+
+  // 將使用該終端的目錄遷移至預設終端
+  const defaultTerminalId = config.terminals.find(t => t.isBuiltin)?.id || 'wsl-ubuntu';
+  config.directories.forEach(dir => {
+    if (dir.terminalId === terminalId) {
+      dir.terminalId = defaultTerminalId;
+    }
+  });
+
+  // 刪除終端
+  config.terminals = config.terminals.filter(t => t.id !== terminalId);
+  await saveConfig();
+
+  // 重新渲染
+  renderTerminalsList();
+  renderTerminalSelect();
+  renderDirectories();
+
+  showToast(t('toast.terminalDeleted'), 'success');
 }
 
 /**
@@ -226,10 +435,12 @@ export async function importConfig() {
     // 重新渲染所有
     renderGroupFilter();
     renderGroupSelect();
+    renderTerminalSelect();
     renderDirectories();
     renderRecentList();
     await renderSettings();
     renderGroupsList();
+    renderTerminalsList();
 
     showToast(t('toast.configImported'), 'success');
   } else if (result.error) {
@@ -248,5 +459,12 @@ export function setupSettingsEvents() {
   document.getElementById('minimizeToTray').addEventListener('change', saveSettings);
   document.getElementById('newGroupName').addEventListener('keypress', e => {
     if (e.key === 'Enter') addGroup();
+  });
+
+  // 終端管理事件
+  document.getElementById('btnSaveTerminal').addEventListener('click', saveTerminal);
+  document.getElementById('btnCancelTerminal').addEventListener('click', cancelEditTerminal);
+  document.getElementById('terminalName').addEventListener('keypress', e => {
+    if (e.key === 'Enter') saveTerminal();
   });
 }

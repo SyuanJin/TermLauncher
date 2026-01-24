@@ -9,6 +9,7 @@ import { setupTabs } from './ui/tabs.js';
 import {
   renderGroupFilter,
   renderGroupSelect,
+  renderTerminalSelect,
   renderDirectories,
   renderRecentList,
   toggleAddForm,
@@ -19,6 +20,7 @@ import {
 import {
   renderSettings,
   renderGroupsList,
+  renderTerminalsList,
   addGroup,
   exportConfig,
   importConfig,
@@ -33,10 +35,12 @@ import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
 async function renderAll() {
   renderGroupFilter();
   renderGroupSelect();
+  renderTerminalSelect();
   renderDirectories();
   renderRecentList();
   await renderSettings();
   renderGroupsList();
+  renderTerminalsList();
 }
 
 /**

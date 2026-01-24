@@ -23,9 +23,7 @@
       "collapse": "收起",
       "name": "名稱",
       "namePlaceholder": "例如：我的專案",
-      "type": "類型",
-      "typeWsl": "WSL Ubuntu",
-      "typePowershell": "PowerShell",
+      "type": "終端類型",
       "path": "路徑",
       "pathPlaceholder": "例如：D:\\Projects\\my-app",
       "browse": "瀏覽...",
@@ -61,6 +59,27 @@
         "globalShortcutDesc": "按下快捷鍵顯示/隱藏視窗",
         "recordShortcut": "按鍵錄製"
       },
+      "terminals": {
+        "title": "🖥️ 終端管理",
+        "builtin": "內建",
+        "addNew": "新增自訂終端",
+        "editExisting": "編輯終端",
+        "name": "名稱",
+        "namePlaceholder": "例如：Git Bash",
+        "icon": "圖示",
+        "command": "啟動指令",
+        "commandPlaceholder": "例如：\"C:\\Program Files\\Git\\bin\\bash.exe\" --cd {path}",
+        "commandHint": "使用 {path} 作為路徑佔位符",
+        "pathFormat": "路徑格式",
+        "pathWindows": "Windows (C:\\path)",
+        "pathUnix": "WSL (/mnt/c/path)",
+        "save": "儲存終端",
+        "update": "更新終端",
+        "edit": "編輯",
+        "delete": "刪除",
+        "editTerminal": "編輯終端 {name}",
+        "deleteTerminal": "刪除終端 {name}"
+      },
       "groups": {
         "title": "🏷️ 群組管理",
         "newGroupPlaceholder": "新群組名稱",
@@ -95,7 +114,13 @@
     "shortcutFormatError": "快捷鍵格式錯誤，需要包含 Ctrl、Alt 或 Shift",
     "languageChanged": "語言已變更，部分項目需重啟生效",
     "autoLaunchEnabled": "已啟用開機自動啟動",
-    "autoLaunchDisabled": "已停用開機自動啟動"
+    "autoLaunchDisabled": "已停用開機自動啟動",
+    "terminalNameRequired": "請輸入終端名稱",
+    "terminalCommandRequired": "請輸入啟動指令",
+    "terminalCommandNeedsPath": "指令必須包含 {path} 佔位符",
+    "terminalAdded": "終端已新增",
+    "terminalUpdated": "終端已更新",
+    "terminalDeleted": "終端已刪除"
   },
   "tray": {
     "showWindow": "顯示視窗",

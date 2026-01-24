@@ -31,14 +31,24 @@ function setupIpcHandlers() {
 
   // 開啟終端
   ipcMain.handle('open-terminal', (event, dir) => {
-    // 更新最近使用時間
     const config = loadConfig();
+
+    // 更新最近使用時間
     const dirIndex = config.directories.findIndex(d => d.id === dir.id);
     if (dirIndex !== -1) {
       config.directories[dirIndex].lastUsed = Date.now();
       saveConfig(config);
     }
-    return openTerminal(dir);
+
+    // 取得終端配置
+    const terminalId = dir.terminalId || 'wsl-ubuntu';
+    const terminal = config.terminals?.find(t => t.id === terminalId);
+
+    if (!terminal) {
+      return { success: false, error: 'Terminal config not found' };
+    }
+
+    return openTerminal(dir, terminal);
   });
 
   // 匯出配置

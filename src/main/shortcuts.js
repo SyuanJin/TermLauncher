@@ -28,7 +28,7 @@ function registerShortcut() {
       }
     });
   } catch (err) {
-    console.error('註冊快捷鍵失敗:', err);
+    console.error('[Shortcut] Failed to register:', err);
   }
 }
 

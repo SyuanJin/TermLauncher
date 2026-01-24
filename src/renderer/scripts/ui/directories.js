@@ -8,6 +8,52 @@ import { showToast } from './toast.js';
 import { t } from '../i18n.js';
 
 /**
+ * 取得終端配置
+ * @param {string} terminalId - 終端 ID
+ * @returns {Object|null} 終端配置物件
+ */
+function getTerminal(terminalId) {
+  const config = getConfig();
+  return config.terminals?.find(t => t.id === terminalId) || null;
+}
+
+/**
+ * 取得終端圖示
+ * @param {string} terminalId - 終端 ID
+ * @returns {string} 終端圖示
+ */
+function getTerminalIcon(terminalId) {
+  const terminal = getTerminal(terminalId);
+  return terminal?.icon || '💻';
+}
+
+/**
+ * 取得終端名稱
+ * @param {string} terminalId - 終端 ID
+ * @returns {string} 終端名稱
+ */
+function getTerminalName(terminalId) {
+  const terminal = getTerminal(terminalId);
+  return terminal?.name || terminalId;
+}
+
+/**
+ * 渲染終端類型下拉選單
+ */
+export function renderTerminalSelect() {
+  const config = getConfig();
+  const select = document.getElementById('dirType');
+  if (!select || !config.terminals) return;
+
+  select.innerHTML = config.terminals
+    .map(
+      terminal =>
+        '<option value="' + terminal.id + '">' + terminal.icon + ' ' + terminal.name + '</option>'
+    )
+    .join('');
+}
+
+/**
  * 渲染群組篩選下拉選單
  */
 export function renderGroupFilter() {
@@ -19,10 +65,7 @@ export function renderGroupFilter() {
     t('ui.search.allGroups') +
     '</option>' +
     config.groups
-      .map(
-        g =>
-          '<option value="' + g + '">' + (g === '預設' ? defaultGroupName : g) + '</option>'
-      )
+      .map(g => '<option value="' + g + '">' + (g === '預設' ? defaultGroupName : g) + '</option>')
       .join('');
 }
 
@@ -79,22 +122,28 @@ export function renderDirectories() {
         items.length +
         '</span></div><div class="directory-list">' +
         items
-          .map(
-            dir =>
+          .map(dir => {
+            const terminalId = dir.terminalId || 'wsl-ubuntu';
+            const terminalIcon = getTerminalIcon(terminalId);
+            const terminalName = getTerminalName(terminalId);
+            const iconClass = terminalId === 'wsl-ubuntu' ? 'wsl' : 'powershell';
+            const tagClass = terminalId === 'wsl-ubuntu' ? 'wsl' : 'ps';
+
+            return (
               '<div class="directory-item" data-id="' +
               dir.id +
               '" tabindex="0" role="button" aria-label="' +
               t('ui.directory.openTerminal', { name: dir.name }) +
               '"><div class="dir-icon ' +
-              dir.type +
+              iconClass +
               '">' +
-              (dir.type === 'wsl' ? '🐧' : '⚡') +
+              terminalIcon +
               '</div><div class="dir-info"><div class="dir-name">' +
               dir.name +
               '<span class="tag ' +
-              (dir.type === 'wsl' ? 'wsl' : 'ps') +
+              tagClass +
               '">' +
-              (dir.type === 'wsl' ? 'WSL' : 'PS') +
+              terminalName +
               '</span></div><div class="dir-path">' +
               dir.path +
               '</div></div><div class="dir-actions"><button class="btn-icon delete" data-delete-id="' +
@@ -104,7 +153,8 @@ export function renderDirectories() {
               '" aria-label="' +
               t('ui.directory.deleteItem', { name: dir.name }) +
               '">🗑️</button></div></div>'
-          )
+            );
+          })
           .join('') +
         '</div></div>'
     )
@@ -178,18 +228,20 @@ export function renderRecentList() {
 
   section.style.display = 'block';
   list.innerHTML = recent
-    .map(
-      d =>
+    .map(d => {
+      const terminalIcon = getTerminalIcon(d.terminalId);
+      return (
         '<div class="recent-item" data-recent-id="' +
         d.id +
         '" tabindex="0" role="button" aria-label="' +
         t('ui.directory.openTerminal', { name: d.name }) +
         '"><span>' +
-        (d.type === 'wsl' ? '🐧' : '⚡') +
+        terminalIcon +
         '</span><span>' +
         d.name +
         '</span></div>'
-    )
+      );
+    })
     .join('');
 
   // 綁定點擊和鍵盤事件
@@ -219,9 +271,7 @@ export function toggleAddForm() {
   const btn = document.getElementById('btnToggleAddForm');
   form.classList.toggle('show');
   const isExpanded = form.classList.contains('show');
-  btn.textContent = isExpanded
-    ? t('ui.addDirectory.collapse')
-    : t('ui.addDirectory.expand');
+  btn.textContent = isExpanded ? t('ui.addDirectory.collapse') : t('ui.addDirectory.expand');
   btn.setAttribute('aria-expanded', isExpanded.toString());
 }
 
@@ -242,7 +292,7 @@ export async function addDirectory() {
   const config = getConfig();
   const name = document.getElementById('dirName').value.trim();
   const path = document.getElementById('dirPath').value.trim();
-  const type = document.getElementById('dirType').value;
+  const terminalId = document.getElementById('dirType').value;
   const group = document.getElementById('dirGroup').value;
 
   if (!name || !path) {
@@ -250,7 +300,14 @@ export async function addDirectory() {
     return;
   }
 
-  config.directories.push({ id: Date.now(), name, path, type, group, lastUsed: null });
+  config.directories.push({
+    id: Date.now(),
+    name,
+    path,
+    terminalId,
+    group,
+    lastUsed: null,
+  });
   await saveConfig();
 
   // 重新渲染
