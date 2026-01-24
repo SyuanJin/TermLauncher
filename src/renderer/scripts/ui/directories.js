@@ -107,7 +107,9 @@ function getTerminalOptionsHtml(selectedId = 'wsl-ubuntu') {
  */
 function getGroupOptionsHtml(selectedId = 'default') {
   const config = getConfig();
-  return config.groups
+  // 按 order 排序群組
+  const sortedGroups = [...config.groups].sort((a, b) => (a.order || 0) - (b.order || 0));
+  return sortedGroups
     .map(
       g =>
         '<option value="' +
