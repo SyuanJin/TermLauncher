@@ -19,6 +19,7 @@ npm run format
 ```bash
 npm run build              # Portable 版
 npm run build:installer    # 安裝版
+npm run build:all          # 同時打包兩種版本
 ```
 
 輸出位置：
