@@ -51,6 +51,8 @@
         "themeLight": "☀️ Light",
         "language": "Language",
         "languageDesc": "Select interface language",
+        "autoLaunch": "Launch at startup",
+        "autoLaunchDesc": "Automatically start when system boots",
         "startMinimized": "Start minimized",
         "startMinimizedDesc": "Minimize to system tray on startup",
         "minimizeToTray": "Minimize to tray on close",
@@ -91,7 +93,9 @@
     "shortcutUpdated": "Shortcut updated to {shortcut}",
     "shortcutNeedsModifier": "Shortcut must include Ctrl, Alt or Shift",
     "shortcutFormatError": "Invalid shortcut format, must include Ctrl, Alt or Shift",
-    "languageChanged": "Language changed, some items require restart"
+    "languageChanged": "Language changed, some items require restart",
+    "autoLaunchEnabled": "Auto-launch enabled",
+    "autoLaunchDisabled": "Auto-launch disabled"
   },
   "tray": {
     "showWindow": "Show Window",

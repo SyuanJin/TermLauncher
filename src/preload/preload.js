@@ -26,4 +26,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 國際化
   getAvailableLocales: () => ipcRenderer.invoke('get-available-locales'),
   loadLocale: localeCode => ipcRenderer.invoke('load-locale', localeCode),
+
+  // 開機自動啟動
+  setAutoLaunch: enabled => ipcRenderer.invoke('set-auto-launch', enabled),
+  getAutoLaunch: () => ipcRenderer.invoke('get-auto-launch'),
 });

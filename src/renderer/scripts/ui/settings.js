@@ -34,6 +34,20 @@ export async function changeTheme() {
 }
 
 /**
+ * 變更開機自動啟動設定
+ */
+export async function changeAutoLaunch() {
+  const enabled = document.getElementById('autoLaunch').checked;
+  const result = await api.setAutoLaunch(enabled);
+  if (result.success) {
+    showToast(
+      enabled ? t('toast.autoLaunchEnabled') : t('toast.autoLaunchDisabled'),
+      'success'
+    );
+  }
+}
+
+/**
  * 變更語言
  */
 export async function changeLanguage() {
@@ -56,12 +70,16 @@ export async function changeLanguage() {
 /**
  * 渲染設定項目
  */
-export function renderSettings() {
+export async function renderSettings() {
   const config = getConfig();
   document.getElementById('themeSelect').value = config.settings.theme || 'dark';
   document.getElementById('startMinimized').checked = config.settings.startMinimized;
   document.getElementById('minimizeToTray').checked = config.settings.minimizeToTray;
   document.getElementById('globalShortcut').value = config.settings.globalShortcut || 'Alt+Space';
+
+  // 渲染開機自動啟動狀態（從系統取得實際狀態）
+  const autoLaunchEnabled = await api.getAutoLaunch();
+  document.getElementById('autoLaunch').checked = autoLaunchEnabled;
 
   // 渲染語言選擇器
   const languageSelect = document.getElementById('languageSelect');
@@ -210,7 +228,7 @@ export async function importConfig() {
     renderGroupSelect();
     renderDirectories();
     renderRecentList();
-    renderSettings();
+    await renderSettings();
     renderGroupsList();
 
     showToast(t('toast.configImported'), 'success');
@@ -220,11 +238,12 @@ export async function importConfig() {
 }
 
 /**
- * 設定設定頁面的事件監聽
+ * 設定設定頁面的事件監聯
  */
 export function setupSettingsEvents() {
   document.getElementById('themeSelect').addEventListener('change', changeTheme);
   document.getElementById('languageSelect').addEventListener('change', changeLanguage);
+  document.getElementById('autoLaunch').addEventListener('change', changeAutoLaunch);
   document.getElementById('startMinimized').addEventListener('change', saveSettings);
   document.getElementById('minimizeToTray').addEventListener('change', saveSettings);
   document.getElementById('newGroupName').addEventListener('keypress', e => {

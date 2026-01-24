@@ -16,6 +16,7 @@ const defaultConfig = {
   ],
   groups: ['預設'],
   settings: {
+    autoLaunch: false,
     startMinimized: false,
     minimizeToTray: true,
     globalShortcut: 'Alt+Space',

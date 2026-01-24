@@ -69,4 +69,17 @@ export const api = {
    * @returns {Promise<Object>} 語系資料
    */
   loadLocale: localeCode => window.electronAPI.loadLocale(localeCode),
+
+  /**
+   * 設定開機自動啟動
+   * @param {boolean} enabled - 是否啟用
+   * @returns {Promise<Object>} { success: boolean, enabled: boolean }
+   */
+  setAutoLaunch: enabled => window.electronAPI.setAutoLaunch(enabled),
+
+  /**
+   * 取得開機自動啟動狀態
+   * @returns {Promise<boolean>} 是否啟用
+   */
+  getAutoLaunch: () => window.electronAPI.getAutoLaunch(),
 };

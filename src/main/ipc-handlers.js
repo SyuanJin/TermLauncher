@@ -2,7 +2,7 @@
  * IPC 事件處理模組
  * 處理主進程與渲染進程之間的通訊
  */
-const { ipcMain, dialog } = require('electron');
+const { ipcMain, dialog, app } = require('electron');
 const fs = require('fs');
 const { loadConfig, saveConfig } = require('./config');
 const { openTerminal } = require('./terminal');
@@ -105,6 +105,24 @@ function setupIpcHandlers() {
     // 更新托盤選單語言
     updateTrayMenu();
     return locale;
+  });
+
+  // 設定開機自動啟動
+  ipcMain.handle('set-auto-launch', (event, enabled) => {
+    const config = loadConfig();
+    app.setLoginItemSettings({
+      openAtLogin: enabled,
+      openAsHidden: config.settings.startMinimized || false,
+    });
+    config.settings.autoLaunch = enabled;
+    saveConfig(config);
+    return { success: true, enabled };
+  });
+
+  // 取得開機自動啟動狀態
+  ipcMain.handle('get-auto-launch', () => {
+    const settings = app.getLoginItemSettings();
+    return settings.openAtLogin;
   });
 
   // 視窗控制

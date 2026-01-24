@@ -30,12 +30,12 @@ import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
 /**
  * 渲染所有內容
  */
-function renderAll() {
+async function renderAll() {
   renderGroupFilter();
   renderGroupSelect();
   renderDirectories();
   renderRecentList();
-  renderSettings();
+  await renderSettings();
   renderGroupsList();
 }
 
@@ -90,7 +90,7 @@ async function init() {
   // 初始化 i18n
   await initI18n(config.settings?.language || 'zh-TW');
 
-  renderAll();
+  await renderAll();
   setupEventListeners();
 }
 

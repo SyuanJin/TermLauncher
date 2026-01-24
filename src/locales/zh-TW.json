@@ -51,6 +51,8 @@
         "themeLight": "☀️ 淺色",
         "language": "語言",
         "languageDesc": "選擇介面顯示語言",
+        "autoLaunch": "開機自動啟動",
+        "autoLaunchDesc": "系統開機時自動啟動程式",
         "startMinimized": "啟動時最小化",
         "startMinimizedDesc": "程式啟動時自動最小化到系統托盤",
         "minimizeToTray": "關閉時最小化到托盤",
@@ -91,7 +93,9 @@
     "shortcutUpdated": "快捷鍵已更新為 {shortcut}",
     "shortcutNeedsModifier": "快捷鍵需要包含 Ctrl、Alt 或 Shift",
     "shortcutFormatError": "快捷鍵格式錯誤，需要包含 Ctrl、Alt 或 Shift",
-    "languageChanged": "語言已變更，部分項目需重啟生效"
+    "languageChanged": "語言已變更，部分項目需重啟生效",
+    "autoLaunchEnabled": "已啟用開機自動啟動",
+    "autoLaunchDisabled": "已停用開機自動啟動"
   },
   "tray": {
     "showWindow": "顯示視窗",
