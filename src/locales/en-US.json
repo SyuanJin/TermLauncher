@@ -10,35 +10,99 @@
       "close": "Close window"
     },
     "tabs": {
-      "directories": "📁 Directories",
-      "settings": "⚙️ Settings"
+      "recent": "Recent",
+      "recentText": "Recent",
+      "favorites": "Favorites",
+      "favoritesText": "Favorites",
+      "groups": "Groups",
+      "groupsText": "Groups",
+      "directories": "Directories",
+      "directoriesText": "Directories",
+      "settings": "Settings",
+      "settingsText": "Settings"
     },
     "search": {
       "placeholder": "Search directories...",
-      "allGroups": "All groups"
+      "allGroups": "All groups",
+      "filterGroups": "Filter groups",
+      "selectedGroups": "Selected:",
+      "removeFilter": "Remove filter",
+      "selectAll": "Select All",
+      "clearAll": "Clear",
+      "applyFilter": "Apply Filter",
+      "directories": "directories"
     },
     "addDirectory": {
-      "sectionTitle": "➕ Add Directory",
+      "sectionTitle": "Add Directory",
       "expand": "Expand",
       "collapse": "Collapse",
       "name": "Name",
       "namePlaceholder": "e.g., My Project",
+      "icon": "Icon",
+      "iconHint": "Press Win+. to open Emoji picker",
       "type": "Terminal Type",
       "path": "Path",
       "pathPlaceholder": "e.g., D:\\Projects\\my-app",
       "browse": "Browse...",
       "group": "Group",
-      "addButton": "➕ Add Directory"
+      "addButton": "Add Directory",
+      "title": "Add Directory",
+      "add": "Add"
     },
     "recent": {
-      "title": "🕐 Recent"
+      "title": "🕐 Recent",
+      "searchPlaceholder": "Search recent...",
+      "empty": "No recent directories",
+      "emptyHint": "Directories you open will appear here",
+      "emptyFiltered": "No matching records",
+      "emptyFilteredHint": "Try a different search term",
+      "daysAgo": "{count} days ago",
+      "hoursAgo": "{count} hours ago",
+      "minutesAgo": "{count} minutes ago",
+      "justNow": "Just now"
+    },
+    "favorites": {
+      "searchPlaceholder": "Search favorites...",
+      "empty": "No favorite directories",
+      "emptyHint": "Click ⭐ on a directory card to add to favorites",
+      "emptyFiltered": "No matching favorites",
+      "emptyFilteredHint": "Try a different search term",
+      "dragHint": "Drag to reorder"
+    },
+    "groups": {
+      "searchPlaceholder": "Search groups...",
+      "addButton": "Add Group",
+      "empty": "No groups yet",
+      "emptyHint": "Click the button above to add a group",
+      "emptyFiltered": "No matching groups",
+      "emptyFilteredHint": "Try a different search term",
+      "defaultBadge": "Default",
+      "directoryCount": "{count} directories",
+      "name": "Group name",
+      "namePlaceholder": "e.g., Work Projects",
+      "icon": "Icon",
+      "addTitle": "Add Group",
+      "editTitle": "Edit Group",
+      "editGroup": "Edit group {name}",
+      "deleteTitle": "Delete Group",
+      "deleteGroupLabel": "Delete group {name}",
+      "deleteConfirm": "Are you sure you want to delete group \"{name}\"?",
+      "deleteHasDirectories": "This group contains {count} directories",
+      "moveToDefault": "Move directories to default group",
+      "deleteWithDirectories": "Delete directories as well",
+      "confirmDelete": "Delete"
     },
     "directory": {
       "emptyFiltered": "No matching directories",
       "emptyAll": "No directories added yet",
-      "delete": "Delete",
       "openTerminal": "Open {name} terminal",
-      "deleteItem": "Delete {name}"
+      "deleteItem": "Delete {name}",
+      "editItem": "Edit {name}",
+      "editTitle": "Edit Directory",
+      "addToGroup": "Add directory to this group",
+      "toggleAllGroups": "Expand/collapse all groups",
+      "expandAllGroups": "Expand all groups",
+      "collapseAllGroups": "Collapse all groups"
     },
     "settings": {
       "general": {
@@ -49,6 +113,8 @@
         "themeLight": "☀️ Light",
         "language": "Language",
         "languageDesc": "Select interface language",
+        "showTabText": "Show Tab Text",
+        "showTabTextDesc": "Display text labels next to tab icons",
         "autoLaunch": "Launch at startup",
         "autoLaunchDesc": "Automatically start when system boots",
         "startMinimized": "Start minimized",
@@ -57,13 +123,31 @@
         "minimizeToTrayDesc": "Minimize instead of quit when closing",
         "globalShortcut": "Global shortcut",
         "globalShortcutDesc": "Press to show/hide window",
-        "recordShortcut": "Record shortcut"
+        "recordShortcut": "Record shortcut",
+        "keyboardShortcuts": "Keyboard Shortcuts",
+        "keyboardShortcutsDesc": "View global and in-app keyboard shortcuts",
+        "viewShortcuts": "View Shortcuts"
+      },
+      "recent": {
+        "title": "🕐 Recent",
+        "limit": "Display Limit",
+        "limitDesc": "Maximum number of items in recent list",
+        "clearRecent": "Clear Recent History",
+        "clearRecentDesc": "Remove all recent usage records",
+        "clearButton": "Clear History",
+        "clearTitle": "Clear Recent History",
+        "clearConfirm": "Are you sure you want to clear all recent records? This action cannot be undone."
       },
       "terminals": {
         "title": "🖥️ Terminal Management",
         "builtin": "Built-in",
+        "add": "Add Terminal",
         "addNew": "Add Custom Terminal",
+        "addTitle": "Add Terminal",
+        "editTitle": "Edit Terminal",
         "editExisting": "Edit Terminal",
+        "hideBuiltin": "Hide Built-in Terminals",
+        "hideBuiltinDesc": "Don't show built-in terminals in dropdown",
         "name": "Name",
         "namePlaceholder": "e.g., Git Bash",
         "icon": "Icon",
@@ -73,12 +157,15 @@
         "pathFormat": "Path Format",
         "pathWindows": "Windows (C:\\path)",
         "pathUnix": "WSL (/mnt/c/path)",
-        "save": "Save Terminal",
         "update": "Update Terminal",
-        "edit": "Edit",
-        "delete": "Delete",
         "editTerminal": "Edit terminal {name}",
-        "deleteTerminal": "Delete terminal {name}"
+        "deleteTerminal": "Delete terminal {name}",
+        "deleteTitle": "Delete Terminal",
+        "deleteConfirm": "Are you sure you want to delete terminal \"{name}\"?",
+        "deleteHasDirectories": "{count} directories use this terminal",
+        "replaceWith": "Replace with",
+        "confirmDelete": "Delete",
+        "toggleVisibility": "Toggle visibility"
       },
       "groups": {
         "title": "🏷️ Group Management",
@@ -88,14 +175,42 @@
       },
       "data": {
         "title": "💾 Data Management",
-        "export": "📤 Export Settings",
-        "import": "📥 Import Settings"
+        "export": "Export Settings",
+        "import": "Import Settings",
+        "openConfigDir": "Config Directory"
+      },
+      "advanced": {
+        "title": "🔧 Advanced",
+        "clearLogs": "Clear Logs",
+        "clearLogsTitle": "Clear Logs",
+        "clearLogsConfirm": "Are you sure you want to clear all log records?",
+        "resetSettings": "Reset All Settings",
+        "resetTitle": "Reset All Settings",
+        "resetConfirm": "Are you sure you want to reset all settings? This will clear all directories, groups, and custom settings. This action cannot be undone."
+      },
+      "about": {
+        "title": "ℹ️ About",
+        "description": "A desktop tool for quickly opening terminals",
+        "github": "GitHub",
+        "issues": "Report Issue"
       }
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "global": "Global Shortcuts",
+      "app": "App Shortcuts",
+      "toggleWindow": "Show/Hide Window",
+      "switchTab": "Switch Tab",
+      "addDirectory": "Add Directory",
+      "focusSearch": "Focus Search",
+      "closeModal": "Close Modal",
+      "openDirectory": "Open Selected Directory"
     }
   },
   "toast": {
     "fillNameAndPath": "Please enter name and path",
     "directoryAdded": "Directory added",
+    "directoryUpdated": "Directory updated",
     "directoryDeleted": "Directory deleted",
     "openingDirectory": "Opening {name}...",
     "openFailed": "Failed to open: {error}",
@@ -112,6 +227,7 @@
     "enterGroupName": "Please enter group name",
     "groupExists": "Group already exists",
     "groupAdded": "Group added",
+    "groupUpdated": "Group updated",
     "groupDeleted": "Group deleted",
     "configExported": "Settings exported",
     "configImported": "Settings imported",
@@ -128,7 +244,14 @@
     "terminalCommandNeedsPath": "Command must include {path} placeholder",
     "terminalAdded": "Terminal added",
     "terminalUpdated": "Terminal updated",
-    "terminalDeleted": "Terminal deleted"
+    "terminalDeleted": "Terminal deleted",
+    "removedFromRecent": "Removed from recent",
+    "recentCleared": "All recent records cleared",
+    "addedToFavorites": "Added to favorites",
+    "removedFromFavorites": "Removed from favorites",
+    "configDirOpened": "Config directory opened",
+    "logsCleared": "Logs cleared",
+    "settingsReset": "All settings have been reset"
   },
   "tray": {
     "showWindow": "Show Window",
@@ -140,6 +263,18 @@
     "selectFolder": "Select Folder"
   },
   "common": {
-    "default": "Default"
+    "default": "Default",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "add": "Add",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "removeFromRecent": "Remove from recent"
+  },
+  "contextMenu": {
+    "openDefault": "Open with default terminal",
+    "openWith": "Open with..."
   }
 }

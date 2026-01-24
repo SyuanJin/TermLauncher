@@ -10,35 +10,99 @@
       "close": "關閉視窗"
     },
     "tabs": {
-      "directories": "📁 目錄",
-      "settings": "⚙️ 設定"
+      "recent": "最近使用",
+      "recentText": "最近",
+      "favorites": "最愛",
+      "favoritesText": "最愛",
+      "groups": "群組",
+      "groupsText": "群組",
+      "directories": "目錄",
+      "directoriesText": "目錄",
+      "settings": "設定",
+      "settingsText": "設定"
     },
     "search": {
       "placeholder": "搜尋目錄...",
-      "allGroups": "所有群組"
+      "allGroups": "所有群組",
+      "filterGroups": "篩選群組",
+      "selectedGroups": "已選擇:",
+      "removeFilter": "移除篩選",
+      "selectAll": "全選",
+      "clearAll": "清除",
+      "applyFilter": "套用篩選",
+      "directories": "個目錄"
     },
     "addDirectory": {
-      "sectionTitle": "➕ 新增目錄",
+      "sectionTitle": "新增目錄",
       "expand": "展開",
       "collapse": "收起",
       "name": "名稱",
       "namePlaceholder": "例如：我的專案",
+      "icon": "圖示",
+      "iconHint": "按 Win+. 開啟 Emoji 選擇器",
       "type": "終端類型",
       "path": "路徑",
       "pathPlaceholder": "例如：D:\\Projects\\my-app",
       "browse": "瀏覽...",
       "group": "群組",
-      "addButton": "➕ 新增目錄"
+      "addButton": "新增目錄",
+      "title": "新增目錄",
+      "add": "新增"
     },
     "recent": {
-      "title": "🕐 最近使用"
+      "title": "🕐 最近使用",
+      "searchPlaceholder": "搜尋最近使用...",
+      "empty": "尚無最近使用紀錄",
+      "emptyHint": "開啟目錄後會自動記錄在這裡",
+      "emptyFiltered": "沒有符合條件的紀錄",
+      "emptyFilteredHint": "試試其他搜尋關鍵字",
+      "daysAgo": "{count} 天前",
+      "hoursAgo": "{count} 小時前",
+      "minutesAgo": "{count} 分鐘前",
+      "justNow": "剛剛"
+    },
+    "favorites": {
+      "searchPlaceholder": "搜尋最愛...",
+      "empty": "尚無最愛目錄",
+      "emptyHint": "在目錄卡片點擊 ⭐ 加入最愛",
+      "emptyFiltered": "沒有符合條件的最愛",
+      "emptyFilteredHint": "試試其他搜尋關鍵字",
+      "dragHint": "拖曳可排序"
+    },
+    "groups": {
+      "searchPlaceholder": "搜尋群組...",
+      "addButton": "新增群組",
+      "empty": "尚無群組",
+      "emptyHint": "點擊上方按鈕新增群組",
+      "emptyFiltered": "沒有符合條件的群組",
+      "emptyFilteredHint": "試試其他搜尋關鍵字",
+      "defaultBadge": "預設",
+      "directoryCount": "{count} 個目錄",
+      "name": "群組名稱",
+      "namePlaceholder": "例如：工作專案",
+      "icon": "圖示",
+      "addTitle": "新增群組",
+      "editTitle": "編輯群組",
+      "editGroup": "編輯群組 {name}",
+      "deleteTitle": "刪除群組",
+      "deleteGroupLabel": "刪除群組 {name}",
+      "deleteConfirm": "確定要刪除群組「{name}」嗎？",
+      "deleteHasDirectories": "此群組包含 {count} 個目錄",
+      "moveToDefault": "將目錄移至預設群組",
+      "deleteWithDirectories": "連同目錄一併刪除",
+      "confirmDelete": "刪除"
     },
     "directory": {
       "emptyFiltered": "沒有符合條件的目錄",
       "emptyAll": "尚未新增任何目錄",
-      "delete": "刪除",
       "openTerminal": "開啟 {name} 終端機",
-      "deleteItem": "刪除 {name}"
+      "deleteItem": "刪除 {name}",
+      "editItem": "編輯 {name}",
+      "editTitle": "編輯目錄",
+      "addToGroup": "新增目錄到此群組",
+      "toggleAllGroups": "展開/收合所有群組",
+      "expandAllGroups": "展開所有群組",
+      "collapseAllGroups": "收合所有群組"
     },
     "settings": {
       "general": {
@@ -49,6 +113,8 @@
         "themeLight": "☀️ 淺色",
         "language": "語言",
         "languageDesc": "選擇介面顯示語言",
+        "showTabText": "顯示 Tab 文字",
+        "showTabTextDesc": "在 Tab 圖示旁顯示文字標籤",
         "autoLaunch": "開機自動啟動",
         "autoLaunchDesc": "系統開機時自動啟動程式",
         "startMinimized": "啟動時最小化",
@@ -57,13 +123,31 @@
         "minimizeToTrayDesc": "點擊關閉按鈕時最小化而非結束",
         "globalShortcut": "全域快捷鍵",
         "globalShortcutDesc": "按下快捷鍵顯示/隱藏視窗",
-        "recordShortcut": "按鍵錄製"
+        "recordShortcut": "按鍵錄製",
+        "keyboardShortcuts": "鍵盤快捷鍵",
+        "keyboardShortcutsDesc": "查看全域與應用內的鍵盤快捷鍵",
+        "viewShortcuts": "查看快捷鍵"
+      },
+      "recent": {
+        "title": "🕐 最近使用",
+        "limit": "顯示數量上限",
+        "limitDesc": "最近使用清單最多顯示的項目數量",
+        "clearRecent": "清除最近使用記錄",
+        "clearRecentDesc": "移除所有最近使用的歷史記錄",
+        "clearButton": "清除記錄",
+        "clearTitle": "清除最近使用",
+        "clearConfirm": "確定要清除所有最近使用記錄嗎？此操作無法復原。"
       },
       "terminals": {
         "title": "🖥️ 終端管理",
         "builtin": "內建",
+        "add": "新增終端",
         "addNew": "新增自訂終端",
+        "addTitle": "新增終端",
+        "editTitle": "編輯終端",
         "editExisting": "編輯終端",
+        "hideBuiltin": "隱藏內建終端",
+        "hideBuiltinDesc": "在下拉選單中不顯示內建終端選項",
         "name": "名稱",
         "namePlaceholder": "例如：Git Bash",
         "icon": "圖示",
@@ -73,12 +157,15 @@
         "pathFormat": "路徑格式",
         "pathWindows": "Windows (C:\\path)",
         "pathUnix": "WSL (/mnt/c/path)",
-        "save": "儲存終端",
         "update": "更新終端",
-        "edit": "編輯",
-        "delete": "刪除",
         "editTerminal": "編輯終端 {name}",
-        "deleteTerminal": "刪除終端 {name}"
+        "deleteTerminal": "刪除終端 {name}",
+        "deleteTitle": "刪除終端",
+        "deleteConfirm": "確定要刪除終端「{name}」嗎？",
+        "deleteHasDirectories": "有 {count} 個目錄使用此終端",
+        "replaceWith": "替代終端",
+        "confirmDelete": "刪除",
+        "toggleVisibility": "切換顯示/隱藏"
       },
       "groups": {
         "title": "🏷️ 群組管理",
@@ -88,14 +175,42 @@
       },
       "data": {
         "title": "💾 資料管理",
-        "export": "📤 匯出設定",
-        "import": "📥 匯入設定"
+        "export": "匯出設定",
+        "import": "匯入設定",
+        "openConfigDir": "設定目錄"
+      },
+      "advanced": {
+        "title": "🔧 進階操作",
+        "clearLogs": "清除日誌",
+        "clearLogsTitle": "清除日誌",
+        "clearLogsConfirm": "確定要清除所有日誌記錄嗎？",
+        "resetSettings": "重設所有設定",
+        "resetTitle": "重設所有設定",
+        "resetConfirm": "確定要重設所有設定嗎？此操作將會清除所有目錄、群組和自訂設定，無法復原。"
+      },
+      "about": {
+        "title": "ℹ️ 關於",
+        "description": "快速開啟終端機的桌面工具",
+        "github": "GitHub",
+        "issues": "回報問題"
       }
+    },
+    "shortcuts": {
+      "title": "鍵盤快捷鍵",
+      "global": "全域快捷鍵",
+      "app": "應用內快捷鍵",
+      "toggleWindow": "顯示/隱藏視窗",
+      "switchTab": "切換分頁",
+      "addDirectory": "新增目錄",
+      "focusSearch": "聚焦搜尋框",
+      "closeModal": "關閉彈窗",
+      "openDirectory": "開啟選中目錄"
     }
   },
   "toast": {
     "fillNameAndPath": "請填寫名稱和路徑",
     "directoryAdded": "目錄已新增",
+    "directoryUpdated": "目錄已更新",
     "directoryDeleted": "目錄已刪除",
     "openingDirectory": "正在開啟 {name}...",
     "openFailed": "開啟失敗: {error}",
@@ -112,6 +227,7 @@
     "enterGroupName": "請輸入群組名稱",
     "groupExists": "群組已存在",
     "groupAdded": "群組已新增",
+    "groupUpdated": "群組已更新",
     "groupDeleted": "群組已刪除",
     "configExported": "設定已匯出",
     "configImported": "設定已匯入",
@@ -128,7 +244,14 @@
     "terminalCommandNeedsPath": "指令必須包含 {path} 佔位符",
     "terminalAdded": "終端已新增",
     "terminalUpdated": "終端已更新",
-    "terminalDeleted": "終端已刪除"
+    "terminalDeleted": "終端已刪除",
+    "removedFromRecent": "已從最近使用中移除",
+    "recentCleared": "已清除所有最近使用紀錄",
+    "addedToFavorites": "已加入最愛",
+    "removedFromFavorites": "已從最愛移除",
+    "configDirOpened": "已開啟設定目錄",
+    "logsCleared": "日誌已清除",
+    "settingsReset": "所有設定已重設"
   },
   "tray": {
     "showWindow": "顯示視窗",
@@ -140,6 +263,18 @@
     "selectFolder": "選擇資料夾"
   },
   "common": {
-    "default": "預設"
+    "default": "預設",
+    "close": "關閉",
+    "edit": "編輯",
+    "delete": "刪除",
+    "save": "儲存",
+    "add": "新增",
+    "addToFavorites": "加入最愛",
+    "removeFromFavorites": "從最愛移除",
+    "removeFromRecent": "從最近使用中移除"
+  },
+  "contextMenu": {
+    "openDefault": "使用預設終端開啟",
+    "openWith": "選擇終端開啟"
   }
 }

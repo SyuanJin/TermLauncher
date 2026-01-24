@@ -44,17 +44,165 @@
     <!-- 主容器 -->
     <div class="main-container">
       <!-- 分頁標籤 -->
-      <div class="tabs">
-        <button class="tab active" data-tab="directories" data-i18n="ui.tabs.directories">
-          📁 目錄
+      <div class="tabs" id="tabsContainer">
+        <button
+          class="tab active"
+          data-tab="recent"
+          data-tooltip="最近使用"
+          data-i18n-tooltip="ui.tabs.recent"
+        >
+          <span class="tab-icon">🕐</span>
+          <span class="tab-text" data-i18n="ui.tabs.recentText">最近</span>
         </button>
-        <button class="tab" data-tab="settings" data-i18n="ui.tabs.settings">⚙️ 設定</button>
+        <button
+          class="tab"
+          data-tab="favorites"
+          data-tooltip="最愛"
+          data-i18n-tooltip="ui.tabs.favorites"
+        >
+          <span class="tab-icon">⭐</span>
+          <span class="tab-text" data-i18n="ui.tabs.favoritesText">最愛</span>
+        </button>
+        <button
+          class="tab"
+          data-tab="groups"
+          data-tooltip="群組"
+          data-i18n-tooltip="ui.tabs.groups"
+        >
+          <span class="tab-icon">🏷️</span>
+          <span class="tab-text" data-i18n="ui.tabs.groupsText">群組</span>
+        </button>
+        <button
+          class="tab"
+          data-tab="directories"
+          data-tooltip="目錄"
+          data-i18n-tooltip="ui.tabs.directories"
+        >
+          <span class="tab-icon">📁</span>
+          <span class="tab-text" data-i18n="ui.tabs.directoriesText">目錄</span>
+        </button>
+        <button
+          class="tab"
+          data-tab="settings"
+          data-tooltip="設定"
+          data-i18n-tooltip="ui.tabs.settings"
+        >
+          <span class="tab-icon">⚙️</span>
+          <span class="tab-text" data-i18n="ui.tabs.settingsText">設定</span>
+        </button>
       </div>
 
       <!-- 內容區 -->
       <div class="content">
+        <!-- 最近使用分頁 -->
+        <div class="tab-content active" id="recent-tab">
+          <div class="search-bar">
+            <div class="search-input-wrapper">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                class="search-input"
+                id="recentSearchInput"
+                placeholder="搜尋最近使用..."
+                data-i18n-placeholder="ui.recent.searchPlaceholder"
+              />
+            </div>
+          </div>
+          <div class="recent-list-container" id="recentListContainer">
+            <div class="empty-state" id="recentEmptyState">
+              <span class="empty-icon">🕐</span>
+              <p data-i18n="ui.recent.empty">尚無最近使用紀錄</p>
+              <small data-i18n="ui.recent.emptyHint">開啟目錄後會自動記錄在這裡</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- 最愛分頁 -->
+        <div class="tab-content" id="favorites-tab">
+          <div class="search-bar">
+            <div class="search-input-wrapper">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                class="search-input"
+                id="favoritesSearchInput"
+                placeholder="搜尋最愛..."
+                data-i18n-placeholder="ui.favorites.searchPlaceholder"
+              />
+            </div>
+          </div>
+          <div class="favorites-list-container" id="favoritesListContainer">
+            <div class="empty-state" id="favoritesEmptyState">
+              <span class="empty-icon">⭐</span>
+              <p data-i18n="ui.favorites.empty">尚無最愛目錄</p>
+              <small data-i18n="ui.favorites.emptyHint">在目錄中點擊星號加入最愛</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- 群組分頁 -->
+        <div class="tab-content" id="groups-tab">
+          <div class="search-bar">
+            <div class="search-input-wrapper">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                class="search-input"
+                id="groupsSearchInput"
+                placeholder="搜尋群組..."
+                data-i18n-placeholder="ui.groups.searchPlaceholder"
+              />
+            </div>
+            <button
+              class="btn btn-primary btn-icon-only-btn"
+              id="btnAddGroupTab"
+              title="新增群組"
+              data-i18n-title="ui.groups.addButton"
+            >
+              +
+            </button>
+          </div>
+          <div class="groups-list-container" id="groupsListContainer">
+            <div class="empty-state" id="groupsEmptyState" style="display: none">
+              <span class="empty-icon">🏷️</span>
+              <p data-i18n="ui.groups.empty">尚無群組</p>
+              <small data-i18n="ui.groups.emptyHint">點擊上方按鈕新增群組</small>
+            </div>
+          </div>
+        </div>
+
         <!-- 目錄分頁 -->
-        <div class="tab-content active" id="directories-tab">
+        <div class="tab-content" id="directories-tab">
           <!-- 搜尋列 -->
           <div class="search-bar">
             <div class="search-input-wrapper">
@@ -79,320 +227,254 @@
                 data-i18n-aria="ui.search.placeholder"
               />
             </div>
-            <select
-              class="filter-select"
-              id="groupFilter"
-              aria-label="篩選群組"
-              data-i18n-aria="ui.search.allGroups"
+            <button
+              class="btn btn-secondary btn-icon-only-btn"
+              id="btnGroupFilter"
+              title="篩選群組"
+              data-i18n-title="ui.search.filterGroups"
             >
-              <option value="" data-i18n="ui.search.allGroups">所有群組</option>
-            </select>
+              🏷️
+            </button>
+            <button
+              class="btn btn-secondary btn-icon-only-btn"
+              id="btnToggleAllGroups"
+              title="展開所有群組"
+              data-i18n-title="ui.directory.toggleAllGroups"
+            >
+              📂
+            </button>
+            <button
+              class="btn btn-primary btn-icon-only-btn"
+              id="btnAddDirectoryModal"
+              title="新增目錄"
+              data-i18n-title="ui.addDirectory.addButton"
+            >
+              +
+            </button>
           </div>
 
-          <!-- 新增目錄區塊 -->
-          <div class="add-section">
-            <div class="section-header">
-              <div class="section-title" data-i18n="ui.addDirectory.sectionTitle">➕ 新增目錄</div>
-              <button
-                class="toggle-btn"
-                id="btnToggleAddForm"
-                aria-label="展開或收起新增目錄表單"
-                aria-expanded="false"
-                data-i18n="ui.addDirectory.expand"
-              >
-                展開
-              </button>
-            </div>
-            <div class="add-form" id="addForm">
-              <div class="input-row">
-                <div class="input-group">
-                  <label data-i18n="ui.addDirectory.name">名稱</label>
-                  <input
-                    type="text"
-                    id="dirName"
-                    placeholder="例如：我的專案"
-                    data-i18n-placeholder="ui.addDirectory.namePlaceholder"
-                  />
-                </div>
-                <div class="input-group" style="max-width: 180px">
-                  <label data-i18n="ui.addDirectory.type">終端類型</label>
-                  <select id="dirType">
-                    <!-- 動態渲染終端選項 -->
-                  </select>
-                </div>
-              </div>
-              <div class="input-group">
-                <label data-i18n="ui.addDirectory.path">路徑</label>
-                <div class="path-input-wrapper">
-                  <input
-                    type="text"
-                    id="dirPath"
-                    placeholder="例如：D:\Projects\my-app"
-                    data-i18n-placeholder="ui.addDirectory.pathPlaceholder"
-                  />
-                  <button
-                    class="browse-btn"
-                    id="btnBrowsePath"
-                    aria-label="瀏覽並選擇資料夾"
-                    data-i18n="ui.addDirectory.browse"
-                    data-i18n-aria="ui.addDirectory.browse"
-                  >
-                    瀏覽...
-                  </button>
-                </div>
-              </div>
-              <div class="input-group">
-                <label data-i18n="ui.addDirectory.group">群組</label>
-                <select id="dirGroup"></select>
-              </div>
-              <button
-                class="btn btn-primary"
-                id="btnAddDirectory"
-                aria-label="新增目錄"
-                data-i18n="ui.addDirectory.addButton"
-                data-i18n-aria="ui.addDirectory.addButton"
-              >
-                ➕ 新增目錄
-              </button>
-            </div>
+          <!-- 篩選標籤區域 -->
+          <div class="filter-tags" id="filterTags" style="display: none">
+            <span class="filter-tags-label" data-i18n="ui.search.selectedGroups">已選擇:</span>
+            <div class="filter-tags-list" id="filterTagsList"></div>
           </div>
 
-          <!-- 最近使用區塊 -->
-          <div class="recent-section" id="recentSection" style="display: none">
-            <h3 data-i18n="ui.recent.title">🕐 最近使用</h3>
-            <div class="recent-list" id="recentList"></div>
+          <!-- 可滾動內容區域 -->
+          <div class="tab-scroll-content">
+            <!-- 目錄群組列表 -->
+            <div id="directoryGroups"></div>
           </div>
-
-          <!-- 目錄群組列表 -->
-          <div id="directoryGroups"></div>
         </div>
 
         <!-- 設定分頁 -->
         <div class="tab-content" id="settings-tab">
-          <!-- 一般設定 -->
-          <div class="settings-section">
-            <h3 data-i18n="ui.settings.general.title">⚙️ 一般設定</h3>
-            <div class="setting-item">
-              <div class="setting-label">
-                <span data-i18n="ui.settings.general.theme">主題</span>
-                <small data-i18n="ui.settings.general.themeDesc">切換介面的外觀主題</small>
-              </div>
-              <select class="theme-select" id="themeSelect" aria-label="選擇主題">
-                <option value="dark" data-i18n="ui.settings.general.themeDark">🌙 深色</option>
-                <option value="light" data-i18n="ui.settings.general.themeLight">☀️ 淺色</option>
-              </select>
-            </div>
-            <div class="setting-item">
-              <div class="setting-label">
-                <span data-i18n="ui.settings.general.language">語言</span>
-                <small data-i18n="ui.settings.general.languageDesc">選擇介面顯示語言</small>
-              </div>
-              <select class="theme-select" id="languageSelect" aria-label="選擇語言"></select>
-            </div>
-            <div class="setting-item">
-              <div class="setting-label">
-                <span data-i18n="ui.settings.general.autoLaunch">開機自動啟動</span>
-                <small data-i18n="ui.settings.general.autoLaunchDesc">系統開機時自動啟動程式</small>
-              </div>
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  id="autoLaunch"
-                  aria-label="開機自動啟動"
-                  data-i18n-aria="ui.settings.general.autoLaunch"
-                />
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="setting-item">
-              <div class="setting-label">
-                <span data-i18n="ui.settings.general.startMinimized">啟動時最小化</span>
-                <small data-i18n="ui.settings.general.startMinimizedDesc"
-                  >程式啟動時自動最小化到系統托盤</small
-                >
-              </div>
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  id="startMinimized"
-                  aria-label="啟動時最小化"
-                  data-i18n-aria="ui.settings.general.startMinimized"
-                />
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="setting-item">
-              <div class="setting-label">
-                <span data-i18n="ui.settings.general.minimizeToTray">關閉時最小化到托盤</span>
-                <small data-i18n="ui.settings.general.minimizeToTrayDesc"
-                  >點擊關閉按鈕時最小化而非結束</small
-                >
-              </div>
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  id="minimizeToTray"
-                  checked
-                  aria-label="關閉時最小化到托盤"
-                  data-i18n-aria="ui.settings.general.minimizeToTray"
-                />
-                <span class="slider"></span>
-              </label>
-            </div>
-            <div class="setting-item">
-              <div class="setting-label">
-                <span data-i18n="ui.settings.general.globalShortcut">全域快捷鍵</span>
-                <small data-i18n="ui.settings.general.globalShortcutDesc"
-                  >按下快捷鍵顯示/隱藏視窗</small
-                >
-              </div>
-              <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0">
-                <input
-                  type="text"
-                  class="shortcut-input"
-                  id="globalShortcut"
-                  value="Alt+Space"
-                  aria-label="全域快捷鍵設定"
-                  data-i18n-aria="ui.settings.general.globalShortcut"
-                  readonly
-                />
-                <button
-                  class="btn-icon"
-                  id="btnRecordShortcut"
-                  title="按鍵錄製"
-                  aria-label="錄製快捷鍵"
-                  data-i18n-title="ui.settings.general.recordShortcut"
-                  data-i18n-aria="ui.settings.general.recordShortcut"
-                >
-                  🎹
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- 終端管理 -->
-          <div class="settings-section">
-            <h3 data-i18n="ui.settings.terminals.title">🖥️ 終端管理</h3>
-            <div class="terminals-list" id="terminalsList"></div>
-            <div class="terminal-form" id="terminalForm">
-              <div class="terminal-form-header">
-                <span id="terminalFormTitle" data-i18n="ui.settings.terminals.addNew"
-                  >新增自訂終端</span
-                >
-                <button
-                  class="btn-icon"
-                  id="btnCancelTerminal"
-                  title="取消"
-                  aria-label="取消編輯"
-                  style="display: none"
-                >
-                  ✕
-                </button>
-              </div>
-              <input type="hidden" id="terminalEditId" value="" />
-              <div class="input-row">
-                <div class="input-group">
-                  <label data-i18n="ui.settings.terminals.name">名稱</label>
-                  <input
-                    type="text"
-                    id="terminalName"
-                    placeholder="例如：Git Bash"
-                    data-i18n-placeholder="ui.settings.terminals.namePlaceholder"
-                  />
+          <div class="tab-scroll-content">
+            <!-- 一般設定 -->
+            <div class="settings-section">
+              <h3 data-i18n="ui.settings.general.title">⚙️ 一般設定</h3>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.theme">主題</span>
+                  <small data-i18n="ui.settings.general.themeDesc">切換介面的外觀主題</small>
                 </div>
-                <div class="input-group" style="max-width: 80px">
-                  <label data-i18n="ui.settings.terminals.icon">圖示</label>
-                  <input
-                    type="text"
-                    id="terminalIcon"
-                    placeholder="🔧"
-                    maxlength="2"
-                    class="icon-input"
-                  />
-                </div>
-              </div>
-              <div class="input-group">
-                <label data-i18n="ui.settings.terminals.command">啟動指令</label>
-                <input
-                  type="text"
-                  id="terminalCommand"
-                  placeholder='例如："C:\Program Files\Git\bin\bash.exe" --cd {path}'
-                  data-i18n-placeholder="ui.settings.terminals.commandPlaceholder"
-                  class="mono-input"
-                />
-                <small class="hint" data-i18n="ui.settings.terminals.commandHint"
-                  >使用 {path} 作為路徑佔位符</small
-                >
-              </div>
-              <div class="input-group">
-                <label data-i18n="ui.settings.terminals.pathFormat">路徑格式</label>
-                <select id="terminalPathFormat">
-                  <option value="windows" data-i18n="ui.settings.terminals.pathWindows">
-                    Windows (C:\path)
-                  </option>
-                  <option value="unix" data-i18n="ui.settings.terminals.pathUnix">
-                    WSL (/mnt/c/path)
-                  </option>
+                <select class="theme-select" id="themeSelect" aria-label="選擇主題">
+                  <option value="dark" data-i18n="ui.settings.general.themeDark">🌙 深色</option>
+                  <option value="light" data-i18n="ui.settings.general.themeLight">☀️ 淺色</option>
                 </select>
               </div>
-              <button
-                class="btn btn-primary"
-                id="btnSaveTerminal"
-                aria-label="儲存終端"
-                data-i18n="ui.settings.terminals.save"
-              >
-                儲存終端
-              </button>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.language">語言</span>
+                  <small data-i18n="ui.settings.general.languageDesc">選擇介面顯示語言</small>
+                </div>
+                <select class="theme-select" id="languageSelect" aria-label="選擇語言"></select>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.showTabText">顯示 Tab 文字</span>
+                  <small data-i18n="ui.settings.general.showTabTextDesc"
+                    >在 Tab 圖示旁顯示文字標籤</small
+                  >
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="showTabText" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.autoLaunch">開機自動啟動</span>
+                  <small data-i18n="ui.settings.general.autoLaunchDesc"
+                    >系統開機時自動啟動程式</small
+                  >
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="autoLaunch" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.startMinimized">啟動時最小化</span>
+                  <small data-i18n="ui.settings.general.startMinimizedDesc"
+                    >程式啟動時自動最小化到系統托盤</small
+                  >
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="startMinimized" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.minimizeToTray">關閉時最小化到托盤</span>
+                  <small data-i18n="ui.settings.general.minimizeToTrayDesc"
+                    >點擊關閉按鈕時最小化而非結束</small
+                  >
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="minimizeToTray" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.globalShortcut">全域快捷鍵</span>
+                  <small data-i18n="ui.settings.general.globalShortcutDesc"
+                    >按下快捷鍵顯示/隱藏視窗</small
+                  >
+                </div>
+                <div class="setting-actions">
+                  <input
+                    type="text"
+                    class="shortcut-input"
+                    id="globalShortcut"
+                    value="Alt+Space"
+                    readonly
+                  />
+                  <button class="btn-icon" id="btnRecordShortcut" title="按鍵錄製">🎹</button>
+                </div>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.recent.limit">最近使用上限</span>
+                  <small data-i18n="ui.settings.recent.limitDesc"
+                    >最近使用清單最多顯示的項目數量</small
+                  >
+                </div>
+                <select class="theme-select" id="recentLimit">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.recent.clearRecent">清除最近使用記錄</span>
+                  <small data-i18n="ui.settings.recent.clearRecentDesc"
+                    >移除所有最近使用的歷史記錄</small
+                  >
+                </div>
+                <div class="setting-actions">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    id="btnClearRecent"
+                    data-i18n="ui.settings.recent.clearButton"
+                  >
+                    清除記錄
+                  </button>
+                </div>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.general.keyboardShortcuts">鍵盤快捷鍵</span>
+                  <small data-i18n="ui.settings.general.keyboardShortcutsDesc"
+                    >查看全域與應用內的鍵盤快捷鍵</small
+                  >
+                </div>
+                <div class="setting-actions">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    id="btnViewShortcuts"
+                    data-i18n="ui.settings.general.viewShortcuts"
+                  >
+                    查看快捷鍵
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- 群組管理 -->
-          <div class="settings-section">
-            <h3 data-i18n="ui.settings.groups.title">🏷️ 群組管理</h3>
-            <div class="groups-list" id="groupsList"></div>
-            <div class="add-group-form">
-              <input
-                type="text"
-                id="newGroupName"
-                placeholder="新群組名稱"
-                data-i18n-placeholder="ui.settings.groups.newGroupPlaceholder"
-                aria-label="新群組名稱"
-                data-i18n-aria="ui.settings.groups.newGroupPlaceholder"
-              />
-              <button
-                class="btn btn-primary"
-                id="btnAddGroup"
-                aria-label="新增群組"
-                data-i18n="ui.settings.groups.add"
-                data-i18n-aria="ui.settings.groups.add"
-              >
-                新增
-              </button>
+            <!-- 終端管理 -->
+            <div class="settings-section">
+              <div class="settings-section-header">
+                <h3 data-i18n="ui.settings.terminals.title">🖥️ 終端管理</h3>
+                <button
+                  class="btn btn-primary btn-icon-only-btn"
+                  id="btnAddTerminal"
+                  title="新增終端"
+                  data-i18n-title="ui.settings.terminals.add"
+                >
+                  +
+                </button>
+              </div>
+              <div class="terminals-list" id="terminalsList"></div>
             </div>
-          </div>
 
-          <!-- 資料管理 -->
-          <div class="settings-section">
-            <h3 data-i18n="ui.settings.data.title">💾 資料管理</h3>
-            <div class="import-export-buttons">
-              <button
-                class="btn-secondary"
-                id="btnExportConfig"
-                aria-label="匯出設定檔"
-                data-i18n="ui.settings.data.export"
-                data-i18n-aria="ui.settings.data.export"
-              >
-                📤 匯出設定
-              </button>
-              <button
-                class="btn-secondary"
-                id="btnImportConfig"
-                aria-label="匯入設定檔"
-                data-i18n="ui.settings.data.import"
-                data-i18n-aria="ui.settings.data.import"
-              >
-                📥 匯入設定
-              </button>
+            <!-- 資料管理 -->
+            <div class="settings-section">
+              <h3 data-i18n="ui.settings.data.title">💾 資料管理</h3>
+              <div class="setting-buttons-row">
+                <button class="btn btn-secondary" id="btnExportConfig">
+                  <span class="btn-emoji">📤</span>
+                  <span data-i18n="ui.settings.data.export">匯出設定</span>
+                </button>
+                <button class="btn btn-secondary" id="btnImportConfig">
+                  <span class="btn-emoji">📥</span>
+                  <span data-i18n="ui.settings.data.import">匯入設定</span>
+                </button>
+              </div>
+              <div class="setting-buttons-row">
+                <button class="btn btn-secondary" id="btnOpenConfigDir">
+                  <span class="btn-emoji">📂</span>
+                  <span data-i18n="ui.settings.data.openConfigDir">設定目錄</span>
+                </button>
+                <button class="btn btn-secondary" id="btnClearLogs">
+                  <span class="btn-emoji">🗑️</span>
+                  <span data-i18n="ui.settings.advanced.clearLogs">清除日誌</span>
+                </button>
+              </div>
+              <div class="setting-buttons-row no-flex">
+                <button class="btn btn-danger" id="btnResetSettings">
+                  <span class="btn-emoji">⚠️</span>
+                  <span data-i18n="ui.settings.advanced.resetSettings">重設所有設定</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 關於 -->
+            <div class="settings-section about-section">
+              <h3 data-i18n="ui.settings.about.title">ℹ️ 關於</h3>
+              <div class="about-content">
+                <div class="about-logo">🚀</div>
+                <div class="about-info">
+                  <div class="about-name">TermLauncher</div>
+                  <div class="about-version" id="appVersion">v2.0.0</div>
+                  <div class="about-desc" data-i18n="ui.settings.about.description">
+                    快速開啟終端機的桌面工具
+                  </div>
+                </div>
+              </div>
+              <div class="about-links">
+                <button
+                  class="btn btn-link"
+                  id="btnOpenGithub"
+                  data-i18n="ui.settings.about.github"
+                >
+                  GitHub
+                </button>
+              </div>
             </div>
           </div>
         </div>

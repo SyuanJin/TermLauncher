@@ -94,4 +94,43 @@ export const api = {
    * @returns {Promise<Object|null>} { success: boolean, shortcut: string, errorType?: string }
    */
   getShortcutStatus: () => window.electronAPI.getShortcutStatus(),
+
+  /**
+   * 開啟設定目錄
+   * @returns {Promise<Object>} { success: boolean }
+   */
+  openConfigDirectory: () => window.electronAPI.openConfigDirectory(),
+
+  /**
+   * 清除日誌
+   * @returns {Promise<Object>} { success: boolean }
+   */
+  clearLogs: () => window.electronAPI.clearLogs(),
+
+  /**
+   * 重設所有設定
+   * @returns {Promise<Object>} { success: boolean, config?: Object }
+   */
+  resetConfig: () => window.electronAPI.resetConfig(),
+
+  /**
+   * 取得應用程式版本
+   * @returns {Promise<string>} 版本號
+   */
+  getAppVersion: () => window.electronAPI.getAppVersion(),
+
+  /**
+   * 開啟外部連結
+   * @param {string} url - 網址
+   * @returns {Promise<Object>} { success: boolean }
+   */
+  openExternal: url => window.electronAPI.openExternal(url),
+
+  /**
+   * 記錄前端錯誤
+   * @param {Object} error - 錯誤物件
+   * @param {string} context - 錯誤發生的上下文
+   * @returns {Promise<void>}
+   */
+  logRendererError: (error, context) => window.electronAPI.logRendererError(error, context),
 };

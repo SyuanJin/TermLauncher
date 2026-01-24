@@ -5,43 +5,42 @@
 import { loadConfig, getConfig } from './state.js';
 import { api } from './api.js';
 import { initI18n } from './i18n.js';
-import { setupTabs } from './ui/tabs.js';
+import { setupTabs, onTabChange } from './ui/tabs.js';
+import { renderRecentList, setupRecentEvents } from './ui/recent.js';
+import { renderFavoritesList, setupFavoritesEvents } from './ui/favorites.js';
+import { renderGroupsTab, setupGroupsEvents } from './ui/groups.js';
 import {
   renderGroupFilter,
   renderGroupSelect,
   renderTerminalSelect,
   renderDirectories,
-  renderRecentList,
-  toggleAddForm,
-  browsePath,
-  addDirectory,
   setupDirectoryEvents,
 } from './ui/directories.js';
 import {
   renderSettings,
-  renderGroupsList,
   renderTerminalsList,
-  addGroup,
-  exportConfig,
-  importConfig,
   setupSettingsEvents,
   applyTheme,
+  applyShowTabText,
 } from './ui/settings.js';
 import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
 import { initToast, showWarning } from './ui/toast.js';
 import { t } from './i18n.js';
+import { initErrorHandler } from './error-handler.js';
+import { initKeyboardShortcuts } from './utils/keyboard.js';
 
 /**
  * 渲染所有內容
  */
 async function renderAll() {
+  renderRecentList();
+  renderFavoritesList();
+  renderGroupsTab();
   renderGroupFilter();
   renderGroupSelect();
   renderTerminalSelect();
   renderDirectories();
-  renderRecentList();
   await renderSettings();
-  renderGroupsList();
   renderTerminalsList();
 }
 
@@ -51,6 +50,34 @@ async function renderAll() {
 function setupEventListeners() {
   // 分頁切換
   setupTabs();
+
+  // Tab 切換時重新渲染對應內容
+  onTabChange(tabId => {
+    switch (tabId) {
+      case 'recent':
+        renderRecentList();
+        break;
+      case 'favorites':
+        renderFavoritesList();
+        break;
+      case 'groups':
+        renderGroupsTab();
+        break;
+      case 'directories':
+        renderGroupFilter();
+        renderDirectories();
+        break;
+    }
+  });
+
+  // 最近使用相關事件
+  setupRecentEvents();
+
+  // 最愛相關事件
+  setupFavoritesEvents();
+
+  // 群組相關事件
+  setupGroupsEvents();
 
   // 目錄相關事件
   setupDirectoryEvents();
@@ -62,11 +89,6 @@ function setupEventListeners() {
   document.getElementById('btnMinimize').addEventListener('click', () => api.minimizeWindow());
   document.getElementById('btnClose').addEventListener('click', () => api.closeWindow());
 
-  // 新增目錄區塊
-  document.getElementById('btnToggleAddForm').addEventListener('click', toggleAddForm);
-  document.getElementById('btnBrowsePath').addEventListener('click', browsePath);
-  document.getElementById('btnAddDirectory').addEventListener('click', addDirectory);
-
   // 快捷鍵設定
   const shortcutInput = document.getElementById('globalShortcut');
   document
@@ -74,13 +96,6 @@ function setupEventListeners() {
     .addEventListener('click', () => recordShortcut(shortcutInput));
   shortcutInput.addEventListener('change', () => saveShortcutFromInput(shortcutInput));
   shortcutInput.addEventListener('blur', () => saveShortcutFromInput(shortcutInput));
-
-  // 群組管理
-  document.getElementById('btnAddGroup').addEventListener('click', addGroup);
-
-  // 匯入匯出
-  document.getElementById('btnExportConfig').addEventListener('click', exportConfig);
-  document.getElementById('btnImportConfig').addEventListener('click', importConfig);
 }
 
 /**
@@ -109,11 +124,15 @@ async function checkStartupErrors() {
  * 初始化應用程式
  */
 async function init() {
+  // 初始化全域錯誤攔截器（最先執行）
+  initErrorHandler();
+
   await loadConfig();
 
   // 應用保存的主題設定
   const config = getConfig();
   applyTheme(config.settings?.theme || 'dark');
+  applyShowTabText(config.settings?.showTabText !== false);
 
   // 初始化 i18n
   await initI18n(config.settings?.language || 'zh-TW');
@@ -123,6 +142,9 @@ async function init() {
 
   await renderAll();
   setupEventListeners();
+
+  // 初始化鍵盤快捷鍵
+  initKeyboardShortcuts();
 
   // 檢查啟動時的錯誤狀態
   await checkStartupErrors();

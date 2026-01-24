@@ -34,4 +34,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 錯誤處理
   checkConfigCorrupted: () => ipcRenderer.invoke('check-config-corrupted'),
   getShortcutStatus: () => ipcRenderer.invoke('get-shortcut-status'),
+
+  // 外部操作
+  openExternal: url => ipcRenderer.invoke('open-external', url),
+  openConfigDirectory: () => ipcRenderer.invoke('open-config-directory'),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+
+  // 錯誤日誌
+  logRendererError: (error, context) => ipcRenderer.invoke('log-renderer-error', error, context),
+
+  // 進階操作
+  clearLogs: () => ipcRenderer.invoke('clear-logs'),
+  resetConfig: () => ipcRenderer.invoke('reset-config'),
 });

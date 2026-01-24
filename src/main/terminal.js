@@ -284,7 +284,7 @@ function openTerminal(dir, terminal) {
   // 替換 {path} 佔位符
   const commandWithPath = terminal.command.replace(/\{path\}/g, formattedPath);
 
-  logger.info('Execute terminal command', commandWithPath);
+  logger.debug('Execute terminal command', commandWithPath);
 
   try {
     // 直接使用 shell 執行完整指令，避免解析引號問題

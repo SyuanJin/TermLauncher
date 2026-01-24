@@ -62,7 +62,6 @@ function registerShortcut(customShortcut) {
     });
 
     if (success) {
-      logger.info('Shortcut registered successfully', shortcut);
       lastRegistrationResult = {
         success: true,
         shortcut,
@@ -103,7 +102,6 @@ function getLastRegistrationResult() {
  */
 function unregisterAllShortcuts() {
   globalShortcut.unregisterAll();
-  logger.info('All shortcuts unregistered');
 }
 
 /**

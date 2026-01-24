@@ -16,15 +16,16 @@ TermLauncher 是一個 Windows 桌面應用，讓你能夠快速開啟 Windows T
 
 ## ✨ 功能特色
 
-| 功能                    | 說明                           |
-| ----------------------- | ------------------------------ |
-| 🐧 **WSL / PowerShell** | 支援兩種終端環境，一鍵切換     |
-| 📁 **目錄分組**         | 將專案按工作、個人、學習等分類 |
-| 🔍 **搜尋過濾**         | 快速找到目標目錄               |
-| 🕐 **最近使用**         | 顯示最近開啟的目錄             |
-| ⌨️ **全域快捷鍵**       | Alt+Space 快速呼叫（可自訂）   |
-| 🔔 **系統托盤**         | 最小化到托盤，隨時待命         |
-| 💾 **設定同步**         | 匯出/匯入配置檔                |
+| 功能              | 說明                            |
+| ----------------- | ------------------------------- |
+| 🐧 **多終端支援** | WSL、PowerShell、Git Bash、自訂 |
+| 📁 **目錄分組**   | 將專案按工作、個人、學習等分類  |
+| ⭐ **最愛功能**   | 標記常用目錄，快速存取          |
+| 🔍 **搜尋過濾**   | 快速找到目標目錄                |
+| 🕐 **最近使用**   | 顯示最近開啟的目錄              |
+| ⌨️ **快捷鍵**     | 全域 Alt+Space、應用內 Ctrl+1~5 |
+| 🎨 **主題切換**   | 深色/淺色主題                   |
+| 🌐 **多語系**     | 繁體中文、English               |
 
 ## 📦 安裝方式
 
@@ -86,7 +87,7 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 | [PRD.md](docs/PRD.md)                   | 產品需求文檔 |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | 技術架構文檔 |
 | [UI_DESIGN.md](docs/UI_DESIGN.md)       | UI 設計規範  |
-| [PROGRESS.md](docs/PROGRESS.md)         | 開發進度追蹤 |
+| [CHANGELOG.md](docs/CHANGELOG.md)       | 版本變更記錄 |
 
 ## ⚙️ 系統需求
 
@@ -102,4 +103,4 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 
 ## 📝 授權
 
-MIT License © 2025
+MIT License © 2026

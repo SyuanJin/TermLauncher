@@ -5,14 +5,16 @@
 import { getConfig, saveConfig, setConfig } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
-import { t, changeLocale, getAvailableLocales, applyTranslations } from '../i18n.js';
+import { t, changeLocale, getAvailableLocales } from '../i18n.js';
+import { openModal, openConfirmModal } from './modal.js';
 import {
   renderGroupFilter,
   renderGroupSelect,
   renderDirectories,
-  renderRecentList,
   renderTerminalSelect,
 } from './directories.js';
+import { renderRecentList } from './recent.js';
+import { renderGroupsTab } from './groups.js';
 
 /**
  * 應用主題
@@ -20,6 +22,14 @@ import {
  */
 export function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme || 'dark');
+}
+
+/**
+ * 應用 Tab 文字顯示設定
+ * @param {boolean} show - 是否顯示 Tab 文字
+ */
+export function applyShowTabText(show) {
+  document.body.classList.toggle('hide-tab-text', !show);
 }
 
 /**
@@ -32,6 +42,17 @@ export async function changeTheme() {
   applyTheme(theme);
   await saveConfig();
   showToast(theme === 'dark' ? t('toast.themeDark') : t('toast.themeLight'), 'success');
+}
+
+/**
+ * 變更 Tab 文字顯示
+ */
+export async function changeShowTabText() {
+  const config = getConfig();
+  const show = document.getElementById('showTabText').checked;
+  config.settings.showTabText = show;
+  applyShowTabText(show);
+  await saveConfig();
 }
 
 /**
@@ -55,16 +76,40 @@ export async function changeLanguage() {
   await saveConfig();
   await changeLocale(language);
 
-  // 重新渲染動態內容
   renderGroupFilter();
   renderGroupSelect();
   renderTerminalSelect();
   renderDirectories();
-  renderRecentList();
-  renderGroupsList();
+  renderGroupsTab();
   renderTerminalsList();
+  renderRecentList();
 
   showToast(t('toast.languageChanged'), 'success');
+}
+
+/**
+ * 變更最近使用數量上限
+ */
+export async function changeRecentLimit() {
+  const config = getConfig();
+  const limit = parseInt(document.getElementById('recentLimit').value, 10);
+  config.settings.recentLimit = limit;
+  await saveConfig();
+  renderRecentList();
+}
+
+/**
+ * 切換終端的隱藏狀態
+ * @param {string} terminalId - 終端 ID
+ */
+export async function toggleTerminalHidden(terminalId) {
+  const config = getConfig();
+  const terminal = config.terminals?.find(t => t.id === terminalId);
+  if (!terminal) return;
+
+  terminal.hidden = !terminal.hidden;
+  await saveConfig();
+  renderTerminalSelect();
 }
 
 /**
@@ -73,15 +118,15 @@ export async function changeLanguage() {
 export async function renderSettings() {
   const config = getConfig();
   document.getElementById('themeSelect').value = config.settings.theme || 'dark';
+  document.getElementById('showTabText').checked = config.settings.showTabText !== false;
   document.getElementById('startMinimized').checked = config.settings.startMinimized;
   document.getElementById('minimizeToTray').checked = config.settings.minimizeToTray;
   document.getElementById('globalShortcut').value = config.settings.globalShortcut || 'Alt+Space';
+  document.getElementById('recentLimit').value = config.settings.recentLimit || 10;
 
-  // 渲染開機自動啟動狀態（從系統取得實際狀態）
   const autoLaunchEnabled = await api.getAutoLaunch();
   document.getElementById('autoLaunch').checked = autoLaunchEnabled;
 
-  // 渲染語言選擇器
   const languageSelect = document.getElementById('languageSelect');
   const availableLocales = getAvailableLocales();
   const currentLanguage = config.settings.language || 'zh-TW';
@@ -98,6 +143,13 @@ export async function renderSettings() {
         '</option>'
     )
     .join('');
+
+  // 應用 Tab 文字顯示設定
+  applyShowTabText(config.settings.showTabText !== false);
+
+  // 顯示版本號
+  const version = (await api.getAppVersion?.()) || '2.0.0';
+  document.getElementById('appVersion').textContent = 'v' + version;
 }
 
 /**
@@ -113,6 +165,7 @@ export function renderTerminalsList() {
       terminal =>
         '<div class="terminal-item' +
         (terminal.isBuiltin ? ' builtin' : '') +
+        (terminal.hidden ? ' hidden-terminal' : '') +
         '" data-terminal-id="' +
         terminal.id +
         '"><div class="terminal-item-info"><span class="terminal-icon">' +
@@ -126,292 +179,457 @@ export function renderTerminalsList() {
         escapeHtml(terminal.command) +
         '</span></div></div><div class="terminal-actions">' +
         (terminal.isBuiltin
-          ? ''
+          ? '<label class="switch switch-sm" title="' +
+            t('ui.settings.terminals.toggleVisibility') +
+            '"><input type="checkbox" data-toggle-terminal="' +
+            terminal.id +
+            '"' +
+            (terminal.hidden ? '' : ' checked') +
+            ' /><span class="slider"></span></label>'
           : '<button class="btn-icon edit" data-edit-terminal="' +
             terminal.id +
             '" title="' +
-            t('ui.settings.terminals.edit') +
-            '" aria-label="' +
-            t('ui.settings.terminals.editTerminal', { name: terminal.name }) +
+            t('common.edit') +
             '">✏️</button><button class="btn-icon delete" data-delete-terminal="' +
             terminal.id +
             '" title="' +
-            t('ui.settings.terminals.delete') +
-            '" aria-label="' +
-            t('ui.settings.terminals.deleteTerminal', { name: terminal.name }) +
+            t('common.delete') +
             '">🗑️</button>') +
         '</div></div>'
     )
     .join('');
 
-  // 綁定編輯和刪除事件
   bindTerminalEvents();
 }
 
-/**
- * 跳脫 HTML 特殊字元
- */
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
-/**
- * 綁定終端項目事件
- */
 function bindTerminalEvents() {
-  // 編輯按鈕
   document.querySelectorAll('[data-edit-terminal]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const terminalId = btn.dataset.editTerminal;
-      editTerminal(terminalId);
+      showEditTerminalModal(btn.dataset.editTerminal);
     });
   });
 
-  // 刪除按鈕
   document.querySelectorAll('[data-delete-terminal]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const terminalId = btn.dataset.deleteTerminal;
-      deleteTerminal(terminalId);
+      showDeleteTerminalModal(btn.dataset.deleteTerminal);
+    });
+  });
+
+  document.querySelectorAll('[data-toggle-terminal]').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      toggleTerminalHidden(checkbox.dataset.toggleTerminal);
     });
   });
 }
 
 /**
- * 編輯終端
- * @param {string} terminalId - 終端 ID
+ * 顯示新增終端彈窗
  */
-export function editTerminal(terminalId) {
-  const config = getConfig();
-  const terminal = config.terminals?.find(t => t.id === terminalId);
-  if (!terminal || terminal.isBuiltin) return;
+export function showAddTerminalModal() {
+  const content =
+    '<div class="modal-form">' +
+    '<div class="input-row">' +
+    '<div class="input-group flex-1">' +
+    '<label>' +
+    t('ui.settings.terminals.name') +
+    '<span class="required-mark">*</span></label>' +
+    '<input type="text" id="modalTerminalName" placeholder="' +
+    t('ui.settings.terminals.namePlaceholder') +
+    '" />' +
+    '</div>' +
+    '<div class="input-group" style="max-width: 80px">' +
+    '<label>' +
+    t('ui.settings.terminals.icon') +
+    '</label>' +
+    '<input type="text" id="modalTerminalIcon" placeholder="💻" maxlength="2" class="icon-input" title="' +
+    t('ui.addDirectory.iconHint') +
+    '" />' +
+    '</div>' +
+    '</div>' +
+    '<div class="input-group">' +
+    '<label>' +
+    t('ui.settings.terminals.command') +
+    '<span class="required-mark">*</span></label>' +
+    '<input type="text" id="modalTerminalCommand" placeholder="' +
+    t('ui.settings.terminals.commandPlaceholder') +
+    '" class="mono-input" />' +
+    '<small class="hint">' +
+    t('ui.settings.terminals.commandHint') +
+    '</small>' +
+    '</div>' +
+    '<div class="input-group">' +
+    '<label>' +
+    t('ui.settings.terminals.pathFormat') +
+    '</label>' +
+    '<select id="modalTerminalPathFormat">' +
+    '<option value="windows">' +
+    t('ui.settings.terminals.pathWindows') +
+    '</option>' +
+    '<option value="unix">' +
+    t('ui.settings.terminals.pathUnix') +
+    '</option>' +
+    '</select>' +
+    '</div>' +
+    '</div>';
 
-  // 填入表單
-  document.getElementById('terminalEditId').value = terminal.id;
-  document.getElementById('terminalName').value = terminal.name;
-  document.getElementById('terminalIcon').value = terminal.icon;
-  document.getElementById('terminalCommand').value = terminal.command;
-  document.getElementById('terminalPathFormat').value = terminal.pathFormat;
+  openModal({
+    title: t('ui.settings.terminals.addTitle'),
+    content,
+    confirmText: t('common.add'),
+    onConfirm: async () => {
+      const name = document.getElementById('modalTerminalName').value.trim();
+      const icon = document.getElementById('modalTerminalIcon').value.trim() || '💻';
+      const command = document.getElementById('modalTerminalCommand').value.trim();
+      const pathFormat = document.getElementById('modalTerminalPathFormat').value;
 
-  // 更新表單標題和顯示取消按鈕
-  document.getElementById('terminalFormTitle').textContent = t(
-    'ui.settings.terminals.editExisting'
-  );
-  document.getElementById('btnCancelTerminal').style.display = 'flex';
-  document.getElementById('btnSaveTerminal').textContent = t('ui.settings.terminals.update');
-}
+      if (!name) {
+        showToast(t('toast.terminalNameRequired'), 'error');
+        return false;
+      }
+      if (!command) {
+        showToast(t('toast.terminalCommandRequired'), 'error');
+        return false;
+      }
+      if (!command.includes('{path}')) {
+        showToast(t('toast.terminalCommandNeedsPath'), 'error');
+        return false;
+      }
 
-/**
- * 取消編輯終端
- */
-export function cancelEditTerminal() {
-  // 清空表單
-  document.getElementById('terminalEditId').value = '';
-  document.getElementById('terminalName').value = '';
-  document.getElementById('terminalIcon').value = '';
-  document.getElementById('terminalCommand').value = '';
-  document.getElementById('terminalPathFormat').value = 'windows';
-
-  // 重置表單標題
-  document.getElementById('terminalFormTitle').textContent = t('ui.settings.terminals.addNew');
-  document.getElementById('btnCancelTerminal').style.display = 'none';
-  document.getElementById('btnSaveTerminal').textContent = t('ui.settings.terminals.save');
-}
-
-/**
- * 儲存終端
- */
-export async function saveTerminal() {
-  const config = getConfig();
-  const editId = document.getElementById('terminalEditId').value;
-  const name = document.getElementById('terminalName').value.trim();
-  const icon = document.getElementById('terminalIcon').value.trim();
-  const command = document.getElementById('terminalCommand').value.trim();
-  const pathFormat = document.getElementById('terminalPathFormat').value;
-
-  // 驗證
-  if (!name) {
-    showToast(t('toast.terminalNameRequired'), 'error');
-    return;
-  }
-  if (!command) {
-    showToast(t('toast.terminalCommandRequired'), 'error');
-    return;
-  }
-  if (!command.includes('{path}')) {
-    showToast(t('toast.terminalCommandNeedsPath'), 'error');
-    return;
-  }
-
-  if (editId) {
-    // 編輯現有終端
-    const terminalIndex = config.terminals.findIndex(t => t.id === editId);
-    if (terminalIndex !== -1 && !config.terminals[terminalIndex].isBuiltin) {
-      config.terminals[terminalIndex] = {
-        ...config.terminals[terminalIndex],
+      const config = getConfig();
+      const newId = 'custom-' + Date.now();
+      config.terminals.push({
+        id: newId,
         name,
-        icon: icon || '💻',
+        icon,
         command,
         pathFormat,
-      };
-      await saveConfig();
-      showToast(t('toast.terminalUpdated'), 'success');
-    }
-  } else {
-    // 新增終端
-    const newId = 'custom-' + Date.now();
-    config.terminals.push({
-      id: newId,
-      name,
-      icon: icon || '💻',
-      command,
-      pathFormat,
-      isBuiltin: false,
-    });
-    await saveConfig();
-    showToast(t('toast.terminalAdded'), 'success');
-  }
+        isBuiltin: false,
+      });
 
-  // 清空表單並重新渲染
-  cancelEditTerminal();
-  renderTerminalsList();
-  renderTerminalSelect();
-  renderDirectories();
+      await saveConfig();
+      renderTerminalsList();
+      renderTerminalSelect();
+      showToast(t('toast.terminalAdded'), 'success');
+      return true;
+    },
+  });
 }
 
 /**
- * 刪除終端
+ * 顯示編輯終端彈窗
  * @param {string} terminalId - 終端 ID
  */
-export async function deleteTerminal(terminalId) {
+function showEditTerminalModal(terminalId) {
   const config = getConfig();
   const terminal = config.terminals?.find(t => t.id === terminalId);
   if (!terminal || terminal.isBuiltin) return;
 
-  // 將使用該終端的目錄遷移至預設終端
-  const defaultTerminalId = config.terminals.find(t => t.isBuiltin)?.id || 'wsl-ubuntu';
-  config.directories.forEach(dir => {
-    if (dir.terminalId === terminalId) {
-      dir.terminalId = defaultTerminalId;
-    }
-  });
+  const content =
+    '<div class="modal-form">' +
+    '<div class="input-row">' +
+    '<div class="input-group flex-1">' +
+    '<label>' +
+    t('ui.settings.terminals.name') +
+    '<span class="required-mark">*</span></label>' +
+    '<input type="text" id="modalTerminalName" value="' +
+    escapeHtml(terminal.name) +
+    '" />' +
+    '</div>' +
+    '<div class="input-group" style="max-width: 80px">' +
+    '<label>' +
+    t('ui.settings.terminals.icon') +
+    '</label>' +
+    '<input type="text" id="modalTerminalIcon" value="' +
+    (terminal.icon || '') +
+    '" maxlength="2" class="icon-input" title="' +
+    t('ui.addDirectory.iconHint') +
+    '" />' +
+    '</div>' +
+    '</div>' +
+    '<div class="input-group">' +
+    '<label>' +
+    t('ui.settings.terminals.command') +
+    '<span class="required-mark">*</span></label>' +
+    '<input type="text" id="modalTerminalCommand" value="' +
+    escapeHtml(terminal.command) +
+    '" class="mono-input" />' +
+    '<small class="hint">' +
+    t('ui.settings.terminals.commandHint') +
+    '</small>' +
+    '</div>' +
+    '<div class="input-group">' +
+    '<label>' +
+    t('ui.settings.terminals.pathFormat') +
+    '</label>' +
+    '<select id="modalTerminalPathFormat">' +
+    '<option value="windows"' +
+    (terminal.pathFormat === 'windows' ? ' selected' : '') +
+    '>' +
+    t('ui.settings.terminals.pathWindows') +
+    '</option>' +
+    '<option value="unix"' +
+    (terminal.pathFormat === 'unix' ? ' selected' : '') +
+    '>' +
+    t('ui.settings.terminals.pathUnix') +
+    '</option>' +
+    '</select>' +
+    '</div>' +
+    '</div>';
 
-  // 刪除終端
-  config.terminals = config.terminals.filter(t => t.id !== terminalId);
-  await saveConfig();
+  openModal({
+    title: t('ui.settings.terminals.editTitle'),
+    content,
+    confirmText: t('common.save'),
+    onConfirm: async () => {
+      const name = document.getElementById('modalTerminalName').value.trim();
+      const icon = document.getElementById('modalTerminalIcon').value.trim() || '💻';
+      const command = document.getElementById('modalTerminalCommand').value.trim();
+      const pathFormat = document.getElementById('modalTerminalPathFormat').value;
 
-  // 重新渲染
-  renderTerminalsList();
-  renderTerminalSelect();
-  renderDirectories();
-
-  showToast(t('toast.terminalDeleted'), 'success');
-}
-
-/**
- * 渲染群組列表
- */
-export function renderGroupsList() {
-  const config = getConfig();
-  const defaultGroupName = t('common.default');
-  document.getElementById('groupsList').innerHTML = config.groups
-    .map(
-      g =>
-        '<div class="group-tag">' +
-        (g === '預設' ? defaultGroupName : g) +
-        (g !== '預設'
-          ? '<button class="delete-group" data-group="' +
-            g +
-            '" aria-label="' +
-            t('ui.settings.groups.deleteGroup', { name: g }) +
-            '">✕</button>'
-          : '') +
-        '</div>'
-    )
-    .join('');
-
-  // 綁定刪除群組事件
-  document.querySelectorAll('[data-group]').forEach(btn => {
-    const handleDelete = () => {
-      deleteGroup(btn.dataset.group);
-    };
-
-    btn.addEventListener('click', handleDelete);
-
-    // 鍵盤支援（Enter 和 Space）
-    btn.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleDelete();
+      if (!name) {
+        showToast(t('toast.terminalNameRequired'), 'error');
+        return false;
       }
-    });
+      if (!command) {
+        showToast(t('toast.terminalCommandRequired'), 'error');
+        return false;
+      }
+      if (!command.includes('{path}')) {
+        showToast(t('toast.terminalCommandNeedsPath'), 'error');
+        return false;
+      }
+
+      const terminalIndex = config.terminals.findIndex(t => t.id === terminalId);
+      if (terminalIndex !== -1) {
+        config.terminals[terminalIndex] = {
+          ...config.terminals[terminalIndex],
+          name,
+          icon,
+          command,
+          pathFormat,
+        };
+        await saveConfig();
+        renderTerminalsList();
+        renderTerminalSelect();
+        renderDirectories();
+        showToast(t('toast.terminalUpdated'), 'success');
+      }
+      return true;
+    },
   });
 }
 
 /**
- * 儲存一般設定（開關設定）
+ * 顯示刪除終端彈窗（含替代選項）
+ * @param {string} terminalId - 終端 ID
+ */
+function showDeleteTerminalModal(terminalId) {
+  const config = getConfig();
+  const terminal = config.terminals?.find(t => t.id === terminalId);
+  if (!terminal || terminal.isBuiltin) return;
+
+  // 計算使用此終端的目錄數量
+  const dirCount = config.directories.filter(d => d.terminalId === terminalId).length;
+
+  // 其他可用的終端
+  const otherTerminals = config.terminals.filter(t => t.id !== terminalId);
+
+  let content = '<p>' + t('ui.settings.terminals.deleteConfirm', { name: terminal.name }) + '</p>';
+
+  if (dirCount > 0) {
+    content +=
+      '<p class="warning">' +
+      t('ui.settings.terminals.deleteHasDirectories', { count: dirCount }) +
+      '</p>' +
+      '<div class="input-group">' +
+      '<label>' +
+      t('ui.settings.terminals.replaceWith') +
+      '</label>' +
+      '<select id="modalReplaceTerminal">' +
+      otherTerminals
+        .map(t => '<option value="' + t.id + '">' + t.icon + ' ' + t.name + '</option>')
+        .join('') +
+      '</select>' +
+      '</div>';
+  }
+
+  openModal({
+    title: t('ui.settings.terminals.deleteTitle'),
+    content,
+    confirmText: t('ui.settings.terminals.confirmDelete'),
+    confirmClass: 'btn-danger',
+    onConfirm: async () => {
+      // 替換使用此終端的目錄
+      if (dirCount > 0) {
+        const replaceId = document.getElementById('modalReplaceTerminal').value;
+        config.directories.forEach(dir => {
+          if (dir.terminalId === terminalId) {
+            dir.terminalId = replaceId;
+          }
+        });
+      }
+
+      config.terminals = config.terminals.filter(t => t.id !== terminalId);
+      await saveConfig();
+
+      renderTerminalsList();
+      renderTerminalSelect();
+      renderDirectories();
+      showToast(t('toast.terminalDeleted'), 'success');
+      return true;
+    },
+  });
+}
+
+/**
+ * 清除最近使用記錄
+ */
+export async function clearRecentHistory() {
+  openConfirmModal({
+    title: t('ui.settings.recent.clearTitle'),
+    message: t('ui.settings.recent.clearConfirm'),
+    confirmText: t('ui.settings.recent.clearButton'),
+    danger: true,
+    onConfirm: async () => {
+      const config = getConfig();
+      config.directories.forEach(d => {
+        delete d.lastUsed;
+      });
+      await saveConfig();
+      renderRecentList();
+      showToast(t('toast.recentCleared'), 'success');
+      return true;
+    },
+  });
+}
+
+/**
+ * 顯示快捷鍵彈窗
+ */
+export function showShortcutsModal() {
+  const globalShortcuts = [{ key: 'Alt+Space', desc: t('ui.shortcuts.toggleWindow') }];
+
+  const appShortcuts = [
+    { key: 'Ctrl+1~5', desc: t('ui.shortcuts.switchTab') },
+    { key: 'Ctrl+N', desc: t('ui.shortcuts.addDirectory') },
+    { key: 'Ctrl+F', desc: t('ui.shortcuts.focusSearch') },
+    { key: 'Escape', desc: t('ui.shortcuts.closeModal') },
+    { key: 'Enter', desc: t('ui.shortcuts.openDirectory') },
+  ];
+
+  const renderShortcuts = shortcuts =>
+    shortcuts
+      .map(
+        s => '<div class="shortcut-item"><kbd>' + s.key + '</kbd><span>' + s.desc + '</span></div>'
+      )
+      .join('');
+
+  const content =
+    '<div class="shortcuts-section">' +
+    '<h4>' +
+    t('ui.shortcuts.global') +
+    '</h4>' +
+    '<div class="shortcuts-list">' +
+    renderShortcuts(globalShortcuts) +
+    '</div>' +
+    '</div>' +
+    '<div class="shortcuts-section">' +
+    '<h4>' +
+    t('ui.shortcuts.app') +
+    '</h4>' +
+    '<div class="shortcuts-list">' +
+    renderShortcuts(appShortcuts) +
+    '</div>' +
+    '</div>';
+
+  openModal({
+    title: t('ui.shortcuts.title'),
+    content,
+    confirmText: t('common.close'),
+    showCancel: false,
+    modalClass: 'shortcuts-modal',
+  });
+}
+
+/**
+ * 開啟設定目錄
+ */
+export async function openConfigDirectory() {
+  const result = await api.openConfigDirectory?.();
+  if (result?.success) {
+    showToast(t('toast.configDirOpened'), 'success');
+  }
+}
+
+/**
+ * 清除日誌
+ */
+export async function clearLogs() {
+  openConfirmModal({
+    title: t('ui.settings.advanced.clearLogsTitle'),
+    message: t('ui.settings.advanced.clearLogsConfirm'),
+    confirmText: t('ui.settings.advanced.clearLogs'),
+    danger: false,
+    onConfirm: async () => {
+      const result = await api.clearLogs?.();
+      if (result?.success) {
+        showToast(t('toast.logsCleared'), 'success');
+      }
+      return true;
+    },
+  });
+}
+
+/**
+ * 重設所有設定
+ */
+export async function resetAllSettings() {
+  openConfirmModal({
+    title: t('ui.settings.advanced.resetTitle'),
+    message: t('ui.settings.advanced.resetConfirm'),
+    confirmText: t('ui.settings.advanced.resetSettings'),
+    danger: true,
+    onConfirm: async () => {
+      const result = await api.resetConfig?.();
+      if (result?.success) {
+        setConfig(result.config);
+        await renderSettings();
+        renderGroupFilter();
+        renderGroupSelect();
+        renderTerminalSelect();
+        renderDirectories();
+        renderGroupsTab();
+        renderTerminalsList();
+        renderRecentList();
+        applyTheme(result.config.settings?.theme || 'dark');
+        showToast(t('toast.settingsReset'), 'success');
+      }
+      return true;
+    },
+  });
+}
+
+/**
+ * 開啟 GitHub
+ */
+export function openGithub() {
+  api.openExternal?.('https://github.com/SyuanJin/TermLauncher');
+}
+
+/**
+ * 儲存一般設定
  */
 export async function saveSettings() {
   const config = getConfig();
   config.settings.startMinimized = document.getElementById('startMinimized').checked;
   config.settings.minimizeToTray = document.getElementById('minimizeToTray').checked;
   await saveConfig();
-}
-
-/**
- * 新增群組
- */
-export async function addGroup() {
-  const config = getConfig();
-  const name = document.getElementById('newGroupName').value.trim();
-
-  if (!name) {
-    showToast(t('toast.enterGroupName'), 'error');
-    return;
-  }
-
-  if (config.groups.includes(name)) {
-    showToast(t('toast.groupExists'), 'error');
-    return;
-  }
-
-  config.groups.push(name);
-  await saveConfig();
-
-  // 重新渲染
-  renderGroupFilter();
-  renderGroupSelect();
-  renderGroupsList();
-
-  document.getElementById('newGroupName').value = '';
-  showToast(t('toast.groupAdded'), 'success');
-}
-
-/**
- * 刪除群組
- * @param {string} name - 群組名稱
- */
-export async function deleteGroup(name) {
-  if (name === '預設') return;
-
-  const config = getConfig();
-
-  // 將該群組的目錄移到預設群組
-  config.directories.forEach(d => {
-    if (d.group === name) d.group = '預設';
-  });
-
-  config.groups = config.groups.filter(g => g !== name);
-  await saveConfig();
-
-  // 重新渲染
-  renderGroupFilter();
-  renderGroupSelect();
-  renderDirectories();
-  renderGroupsList();
-
-  showToast(t('toast.groupDeleted'), 'success');
 }
 
 /**
@@ -432,14 +650,12 @@ export async function importConfig() {
   if (result.success) {
     setConfig(result.config);
 
-    // 重新渲染所有
     renderGroupFilter();
     renderGroupSelect();
     renderTerminalSelect();
     renderDirectories();
-    renderRecentList();
     await renderSettings();
-    renderGroupsList();
+    renderGroupsTab();
     renderTerminalsList();
 
     showToast(t('toast.configImported'), 'success');
@@ -449,22 +665,24 @@ export async function importConfig() {
 }
 
 /**
- * 設定設定頁面的事件監聯
+ * 設定設定頁面的事件監聽
  */
 export function setupSettingsEvents() {
   document.getElementById('themeSelect').addEventListener('change', changeTheme);
   document.getElementById('languageSelect').addEventListener('change', changeLanguage);
+  document.getElementById('showTabText').addEventListener('change', changeShowTabText);
   document.getElementById('autoLaunch').addEventListener('change', changeAutoLaunch);
   document.getElementById('startMinimized').addEventListener('change', saveSettings);
   document.getElementById('minimizeToTray').addEventListener('change', saveSettings);
-  document.getElementById('newGroupName').addEventListener('keypress', e => {
-    if (e.key === 'Enter') addGroup();
-  });
+  document.getElementById('recentLimit').addEventListener('change', changeRecentLimit);
 
-  // 終端管理事件
-  document.getElementById('btnSaveTerminal').addEventListener('click', saveTerminal);
-  document.getElementById('btnCancelTerminal').addEventListener('click', cancelEditTerminal);
-  document.getElementById('terminalName').addEventListener('keypress', e => {
-    if (e.key === 'Enter') saveTerminal();
-  });
+  document.getElementById('btnViewShortcuts')?.addEventListener('click', showShortcutsModal);
+  document.getElementById('btnClearRecent')?.addEventListener('click', clearRecentHistory);
+  document.getElementById('btnAddTerminal')?.addEventListener('click', showAddTerminalModal);
+  document.getElementById('btnExportConfig')?.addEventListener('click', exportConfig);
+  document.getElementById('btnImportConfig')?.addEventListener('click', importConfig);
+  document.getElementById('btnOpenConfigDir')?.addEventListener('click', openConfigDirectory);
+  document.getElementById('btnClearLogs')?.addEventListener('click', clearLogs);
+  document.getElementById('btnResetSettings')?.addEventListener('click', resetAllSettings);
+  document.getElementById('btnOpenGithub')?.addEventListener('click', openGithub);
 }

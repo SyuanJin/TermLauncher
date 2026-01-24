@@ -99,16 +99,47 @@
 /* 內容區 */
 .content {
   flex: 1;
-  overflow-y: auto;
-  padding: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .tab-content {
   display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
 .tab-content.active {
-  display: block;
+  display: flex;
+}
+
+/* Tab 內容滾動區域 */
+.tab-content > .search-bar {
+  flex-shrink: 0;
+  padding: 20px 20px 12px;
+}
+
+/* 可滾動的內容區域 */
+.tab-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 20px;
+}
+
+.recent-list-container,
+.favorites-list-container,
+.groups-list-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 20px;
+}
+
+/* 設定頁面整體滾動 */
+#settings-tab {
+  overflow-y: auto;
+  padding: 20px;
 }
 
 /* 搜尋列 */
@@ -269,16 +300,6 @@
     max-width: 100% !important;
   }
 
-  .setting-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .setting-item > div:last-child {
-    align-self: flex-end;
-  }
-
   .import-export-buttons {
     flex-direction: column;
   }
@@ -288,6 +309,27 @@
   }
 
   .browse-btn {
+    width: 100%;
+  }
+
+  /* 設定按鈕群組在窄寬度時垂直排列 */
+  .setting-buttons-group {
+    flex-direction: column;
+  }
+
+  .setting-buttons-group .btn-secondary,
+  .setting-buttons-group .btn-danger {
+    flex: none;
+    width: 100%;
+  }
+
+  /* 設定按鈕行在窄寬度時垂直排列 */
+  .setting-buttons-row {
+    flex-direction: column;
+  }
+
+  .setting-buttons-row .btn {
+    flex: none;
     width: 100%;
   }
 }

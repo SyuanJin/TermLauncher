@@ -3,7 +3,120 @@
  * 按鈕、輸入框、卡片、開關等可重複使用的元件
  */
 
-/* 按鈕 */
+/* ===== Tab 元件 ===== */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.tab {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  font-size: 14px;
+  position: relative;
+}
+
+.tab:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.tab.active {
+  background: var(--accent-blue);
+  color: #fff;
+}
+
+.tab-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.tab-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Tab 純圖示模式 */
+.tabs.icon-only .tab-text {
+  display: none;
+}
+
+.tabs.icon-only .tab {
+  padding: 10px 14px;
+}
+
+/* Tab Tooltip */
+.tab[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.15s ease;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.tab[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 純圖示模式時總是顯示 Tooltip */
+.tabs.icon-only .tab[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== 空狀態 ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state .empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.empty-state small {
+  font-size: 12px;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* ===== 按鈕 ===== */
 .btn {
   padding: 12px 20px;
   border: none;
@@ -28,7 +141,6 @@
 }
 
 .btn-secondary {
-  flex: 1;
   padding: 12px 20px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
@@ -47,6 +159,11 @@
 .btn-secondary:hover {
   background: var(--border-color);
   border-color: var(--accent-blue);
+}
+
+.btn-emoji {
+  font-size: 14px;
+  line-height: 1;
 }
 
 .btn-icon {
@@ -288,6 +405,26 @@
   padding: 12px 0;
   border-bottom: 1px solid var(--border-color);
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* 窄寬度時設定項目改為上下排列 */
+@media (max-width: 400px) {
+  .setting-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .setting-item .setting-label {
+    text-align: left;
+  }
+
+  .setting-item > div:last-child,
+  .setting-item > label:last-child,
+  .setting-item > select:last-child,
+  .setting-item > .setting-actions {
+    align-self: flex-start;
+  }
 }
 
 .setting-item > div:last-child {
@@ -359,6 +496,23 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(20px);
   background: white;
+}
+
+/* 小型開關 */
+.switch-sm {
+  width: 36px;
+  height: 20px;
+}
+
+.switch-sm .slider:before {
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+}
+
+.switch-sm input:checked + .slider:before {
+  transform: translateX(16px);
 }
 
 /* 群組標籤 */
@@ -603,6 +757,19 @@ input:checked + .slider:before {
   display: flex;
   gap: 4px;
   flex-shrink: 0;
+  align-items: center;
+}
+
+/* 隱藏的終端樣式 */
+.terminal-item.hidden-terminal {
+  opacity: 0.5;
+}
+
+.terminal-item.hidden-terminal .terminal-icon,
+.terminal-item.hidden-terminal .terminal-name,
+.terminal-item.hidden-terminal .terminal-command {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-secondary);
 }
 
 .terminal-form {
@@ -638,4 +805,909 @@ input:checked + .slider:before {
   font-size: 11px;
   color: var(--text-secondary);
   margin-top: 4px;
+}
+
+/* 拖曳把手 */
+.drag-handle {
+  color: var(--text-secondary);
+  cursor: grab;
+  font-size: 14px;
+  padding: 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s ease;
+  user-select: none;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ===== 彈窗元件 ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transform: scale(0.95) translateY(-10px);
+  transition: transform 0.2s ease;
+}
+
+.modal-overlay.show .modal {
+  transform: scale(1) translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+.modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-body .input-group {
+  margin-bottom: 16px;
+}
+
+.modal-body .input-group:last-child {
+  margin-bottom: 0;
+}
+
+.modal-body .input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-body .input-row .input-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal-body .input-row .input-group[style*='max-width'] {
+  flex: 0 0 70px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.modal-footer .btn,
+.modal-footer .btn-secondary,
+.modal-footer .btn-primary,
+.modal-footer .btn-danger {
+  flex: 1;
+}
+
+/* 確認訊息樣式 */
+.confirm-message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* 危險按鈕樣式 */
+.btn-danger {
+  background: var(--accent-red);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-danger:hover {
+  filter: brightness(1.1);
+}
+
+/* 必填標記 */
+.required-mark {
+  color: var(--accent-red);
+  margin-left: 2px;
+}
+
+/* 群組圖示 */
+.group-icon {
+  margin-right: 4px;
+}
+
+/* ===== 群組卡片 ===== */
+.groups-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.group-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.group-card:hover {
+  border-color: var(--accent-blue);
+  background: var(--bg-tertiary);
+}
+
+.group-card:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px var(--accent-blue-transparent);
+}
+
+.group-card.default {
+  cursor: default;
+}
+
+.group-card.default:hover {
+  border-color: var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.group-card-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.group-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.group-card-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.group-card-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+.group-card-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.group-card:hover .group-card-actions {
+  opacity: 1;
+}
+
+.default-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* ===== 最愛按鈕 ===== */
+.btn-icon.favorite {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.btn-icon.favorite:hover {
+  color: var(--accent-yellow);
+}
+
+.btn-icon.favorite.active {
+  color: var(--accent-yellow);
+}
+
+/* ===== 目錄額外資訊 ===== */
+.dir-emoji {
+  margin-right: 4px;
+}
+
+.favorite-badge {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.dir-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.dir-meta .last-used,
+.dir-meta .group-name {
+  display: inline-block;
+}
+
+/* ===== Modal 表單 ===== */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-form .input-group {
+  margin-bottom: 0;
+}
+
+.modal-form .icon-input {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  padding: 8px 12px;
+  line-height: 1.3;
+}
+
+/* Checkbox 標籤 */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+  user-select: none;
+}
+
+.checkbox-label input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-color);
+  cursor: pointer;
+}
+
+.checkbox-label span {
+  line-height: 1.4;
+}
+
+/* Radio 按鈕群組 */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.radio-group input[type='radio'] {
+  accent-color: var(--accent-blue);
+}
+
+/* 警告文字 */
+.warning {
+  color: var(--accent-yellow);
+  font-size: 13px;
+}
+
+/* ===== 群組收合 ===== */
+.group-section.collapsed .directory-list {
+  display: none;
+}
+
+.group-toggle {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.group-toggle:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.group-header-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.add-to-group {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  margin-left: auto;
+}
+
+.group-header:hover .add-to-group {
+  opacity: 1;
+}
+
+/* ===== Flex 工具類 ===== */
+.flex-1 {
+  flex: 1;
+}
+
+/* ===== 設定頁面進階樣式 ===== */
+
+/* 隱藏 Tab 文字模式 */
+body.hide-tab-text .tab-text {
+  display: none;
+}
+
+body.hide-tab-text .tab {
+  padding: 10px 14px;
+}
+
+/* 視窗過窄時自動隱藏 Tab 文字 */
+@media (max-width: 500px) {
+  .tab-text {
+    display: none !important;
+  }
+
+  .tab {
+    padding: 10px 14px;
+  }
+}
+
+/* 設定區塊標題帶按鈕 */
+.settings-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.settings-section-header h3 {
+  margin-bottom: 0;
+}
+
+/* 設定按鈕群組 */
+.setting-buttons-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.setting-buttons-group .btn-secondary {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* 設定按鈕行（每行兩個按鈕） */
+.setting-buttons-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.setting-buttons-row:last-child {
+  margin-bottom: 0;
+}
+
+.setting-buttons-row .btn {
+  flex: 1;
+  min-width: 0;
+}
+
+.setting-buttons-row.no-flex {
+  justify-content: flex-start;
+}
+
+.setting-buttons-row.no-flex .btn {
+  flex: none;
+  width: calc(50% - 4px);
+}
+
+/* 設定項的操作區域 */
+.setting-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* 小按鈕 */
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* 關於區塊 */
+.about-section {
+  text-align: center;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 0;
+}
+
+.about-logo {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.about-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.about-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.about-version {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.about-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.about-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* 連結按鈕 */
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-link:hover {
+  background: var(--bg-tertiary);
+  text-decoration: underline;
+}
+
+/* 快捷鍵區塊 */
+.shortcuts-section {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.shortcuts-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.shortcuts-section:first-child {
+  padding-top: 0;
+}
+
+.shortcuts-section h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* 快捷鍵彈窗 - 移除 footer 分隔線 */
+.shortcuts-modal .modal-footer {
+  border-top: none;
+}
+
+/* 快捷鍵列表 */
+.shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.shortcut-item kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  min-width: 80px;
+  text-align: center;
+}
+
+.shortcut-item span {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 危險按鈕 */
+.btn-danger {
+  background: var(--accent-red);
+  color: #fff;
+  border: none;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+/* ===== 按鈕變體 ===== */
+.btn-icon-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+}
+
+/* 搜尋列中的圖示按鈕 */
+.search-bar .btn-icon-text {
+  padding: 10px 12px;
+  flex-shrink: 0;
+}
+
+.btn-icon-only {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Icon-only 按鈕（工具列用） */
+.btn-icon-only-btn {
+  padding: 10px 12px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 42px;
+  flex-shrink: 0;
+}
+
+/* 篩選標籤區域 */
+.filter-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px 12px;
+  flex-wrap: wrap;
+}
+
+.filter-tags-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.filter-tags-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.filter-tag-remove {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.filter-tag-remove:hover {
+  opacity: 1;
+  color: var(--accent-red);
+}
+
+/* 群組篩選彈窗 */
+.group-filter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.group-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.group-filter-item:hover {
+  border-color: var(--accent-blue);
+  background: var(--bg-tertiary);
+}
+
+.group-filter-item.selected {
+  border-color: var(--accent-blue);
+  background: rgba(88, 166, 255, 0.1);
+}
+
+.group-filter-item input[type='checkbox'] {
+  accent-color: var(--accent-blue);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.group-filter-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-filter-icon {
+  font-size: 18px;
+}
+
+.group-filter-name {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.group-filter-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+.group-filter-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.group-filter-actions .btn {
+  flex: 1;
+}
+
+/* ===== 拖拉排序樣式 ===== */
+.directory-item[draggable='true'],
+.group-card[draggable='true'] {
+  cursor: grab;
+}
+
+.directory-item[draggable='true']:active,
+.group-card[draggable='true']:active {
+  cursor: grabbing;
+}
+
+.directory-item.dragging,
+.group-card.dragging {
+  opacity: 0.5;
+}
+
+.drag-placeholder {
+  background: var(--accent-blue);
+  opacity: 0.2;
+  border: 2px dashed var(--accent-blue);
+  border-radius: 12px;
+  min-height: 60px;
+  margin-bottom: 8px;
+}
+
+.group-card-placeholder {
+  min-height: 80px;
+}
+
+/* 拖曳時的視覺提示 */
+.directory-list.drag-over,
+.groups-grid.drag-over {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+/* ===== 右鍵選單 ===== */
+.context-menu {
+  position: fixed;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 1100;
+  animation: contextMenuFadeIn 0.1s ease-out;
+}
+
+@keyframes contextMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.context-menu-item {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  user-select: none;
+}
+
+.context-menu-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.context-menu-item.danger:hover {
+  background: var(--accent-red);
+  color: #fff;
+}
+
+.context-menu-icon {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.context-menu-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.context-menu-separator {
+  height: 1px;
+  background: var(--border-color);
+  margin: 6px 0;
+}
+
+/* 子選單 */
+.context-menu-submenu {
+  position: relative;
+}
+
+.context-menu-submenu::after {
+  content: '▶';
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.context-menu-submenu .context-menu-nested {
+  position: absolute;
+  left: 100%;
+  top: -6px;
+  display: none;
+  margin-left: 2px;
+}
+
+.context-menu-submenu:hover .context-menu-nested {
+  display: block;
+}
+
+/* 子選單往左顯示（當右側空間不足時） */
+.context-menu-submenu.submenu-left .context-menu-nested {
+  left: auto;
+  right: 100%;
+  margin-left: 0;
+  margin-right: 2px;
 }

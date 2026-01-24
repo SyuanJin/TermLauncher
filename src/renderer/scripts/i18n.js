@@ -112,4 +112,12 @@ export function applyTranslations() {
       el.title = t(key);
     }
   });
+
+  // 翻譯 data-tooltip (CSS tooltip)
+  document.querySelectorAll('[data-i18n-tooltip]').forEach(el => {
+    const key = el.getAttribute('data-i18n-tooltip');
+    if (key) {
+      el.setAttribute('data-tooltip', t(key));
+    }
+  });
 }
