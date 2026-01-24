@@ -100,15 +100,15 @@ TermLauncher/
 
 ### 3.1 主進程模組 (src/main/)
 
-| 模組 | 職責 |
-|------|------|
-| `index.js` | 應用程式入口、生命週期管理 |
-| `config.js` | 配置檔的讀取與儲存 |
-| `terminal.js` | Windows Terminal 啟動邏輯 |
-| `window.js` | 主視窗建立與管理 |
-| `tray.js` | 系統托盤圖示與選單 |
-| `shortcuts.js` | 全域快捷鍵註冊 |
-| `ipc-handlers.js` | IPC 事件處理 |
+| 模組              | 職責                       |
+| ----------------- | -------------------------- |
+| `index.js`        | 應用程式入口、生命週期管理 |
+| `config.js`       | 配置檔的讀取與儲存         |
+| `terminal.js`     | Windows Terminal 啟動邏輯  |
+| `window.js`       | 主視窗建立與管理           |
+| `tray.js`         | 系統托盤圖示與選單         |
+| `shortcuts.js`    | 全域快捷鍵註冊             |
+| `ipc-handlers.js` | IPC 事件處理               |
 
 ### 3.2 Preload 安全機制 (src/preload/)
 
@@ -126,16 +126,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
 ### 3.3 渲染進程模組 (src/renderer/scripts/)
 
-| 模組 | 職責 |
-|------|------|
-| `app.js` | 應用入口、初始化、整合所有模組 |
-| `api.js` | 封裝 `window.electronAPI` |
-| `state.js` | 全域配置狀態管理 |
-| `ui/tabs.js` | 分頁切換邏輯 |
-| `ui/directories.js` | 目錄列表的渲染與操作 |
-| `ui/settings.js` | 設定頁面的渲染與操作 |
-| `ui/toast.js` | 通知提示 |
-| `utils/shortcuts.js` | 快捷鍵錄製與驗證 |
+| 模組                 | 職責                           |
+| -------------------- | ------------------------------ |
+| `app.js`             | 應用入口、初始化、整合所有模組 |
+| `api.js`             | 封裝 `window.electronAPI`      |
+| `state.js`           | 全域配置狀態管理               |
+| `ui/tabs.js`         | 分頁切換邏輯                   |
+| `ui/directories.js`  | 目錄列表的渲染與操作           |
+| `ui/settings.js`     | 設定頁面的渲染與操作           |
+| `ui/toast.js`        | 通知提示                       |
+| `utils/shortcuts.js` | 快捷鍵錄製與驗證               |
 
 ### 3.4 配置管理
 
@@ -278,11 +278,13 @@ webPreferences: {
 在 HTML 中設定 CSP：
 
 ```html
-<meta http-equiv="Content-Security-Policy"
-      content="default-src 'self';
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self';
                style-src 'self' https://fonts.googleapis.com;
                font-src 'self' https://fonts.gstatic.com;
-               script-src 'self';" />
+               script-src 'self';"
+/>
 ```
 
 ### 5.3 路徑處理
@@ -309,11 +311,7 @@ webPreferences: {
     "directories": {
       "output": "dist"
     },
-    "files": [
-      "src/**/*",
-      "assets/**/*",
-      "package.json"
-    ],
+    "files": ["src/**/*", "assets/**/*", "package.json"],
     "win": {
       "target": ["portable", "nsis"],
       "icon": "assets/icon.ico"
@@ -377,13 +375,13 @@ npm run build:installer
 
 ### 8.1 常見錯誤
 
-| 錯誤 | 原因 | 處理方式 |
-| ---- | ---- | -------- |
-| Windows Terminal 未安裝 | 系統沒有 wt.exe | 提示用戶安裝 |
-| WSL 未安裝 | 沒有 WSL 環境 | 提示用戶安裝 WSL |
-| 路徑不存在 | 目錄已被刪除 | 提示用戶檢查路徑 |
-| 配置檔損壞 | JSON 格式錯誤 | 重建預設配置 |
-| 快捷鍵衝突 | 已被其他程式佔用 | 提示用戶更換 |
+| 錯誤                    | 原因             | 處理方式         |
+| ----------------------- | ---------------- | ---------------- |
+| Windows Terminal 未安裝 | 系統沒有 wt.exe  | 提示用戶安裝     |
+| WSL 未安裝              | 沒有 WSL 環境    | 提示用戶安裝 WSL |
+| 路徑不存在              | 目錄已被刪除     | 提示用戶檢查路徑 |
+| 配置檔損壞              | JSON 格式錯誤    | 重建預設配置     |
+| 快捷鍵衝突              | 已被其他程式佔用 | 提示用戶更換     |
 
 ### 8.2 日誌記錄
 

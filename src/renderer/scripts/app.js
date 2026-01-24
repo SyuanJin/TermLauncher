@@ -62,7 +62,9 @@ function setupEventListeners() {
 
   // 快捷鍵設定
   const shortcutInput = document.getElementById('globalShortcut');
-  document.getElementById('btnRecordShortcut').addEventListener('click', () => recordShortcut(shortcutInput));
+  document
+    .getElementById('btnRecordShortcut')
+    .addEventListener('click', () => recordShortcut(shortcutInput));
   shortcutInput.addEventListener('change', () => saveShortcutFromInput(shortcutInput));
   shortcutInput.addEventListener('blur', () => saveShortcutFromInput(shortcutInput));
 

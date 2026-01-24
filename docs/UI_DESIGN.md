@@ -68,7 +68,11 @@
 
 ```css
 /* 主要字體 - 介面文字 */
-font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+font-family:
+  'Noto Sans TC',
+  -apple-system,
+  BlinkMacSystemFont,
+  sans-serif;
 
 /* 等寬字體 - 路徑顯示 */
 font-family: 'JetBrains Mono', monospace;
@@ -91,6 +95,7 @@ font-family: 'JetBrains Mono', monospace;
 ### 4.1 按鈕 (Button)
 
 **主要按鈕**
+
 ```css
 .btn-primary {
   background: var(--accent-blue);
@@ -102,6 +107,7 @@ font-family: 'JetBrains Mono', monospace;
 ```
 
 **次要按鈕**
+
 ```css
 .btn-secondary {
   background: var(--bg-tertiary);
@@ -113,7 +119,8 @@ font-family: 'JetBrains Mono', monospace;
 ### 4.2 輸入框 (Input)
 
 ```css
-input, select {
+input,
+select {
   padding: 12px 14px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
@@ -147,6 +154,7 @@ input:focus {
 ### 4.4 標籤 (Tag)
 
 **WSL 標籤**
+
 ```css
 .tag.wsl {
   background: rgba(233, 84, 32, 0.2);
@@ -155,6 +163,7 @@ input:focus {
 ```
 
 **PowerShell 標籤**
+
 ```css
 .tag.ps {
   background: rgba(0, 120, 212, 0.2);
@@ -172,8 +181,12 @@ input:focus {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.toast.success { border-color: var(--accent-green); }
-.toast.error { border-color: var(--accent-red); }
+.toast.success {
+  border-color: var(--accent-green);
+}
+.toast.error {
+  border-color: var(--accent-red);
+}
 ```
 
 ---
@@ -266,13 +279,13 @@ input:focus {
 
 ### 6.3 回饋機制
 
-| 操作     | 回饋                          |
-| -------- | ----------------------------- |
-| 新增目錄 | Toast「目錄已新增」           |
-| 刪除目錄 | Toast「目錄已刪除」           |
-| 開啟終端 | Toast「正在開啟 XXX...」      |
-| 匯出成功 | Toast「設定已匯出」           |
-| 錯誤     | 紅色 Toast + 錯誤訊息         |
+| 操作     | 回饋                     |
+| -------- | ------------------------ |
+| 新增目錄 | Toast「目錄已新增」      |
+| 刪除目錄 | Toast「目錄已刪除」      |
+| 開啟終端 | Toast「正在開啟 XXX...」 |
+| 匯出成功 | Toast「設定已匯出」      |
+| 錯誤     | 紅色 Toast + 錯誤訊息    |
 
 ---
 

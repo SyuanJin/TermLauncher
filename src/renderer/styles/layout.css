@@ -265,7 +265,7 @@
     flex-direction: column;
   }
 
-  .input-group[style*="max-width"] {
+  .input-group[style*='max-width'] {
     max-width: 100% !important;
   }
 

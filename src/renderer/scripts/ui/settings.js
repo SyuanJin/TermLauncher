@@ -5,7 +5,12 @@
 import { getConfig, saveConfig, setConfig } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
-import { renderGroupFilter, renderGroupSelect, renderDirectories, renderRecentList } from './directories.js';
+import {
+  renderGroupFilter,
+  renderGroupSelect,
+  renderDirectories,
+  renderRecentList,
+} from './directories.js';
 
 /**
  * 應用主題
