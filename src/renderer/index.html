@@ -19,8 +19,8 @@
     <div class="titlebar">
       <div class="titlebar-title"><span>🚀</span> TermLauncher</div>
       <div class="titlebar-buttons">
-        <button class="titlebar-btn" id="btnMinimize">─</button>
-        <button class="titlebar-btn close" id="btnClose">✕</button>
+        <button class="titlebar-btn" id="btnMinimize" aria-label="最小化視窗">─</button>
+        <button class="titlebar-btn close" id="btnClose" aria-label="關閉視窗">✕</button>
       </div>
     </div>
 
@@ -50,9 +50,9 @@
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.35-4.35" />
               </svg>
-              <input type="text" class="search-input" id="searchInput" placeholder="搜尋目錄..." />
+              <input type="text" class="search-input" id="searchInput" placeholder="搜尋目錄..." aria-label="搜尋目錄" />
             </div>
-            <select class="filter-select" id="groupFilter">
+            <select class="filter-select" id="groupFilter" aria-label="篩選群組">
               <option value="">所有群組</option>
             </select>
           </div>
@@ -61,7 +61,7 @@
           <div class="add-section">
             <div class="section-header">
               <div class="section-title">➕ 新增目錄</div>
-              <button class="toggle-btn" id="btnToggleAddForm">展開</button>
+              <button class="toggle-btn" id="btnToggleAddForm" aria-label="展開或收起新增目錄表單" aria-expanded="false">展開</button>
             </div>
             <div class="add-form" id="addForm">
               <div class="input-row">
@@ -81,14 +81,14 @@
                 <label>路徑</label>
                 <div class="path-input-wrapper">
                   <input type="text" id="dirPath" placeholder="例如：D:\Projects\my-app" />
-                  <button class="browse-btn" id="btnBrowsePath">瀏覽...</button>
+                  <button class="browse-btn" id="btnBrowsePath" aria-label="瀏覽並選擇資料夾">瀏覽...</button>
                 </div>
               </div>
               <div class="input-group">
                 <label>群組</label>
                 <select id="dirGroup"></select>
               </div>
-              <button class="btn btn-primary" id="btnAddDirectory">➕ 新增目錄</button>
+              <button class="btn btn-primary" id="btnAddDirectory" aria-label="新增目錄">➕ 新增目錄</button>
             </div>
           </div>
 
@@ -113,7 +113,7 @@
                 <small>程式啟動時自動最小化到系統托盤</small>
               </div>
               <label class="switch">
-                <input type="checkbox" id="startMinimized" />
+                <input type="checkbox" id="startMinimized" aria-label="啟動時最小化" />
                 <span class="slider"></span>
               </label>
             </div>
@@ -123,7 +123,7 @@
                 <small>點擊關閉按鈕時最小化而非結束</small>
               </div>
               <label class="switch">
-                <input type="checkbox" id="minimizeToTray" checked />
+                <input type="checkbox" id="minimizeToTray" checked aria-label="關閉時最小化到托盤" />
                 <span class="slider"></span>
               </label>
             </div>
@@ -138,8 +138,10 @@
                   class="shortcut-input"
                   id="globalShortcut"
                   value="Alt+Space"
+                  aria-label="全域快捷鍵設定"
+                  readonly
                 />
-                <button class="btn-icon" id="btnRecordShortcut" title="按鍵錄製">🎹</button>
+                <button class="btn-icon" id="btnRecordShortcut" title="按鍵錄製" aria-label="錄製快捷鍵">🎹</button>
               </div>
             </div>
           </div>
@@ -149,8 +151,8 @@
             <h3>🏷️ 群組管理</h3>
             <div class="groups-list" id="groupsList"></div>
             <div class="add-group-form">
-              <input type="text" id="newGroupName" placeholder="新群組名稱" />
-              <button class="btn btn-primary" id="btnAddGroup">新增</button>
+              <input type="text" id="newGroupName" placeholder="新群組名稱" aria-label="新群組名稱" />
+              <button class="btn btn-primary" id="btnAddGroup" aria-label="新增群組">新增</button>
             </div>
           </div>
 
@@ -158,8 +160,8 @@
           <div class="settings-section">
             <h3>💾 資料管理</h3>
             <div class="import-export-buttons">
-              <button class="btn-secondary" id="btnExportConfig">📤 匯出設定</button>
-              <button class="btn-secondary" id="btnImportConfig">📥 匯入設定</button>
+              <button class="btn-secondary" id="btnExportConfig" aria-label="匯出設定檔">📤 匯出設定</button>
+              <button class="btn-secondary" id="btnImportConfig" aria-label="匯入設定檔">📥 匯入設定</button>
             </div>
           </div>
         </div>

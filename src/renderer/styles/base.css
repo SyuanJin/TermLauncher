@@ -45,4 +45,32 @@ select {
 input:focus,
 select:focus {
   border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+}
+
+/* 全域 focus 樣式 - 提升鍵盤導航辨識度 */
+button:focus-visible,
+.btn:focus-visible,
+.btn-icon:focus-visible,
+.btn-secondary:focus-visible,
+.toggle-btn:focus-visible,
+.browse-btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.directory-item:focus-visible,
+.recent-item:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-color: var(--accent-blue);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: -2px;
+}
+
+.switch input:focus-visible + .slider {
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
 }

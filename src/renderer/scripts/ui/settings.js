@@ -28,7 +28,11 @@ export function renderGroupsList() {
         '<div class="group-tag">' +
         g +
         (g !== '預設'
-          ? '<button class="delete-group" data-group="' + g + '">✕</button>'
+          ? '<button class="delete-group" data-group="' +
+            g +
+            '" aria-label="刪除群組 ' +
+            g +
+            '">✕</button>'
           : '') +
         '</div>'
     )
@@ -36,8 +40,18 @@ export function renderGroupsList() {
 
   // 綁定刪除群組事件
   document.querySelectorAll('[data-group]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    const handleDelete = () => {
       deleteGroup(btn.dataset.group);
+    };
+
+    btn.addEventListener('click', handleDelete);
+
+    // 鍵盤支援（Enter 和 Space）
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleDelete();
+      }
     });
   });
 }

@@ -72,7 +72,9 @@ export function renderDirectories() {
             dir =>
               '<div class="directory-item" data-id="' +
               dir.id +
-              '"><div class="dir-icon ' +
+              '" tabindex="0" role="button" aria-label="開啟 ' +
+              dir.name +
+              ' 終端機"><div class="dir-icon ' +
               dir.type +
               '">' +
               (dir.type === 'wsl' ? '🐧' : '⚡') +
@@ -86,7 +88,9 @@ export function renderDirectories() {
               dir.path +
               '</div></div><div class="dir-actions"><button class="btn-icon delete" data-delete-id="' +
               dir.id +
-              '" title="刪除">🗑️</button></div></div>'
+              '" title="刪除" aria-label="刪除 ' +
+              dir.name +
+              '">🗑️</button></div></div>'
           )
           .join('') +
         '</div></div>'
@@ -103,20 +107,40 @@ export function renderDirectories() {
 function bindDirectoryEvents() {
   // 點擊目錄項目開啟終端
   document.querySelectorAll('.directory-item').forEach(item => {
-    item.addEventListener('click', e => {
+    const handleOpen = e => {
       // 如果點擊的是刪除按鈕，不觸發開啟終端
       if (e.target.closest('.btn-icon.delete')) return;
       const id = parseInt(item.dataset.id);
       openTerminal(id);
+    };
+
+    item.addEventListener('click', handleOpen);
+
+    // 鍵盤支援（Enter 和 Space）
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleOpen(e);
+      }
     });
   });
 
   // 刪除按鈕
   document.querySelectorAll('[data-delete-id]').forEach(btn => {
-    btn.addEventListener('click', e => {
+    const handleDelete = e => {
       e.stopPropagation();
       const id = parseInt(btn.dataset.deleteId);
       deleteDirectory(id);
+    };
+
+    btn.addEventListener('click', handleDelete);
+
+    // 鍵盤支援（Enter 和 Space）
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleDelete(e);
+      }
     });
   });
 }
@@ -145,7 +169,9 @@ export function renderRecentList() {
       d =>
         '<div class="recent-item" data-recent-id="' +
         d.id +
-        '"><span>' +
+        '" tabindex="0" role="button" aria-label="開啟 ' +
+        d.name +
+        ' 終端機"><span>' +
         (d.type === 'wsl' ? '🐧' : '⚡') +
         '</span><span>' +
         d.name +
@@ -153,11 +179,21 @@ export function renderRecentList() {
     )
     .join('');
 
-  // 綁定點擊事件
+  // 綁定點擊和鍵盤事件
   document.querySelectorAll('[data-recent-id]').forEach(item => {
-    item.addEventListener('click', () => {
+    const handleOpen = () => {
       const id = parseInt(item.dataset.recentId);
       openTerminal(id);
+    };
+
+    item.addEventListener('click', handleOpen);
+
+    // 鍵盤支援（Enter 和 Space）
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleOpen();
+      }
     });
   });
 }
@@ -169,7 +205,9 @@ export function toggleAddForm() {
   const form = document.getElementById('addForm');
   const btn = document.getElementById('btnToggleAddForm');
   form.classList.toggle('show');
-  btn.textContent = form.classList.contains('show') ? '收起' : '展開';
+  const isExpanded = form.classList.contains('show');
+  btn.textContent = isExpanded ? '收起' : '展開';
+  btn.setAttribute('aria-expanded', isExpanded.toString());
 }
 
 /**
