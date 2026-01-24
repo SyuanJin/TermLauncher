@@ -342,6 +342,40 @@ export async function deleteDirectory(id) {
 }
 
 /**
+ * 錯誤類型對應的訊息鍵
+ */
+const ErrorTypeToMessageKey = {
+  PATH_NOT_FOUND: 'pathNotFound',
+  PATH_NOT_DIRECTORY: 'pathNotDirectory',
+  WINDOWS_TERMINAL_NOT_FOUND: 'windowsTerminalNotFound',
+  WSL_NOT_FOUND: 'wslNotFound',
+  WSL_DISTRO_NOT_FOUND: 'wslDistroNotFound',
+};
+
+/**
+ * 取得錯誤訊息
+ * @param {Object} result - 錯誤結果
+ * @returns {string} 錯誤訊息
+ */
+function getErrorMessage(result) {
+  const messageKey = ErrorTypeToMessageKey[result.errorType];
+
+  if (messageKey) {
+    // 根據不同錯誤類型傳遞不同的參數
+    if (result.errorType === 'PATH_NOT_FOUND' || result.errorType === 'PATH_NOT_DIRECTORY') {
+      return t('toast.' + messageKey, { path: result.errorDetail });
+    }
+    if (result.errorType === 'WSL_DISTRO_NOT_FOUND') {
+      return t('toast.' + messageKey, { distro: result.errorDetail });
+    }
+    return t('toast.' + messageKey);
+  }
+
+  // 通用錯誤訊息
+  return t('toast.openFailed', { error: result.error || 'Unknown error' });
+}
+
+/**
  * 開啟終端
  * @param {number} id - 目錄 ID
  */
@@ -357,7 +391,8 @@ export async function openTerminal(id) {
     await loadConfig();
     renderRecentList();
   } else {
-    showToast(t('toast.openFailed', { error: result.error }), 'error');
+    const errorMessage = getErrorMessage(result);
+    showToast(errorMessage, 'error');
   }
 }
 

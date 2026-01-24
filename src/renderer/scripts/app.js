@@ -28,6 +28,8 @@ import {
   applyTheme,
 } from './ui/settings.js';
 import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
+import { initToast, showWarning } from './ui/toast.js';
+import { t } from './i18n.js';
 
 /**
  * 渲染所有內容
@@ -82,6 +84,28 @@ function setupEventListeners() {
 }
 
 /**
+ * 檢查啟動時的錯誤狀態
+ */
+async function checkStartupErrors() {
+  // 檢查配置是否曾損壞
+  const configCorrupted = await api.checkConfigCorrupted();
+  if (configCorrupted) {
+    showWarning(t('toast.configCorrupted'), { persistent: true });
+    return; // 避免同時顯示多個警告
+  }
+
+  // 檢查快捷鍵註冊狀態
+  const shortcutStatus = await api.getShortcutStatus();
+  if (shortcutStatus && !shortcutStatus.success) {
+    if (shortcutStatus.errorType === 'ALREADY_REGISTERED') {
+      showWarning(t('toast.shortcutConflict', { shortcut: shortcutStatus.shortcut }));
+    } else {
+      showWarning(t('toast.shortcutRegistrationFailed'));
+    }
+  }
+}
+
+/**
  * 初始化應用程式
  */
 async function init() {
@@ -94,8 +118,14 @@ async function init() {
   // 初始化 i18n
   await initI18n(config.settings?.language || 'zh-TW');
 
+  // 初始化 Toast 通知
+  initToast();
+
   await renderAll();
   setupEventListeners();
+
+  // 檢查啟動時的錯誤狀態
+  await checkStartupErrors();
 }
 
 // 啟動應用程式

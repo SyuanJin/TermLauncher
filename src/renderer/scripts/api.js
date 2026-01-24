@@ -82,4 +82,16 @@ export const api = {
    * @returns {Promise<boolean>} 是否啟用
    */
   getAutoLaunch: () => window.electronAPI.getAutoLaunch(),
+
+  /**
+   * 檢查配置是否曾損壞
+   * @returns {Promise<boolean>} 是否曾損壞
+   */
+  checkConfigCorrupted: () => window.electronAPI.checkConfigCorrupted(),
+
+  /**
+   * 取得快捷鍵註冊狀態
+   * @returns {Promise<Object|null>} { success: boolean, shortcut: string, errorType?: string }
+   */
+  getShortcutStatus: () => window.electronAPI.getShortcutStatus(),
 };

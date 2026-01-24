@@ -4,12 +4,15 @@
  */
 const { ipcMain, dialog, app } = require('electron');
 const fs = require('fs');
-const { loadConfig, saveConfig } = require('./config');
+const { loadConfig, saveConfig, wasConfigCorrupted } = require('./config');
 const { openTerminal } = require('./terminal');
-const { registerShortcut } = require('./shortcuts');
+const { registerShortcut, getLastRegistrationResult } = require('./shortcuts');
 const { getMainWindow } = require('./window');
 const { getAvailableLocales, loadLocale } = require('./i18n');
 const { updateTrayMenu } = require('./tray');
+const { createLogger } = require('./logger');
+
+const logger = createLogger('IPC');
 
 /**
  * 設定所有 IPC 事件處理器
@@ -133,6 +136,16 @@ function setupIpcHandlers() {
   ipcMain.handle('get-auto-launch', () => {
     const settings = app.getLoginItemSettings();
     return settings.openAtLogin;
+  });
+
+  // 檢查配置是否曾損壞
+  ipcMain.handle('check-config-corrupted', () => {
+    return wasConfigCorrupted();
+  });
+
+  // 取得快捷鍵註冊狀態
+  ipcMain.handle('get-shortcut-status', () => {
+    return getLastRegistrationResult();
   });
 
   // 視窗控制

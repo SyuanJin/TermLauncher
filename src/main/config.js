@@ -5,6 +5,9 @@
 const { app } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { createLogger } = require('./logger');
+
+const logger = createLogger('Config');
 
 // 配置檔路徑
 const configPath = path.join(app.getPath('userData'), 'config.json');
@@ -108,6 +111,36 @@ function migrateConfig(config) {
 }
 
 /**
+ * 配置是否曾損壞（用於通知前端）
+ */
+let configWasCorrupted = false;
+
+/**
+ * 檢查配置是否曾損壞
+ * @returns {boolean}
+ */
+function wasConfigCorrupted() {
+  const result = configWasCorrupted;
+  configWasCorrupted = false; // 讀取後重置
+  return result;
+}
+
+/**
+ * 備份損壞的配置
+ */
+function backupCorruptedConfig() {
+  try {
+    if (fs.existsSync(configPath)) {
+      const backupPath = configPath + '.backup.' + Date.now();
+      fs.copyFileSync(configPath, backupPath);
+      logger.info('Corrupted config backed up', backupPath);
+    }
+  } catch (err) {
+    logger.error('Failed to backup corrupted config', err);
+  }
+}
+
+/**
  * 讀取配置
  * @returns {Object} 配置物件
  */
@@ -129,7 +162,14 @@ function loadConfig() {
       return config;
     }
   } catch (err) {
-    console.error('[Config] Failed to load:', err);
+    if (err instanceof SyntaxError) {
+      // JSON 解析錯誤，配置損壞
+      logger.error('Config file corrupted (JSON parse error)', err);
+      backupCorruptedConfig();
+      configWasCorrupted = true;
+    } else {
+      logger.error('Failed to load config', err);
+    }
   }
   return defaultConfig;
 }
@@ -142,9 +182,10 @@ function loadConfig() {
 function saveConfig(config) {
   try {
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
+    logger.info('Config saved successfully');
     return true;
   } catch (err) {
-    console.error('[Config] Failed to save:', err);
+    logger.error('Failed to save config', err);
     return false;
   }
 }
@@ -152,6 +193,7 @@ function saveConfig(config) {
 module.exports = {
   loadConfig,
   saveConfig,
+  wasConfigCorrupted,
   defaultConfig,
   defaultTerminals,
   configPath,

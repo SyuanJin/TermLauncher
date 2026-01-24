@@ -5,18 +5,51 @@
 const { globalShortcut } = require('electron');
 const { loadConfig } = require('./config');
 const { getMainWindow } = require('./window');
+const { createLogger } = require('./logger');
+
+const logger = createLogger('Shortcut');
+
+/**
+ * 錯誤類型常數
+ */
+const ShortcutError = {
+  ALREADY_REGISTERED: 'ALREADY_REGISTERED',
+  INVALID_SHORTCUT: 'INVALID_SHORTCUT',
+  REGISTRATION_FAILED: 'REGISTRATION_FAILED',
+};
+
+/**
+ * 最後一次註冊結果
+ */
+let lastRegistrationResult = null;
+
+/**
+ * 檢測快捷鍵是否已被註冊
+ * @param {string} shortcut - 快捷鍵組合
+ * @returns {boolean}
+ */
+function isShortcutRegistered(shortcut) {
+  return globalShortcut.isRegistered(shortcut);
+}
 
 /**
  * 註冊全域快捷鍵
+ * @param {string} [customShortcut] - 可選的自訂快捷鍵，若未提供則從配置讀取
+ * @returns {Object} { success: boolean, shortcut: string, errorType?: string }
  */
-function registerShortcut() {
+function registerShortcut(customShortcut) {
   const config = loadConfig();
-  const shortcut = config.settings.globalShortcut || 'Alt+Space';
+  const shortcut = customShortcut || config.settings.globalShortcut || 'Alt+Space';
 
+  // 先取消所有已註冊的快捷鍵
   globalShortcut.unregisterAll();
 
+  // 檢測快捷鍵是否已被其他程式佔用
+  // 注意：Electron 的 isRegistered 只檢測本應用程式註冊的快捷鍵
+  // 無法檢測系統或其他程式的佔用
+
   try {
-    globalShortcut.register(shortcut, () => {
+    const success = globalShortcut.register(shortcut, () => {
       const mainWindow = getMainWindow();
       if (!mainWindow) return;
 
@@ -27,9 +60,42 @@ function registerShortcut() {
         mainWindow.focus();
       }
     });
+
+    if (success) {
+      logger.info('Shortcut registered successfully', shortcut);
+      lastRegistrationResult = {
+        success: true,
+        shortcut,
+      };
+    } else {
+      // 註冊失敗，可能是快捷鍵已被佔用
+      logger.warn('Shortcut registration failed (may be occupied)', shortcut);
+      lastRegistrationResult = {
+        success: false,
+        shortcut,
+        errorType: ShortcutError.ALREADY_REGISTERED,
+      };
+    }
+
+    return lastRegistrationResult;
   } catch (err) {
-    console.error('[Shortcut] Failed to register:', err);
+    logger.error('Shortcut registration error', err);
+    lastRegistrationResult = {
+      success: false,
+      shortcut,
+      errorType: ShortcutError.REGISTRATION_FAILED,
+      error: err.message,
+    };
+    return lastRegistrationResult;
   }
+}
+
+/**
+ * 取得最後一次註冊結果
+ * @returns {Object|null}
+ */
+function getLastRegistrationResult() {
+  return lastRegistrationResult;
 }
 
 /**
@@ -37,9 +103,45 @@ function registerShortcut() {
  */
 function unregisterAllShortcuts() {
   globalShortcut.unregisterAll();
+  logger.info('All shortcuts unregistered');
+}
+
+/**
+ * 驗證快捷鍵格式
+ * @param {string} shortcut - 快捷鍵組合
+ * @returns {Object} { valid: boolean, errorType?: string }
+ */
+function validateShortcut(shortcut) {
+  if (!shortcut || typeof shortcut !== 'string') {
+    return {
+      valid: false,
+      errorType: ShortcutError.INVALID_SHORTCUT,
+    };
+  }
+
+  // 檢測是否包含修飾鍵
+  const hasModifier =
+    shortcut.includes('Ctrl') ||
+    shortcut.includes('Alt') ||
+    shortcut.includes('Shift') ||
+    shortcut.includes('Meta') ||
+    shortcut.includes('Command');
+
+  if (!hasModifier) {
+    return {
+      valid: false,
+      errorType: ShortcutError.INVALID_SHORTCUT,
+    };
+  }
+
+  return { valid: true };
 }
 
 module.exports = {
   registerShortcut,
   unregisterAllShortcuts,
+  isShortcutRegistered,
+  validateShortcut,
+  getLastRegistrationResult,
+  ShortcutError,
 };
