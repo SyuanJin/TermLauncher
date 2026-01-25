@@ -111,13 +111,18 @@ function validatePathSafety(path) {
  * @returns {string} 轉義後的路徑（已包含引號）
  */
 function escapePathForShell(path, format) {
-  if (format === 'unix') {
-    // Unix/WSL: 使用單引號，並轉義內部的單引號
+  // 在 Windows 平台上，即使是 WSL 路徑，命令也是在 Windows shell 中執行的
+  // 因此必須使用雙引號（Windows shell 不支援單引號作為字串定界符）
+  if (process.platform === 'win32') {
+    // Windows: 使用雙引號，並轉義內部的雙引號
+    return '"' + path.replace(/"/g, '""') + '"';
+  } else if (format === 'unix') {
+    // Unix/Linux/macOS: 使用單引號，並轉義內部的單引號
     // 'path' -> 'path'
     // path's -> 'path'\''s'
     return "'" + path.replace(/'/g, "'\\''") + "'";
   } else {
-    // Windows: 使用雙引號，並轉義內部的雙引號
+    // 其他情況: 使用雙引號
     return '"' + path.replace(/"/g, '""') + '"';
   }
 }
