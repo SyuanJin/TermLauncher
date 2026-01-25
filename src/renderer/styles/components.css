@@ -1145,6 +1145,8 @@ input:checked + .slider:before {
   gap: 4px;
   opacity: 0;
   transition: opacity 0.15s ease;
+  min-width: 68px; /* 保留按鈕空間以對齊數量顯示 */
+  justify-content: flex-end;
 }
 
 .group-card:hover .group-card-actions {
