@@ -239,6 +239,7 @@
     "languageChanged": "語言已變更，部分項目需重啟生效",
     "autoLaunchEnabled": "已啟用開機自動啟動",
     "autoLaunchDisabled": "已停用開機自動啟動",
+    "autoLaunchDevMode": "開發模式下不支援開機自動啟動",
     "terminalNameRequired": "請輸入終端名稱",
     "terminalCommandRequired": "請輸入啟動指令",
     "terminalCommandNeedsPath": "指令必須包含 {path} 佔位符",

@@ -59,10 +59,15 @@ export async function changeShowTabText() {
  * 變更開機自動啟動設定
  */
 export async function changeAutoLaunch() {
-  const enabled = document.getElementById('autoLaunch').checked;
+  const checkbox = document.getElementById('autoLaunch');
+  const enabled = checkbox.checked;
   const result = await api.setAutoLaunch(enabled);
   if (result.success) {
     showToast(enabled ? t('toast.autoLaunchEnabled') : t('toast.autoLaunchDisabled'), 'success');
+  } else if (result.reason === 'dev-mode') {
+    // 開發模式下不支援，還原 checkbox 狀態
+    checkbox.checked = false;
+    showToast(t('toast.autoLaunchDevMode'), 'warning');
   }
 }
 

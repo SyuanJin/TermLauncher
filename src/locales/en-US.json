@@ -239,6 +239,7 @@
     "languageChanged": "Language changed, some items require restart",
     "autoLaunchEnabled": "Auto-launch enabled",
     "autoLaunchDisabled": "Auto-launch disabled",
+    "autoLaunchDevMode": "Auto-launch not supported in dev mode",
     "terminalNameRequired": "Please enter terminal name",
     "terminalCommandRequired": "Please enter launch command",
     "terminalCommandNeedsPath": "Command must include {path} placeholder",

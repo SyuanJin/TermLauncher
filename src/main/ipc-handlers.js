@@ -123,10 +123,26 @@ function setupIpcHandlers() {
 
   // 設定開機自動啟動
   ipcMain.handle('set-auto-launch', (event, enabled) => {
+    // 開發模式下不支援自動啟動（會啟動空白 Electron）
+    if (!app.isPackaged) {
+      logger.warn('Auto-launch not supported in dev mode');
+      return { success: false, enabled: false, reason: 'dev-mode' };
+    }
+
     const config = loadConfig();
+
+    // 取得正確的可執行檔路徑
+    // Portable 版本需要使用 PORTABLE_EXECUTABLE_FILE 環境變數
+    let exePath = process.execPath;
+    if (process.env.PORTABLE_EXECUTABLE_FILE) {
+      exePath = process.env.PORTABLE_EXECUTABLE_FILE;
+      logger.info(`Portable mode, using path: ${exePath}`);
+    }
+
     app.setLoginItemSettings({
       openAtLogin: enabled,
       openAsHidden: config.settings.startMinimized || false,
+      path: exePath,
     });
     config.settings.autoLaunch = enabled;
     saveConfig(config);
@@ -135,7 +151,18 @@ function setupIpcHandlers() {
 
   // 取得開機自動啟動狀態
   ipcMain.handle('get-auto-launch', () => {
-    const settings = app.getLoginItemSettings();
+    // 開發模式下回傳 false
+    if (!app.isPackaged) {
+      return false;
+    }
+
+    // Portable 版本需要使用正確的路徑檢查
+    let exePath = process.execPath;
+    if (process.env.PORTABLE_EXECUTABLE_FILE) {
+      exePath = process.env.PORTABLE_EXECUTABLE_FILE;
+    }
+
+    const settings = app.getLoginItemSettings({ path: exePath });
     return settings.openAtLogin;
   });
 
