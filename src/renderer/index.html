@@ -419,6 +419,10 @@
                   +
                 </button>
               </div>
+              <div class="terminal-detection">
+                <h4 data-i18n="ui.settings.terminals.detectionTitle">終端偵測狀態</h4>
+                <div class="terminal-detection-status" id="terminalDetectionStatus"></div>
+              </div>
               <div class="terminals-list" id="terminalsList"></div>
             </div>
 
@@ -484,7 +488,10 @@
     <!-- Toast 通知 -->
     <div class="toast" id="toast">
       <span class="toast-icon">✓</span>
-      <span class="toast-text" id="toastText"></span>
+      <div class="toast-content">
+        <span class="toast-text" id="toastText"></span>
+        <div class="toast-actions"></div>
+      </div>
       <button class="toast-close" aria-label="關閉">✕</button>
     </div>
 

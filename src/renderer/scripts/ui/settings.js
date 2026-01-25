@@ -174,6 +174,97 @@ export async function renderSettings() {
   // 顯示版本號
   const version = (await api.getAppVersion?.()) || '2.0.0';
   document.getElementById('appVersion').textContent = 'v' + version;
+
+  // 渲染終端探測狀態
+  await renderTerminalDetectionStatus();
+}
+
+/**
+ * 探測結果快取
+ */
+let detectedTerminalsCache = null;
+
+/**
+ * 探測已安裝的終端
+ * @returns {Promise<Object>} 探測結果
+ */
+export async function detectTerminals() {
+  if (!detectedTerminalsCache) {
+    detectedTerminalsCache = await api.detectTerminals();
+  }
+  return detectedTerminalsCache;
+}
+
+/**
+ * 渲染終端探測狀態
+ */
+export async function renderTerminalDetectionStatus() {
+  const container = document.getElementById('terminalDetectionStatus');
+  if (!container) return;
+
+  const detected = await detectTerminals();
+  const items = [];
+
+  // Windows Terminal
+  items.push({
+    name: 'Windows Terminal',
+    icon: '🖥️',
+    installed: detected.windowsTerminal,
+  });
+
+  // WSL
+  items.push({
+    name: 'WSL',
+    icon: '🐧',
+    installed: detected.wsl,
+    detail:
+      detected.wsl && detected.wslDistros.length > 0
+        ? detected.wslDistros.length + ' ' + t('ui.settings.terminals.distros')
+        : null,
+  });
+
+  // Git Bash
+  items.push({
+    name: 'Git Bash',
+    icon: '🐱',
+    installed: detected.gitBash,
+  });
+
+  // PowerShell
+  items.push({
+    name: 'PowerShell',
+    icon: '⚡',
+    installed: detected.powerShell,
+  });
+
+  // CMD
+  items.push({
+    name: 'CMD',
+    icon: '📟',
+    installed: detected.cmd,
+  });
+
+  container.innerHTML = items
+    .map(
+      item =>
+        '<div class="detection-item ' +
+        (item.installed ? 'installed' : 'not-installed') +
+        '">' +
+        '<span class="detection-icon">' +
+        item.icon +
+        '</span>' +
+        '<span class="detection-name">' +
+        item.name +
+        '</span>' +
+        '<span class="detection-status">' +
+        (item.installed
+          ? '✓ ' + t('ui.settings.terminals.detected')
+          : '✕ ' + t('ui.settings.terminals.notDetected')) +
+        '</span>' +
+        (item.detail ? '<span class="detection-detail">(' + item.detail + ')</span>' : '') +
+        '</div>'
+    )
+    .join('');
 }
 
 /**
@@ -657,35 +748,164 @@ export async function saveSettings() {
 }
 
 /**
- * 匯出配置
+ * 匯出配置（顯示選項彈窗）
  */
 export async function exportConfig() {
-  const result = await api.exportConfig();
-  if (result.success) {
-    showToast(t('toast.configExported'), 'success');
-  }
+  const preview = await api.getExportPreview();
+
+  const content =
+    '<div class="modal-form">' +
+    '<p class="modal-description">' +
+    t('ui.settings.data.exportAdvancedDesc') +
+    '</p>' +
+    '<div class="export-options">' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="exportTerminals" checked />' +
+    '<span>' +
+    t('ui.settings.data.exportTerminals') +
+    ' (' +
+    preview.terminalsCount +
+    ')</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="exportGroups" checked />' +
+    '<span>' +
+    t('ui.settings.data.exportGroups') +
+    ' (' +
+    preview.groupsCount +
+    ')</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="exportDirectories" checked />' +
+    '<span>' +
+    t('ui.settings.data.exportDirectories') +
+    ' (' +
+    preview.directoriesCount +
+    ')</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="exportFavorites" checked />' +
+    '<span>' +
+    t('ui.settings.data.exportFavorites') +
+    ' (' +
+    preview.favoritesCount +
+    ')</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="exportSettings" checked />' +
+    '<span>' +
+    t('ui.settings.data.exportSettings') +
+    '</span>' +
+    '</label>' +
+    '</div>' +
+    '</div>';
+
+  openModal({
+    title: t('ui.settings.data.exportAdvancedTitle'),
+    content,
+    confirmText: t('ui.settings.data.export'),
+    onConfirm: async () => {
+      const options = {
+        includeTerminals: document.getElementById('exportTerminals').checked,
+        includeGroups: document.getElementById('exportGroups').checked,
+        includeDirectories: document.getElementById('exportDirectories').checked,
+        includeFavorites: document.getElementById('exportFavorites').checked,
+        includeSettings: document.getElementById('exportSettings').checked,
+      };
+
+      const result = await api.exportConfigAdvanced(options);
+      if (result.success) {
+        showToast(t('toast.configExported'), 'success');
+      }
+      return true;
+    },
+  });
 }
 
 /**
- * 匯入配置
+ * 匯入配置（顯示選項彈窗）
  */
-export async function importConfig() {
-  const result = await api.importConfig();
-  if (result.success) {
-    setConfig(result.config);
+export function importConfig() {
+  const content =
+    '<div class="modal-form">' +
+    '<p class="modal-description">' +
+    t('ui.settings.data.importAdvancedDesc') +
+    '</p>' +
+    '<div class="import-options">' +
+    '<h4>' +
+    t('ui.settings.data.importMode') +
+    '</h4>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="mergeTerminals" checked />' +
+    '<span>' +
+    t('ui.settings.data.mergeTerminals') +
+    '</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="mergeGroups" checked />' +
+    '<span>' +
+    t('ui.settings.data.mergeGroups') +
+    '</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="mergeDirectories" checked />' +
+    '<span>' +
+    t('ui.settings.data.mergeDirectories') +
+    '</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="mergeFavorites" checked />' +
+    '<span>' +
+    t('ui.settings.data.mergeFavorites') +
+    '</span>' +
+    '</label>' +
+    '<label class="checkbox-label">' +
+    '<input type="checkbox" id="mergeSettings" checked />' +
+    '<span>' +
+    t('ui.settings.data.mergeSettings') +
+    '</span>' +
+    '</label>' +
+    '<small class="hint">' +
+    t('ui.settings.data.mergeHint') +
+    '</small>' +
+    '</div>' +
+    '</div>';
 
-    renderGroupFilter();
-    renderGroupSelect();
-    renderTerminalSelect();
-    renderDirectories();
-    await renderSettings();
-    renderGroupsTab();
-    renderTerminalsList();
+  openModal({
+    title: t('ui.settings.data.importAdvancedTitle'),
+    content,
+    confirmText: t('ui.settings.data.import'),
+    onConfirm: async () => {
+      const options = {
+        mergeTerminals: document.getElementById('mergeTerminals').checked,
+        mergeGroups: document.getElementById('mergeGroups').checked,
+        mergeDirectories: document.getElementById('mergeDirectories').checked,
+        mergeFavorites: document.getElementById('mergeFavorites').checked,
+        mergeSettings: document.getElementById('mergeSettings').checked,
+      };
 
-    showToast(t('toast.configImported'), 'success');
-  } else if (result.error) {
-    showToast(t('toast.importFailed', { error: result.error }), 'error');
-  }
+      const result = await api.importConfigAdvanced(options);
+      if (result.success) {
+        setConfig(result.config);
+        renderGroupFilter();
+        renderGroupSelect();
+        renderTerminalSelect();
+        renderDirectories();
+        await renderSettings();
+        renderGroupsTab();
+        renderTerminalsList();
+
+        if (result.errors && result.errors.length > 0) {
+          showToast(t('toast.configImportedWithWarnings'), 'warning');
+        } else {
+          showToast(t('toast.configImported'), 'success');
+        }
+      } else if (result.errors) {
+        showToast(t('toast.importFailed', { error: result.errors.join(', ') }), 'error');
+      }
+      return true;
+    },
+  });
 }
 
 /**

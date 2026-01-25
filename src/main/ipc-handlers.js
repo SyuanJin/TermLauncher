@@ -5,8 +5,16 @@
 const { ipcMain, dialog, app, shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const { loadConfig, saveConfig, wasConfigCorrupted, defaultConfig } = require('./config');
-const { openTerminal } = require('./terminal');
+const {
+  loadConfig,
+  saveConfig,
+  wasConfigCorrupted,
+  defaultConfig,
+  exportConfigAdvanced,
+  importConfigAdvanced,
+  getExportPreview,
+} = require('./config');
+const { openTerminal, previewCommand, detectInstalledTerminals } = require('./terminal');
 const { registerShortcut, getLastRegistrationResult } = require('./shortcuts');
 const { getMainWindow } = require('./window');
 const { getAvailableLocales, loadLocale } = require('./i18n');
@@ -55,7 +63,23 @@ function setupIpcHandlers() {
     return openTerminal(dir, terminal);
   });
 
-  // 匯出配置
+  // 預覽終端命令
+  ipcMain.handle('preview-command', (event, dir, terminalId) => {
+    const config = loadConfig();
+
+    // 取得終端配置
+    const terminal = config.terminals?.find(
+      t => t.id === (terminalId || dir.terminalId || 'wsl-ubuntu')
+    );
+
+    if (!terminal) {
+      return { success: false, error: 'Terminal config not found' };
+    }
+
+    return previewCommand(dir, terminal);
+  });
+
+  // 匯出配置（基本版）
   ipcMain.handle('export-config', async () => {
     const mainWindow = getMainWindow();
     const result = await dialog.showSaveDialog(mainWindow, {
@@ -72,7 +96,24 @@ function setupIpcHandlers() {
     return { success: false };
   });
 
-  // 匯入配置
+  // 匯出配置（進階版）
+  ipcMain.handle('export-config-advanced', async (event, options) => {
+    const mainWindow = getMainWindow();
+    const result = await dialog.showSaveDialog(mainWindow, {
+      title: '匯出設定',
+      defaultPath: 'termlauncher-config.json',
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+    });
+
+    if (!result.canceled && result.filePath) {
+      const exportData = exportConfigAdvanced(options);
+      fs.writeFileSync(result.filePath, JSON.stringify(exportData, null, 2), 'utf-8');
+      return { success: true, path: result.filePath, data: exportData };
+    }
+    return { success: false };
+  });
+
+  // 匯入配置（基本版）
   ipcMain.handle('import-config', async () => {
     const mainWindow = getMainWindow();
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -92,6 +133,33 @@ function setupIpcHandlers() {
       }
     }
     return { success: false };
+  });
+
+  // 匯入配置（進階版）
+  ipcMain.handle('import-config-advanced', async (event, options) => {
+    const mainWindow = getMainWindow();
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: '匯入設定',
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+      properties: ['openFile'],
+    });
+
+    if (!result.canceled && result.filePaths.length > 0) {
+      try {
+        const data = fs.readFileSync(result.filePaths[0], 'utf-8');
+        const importData = JSON.parse(data);
+        const importResult = importConfigAdvanced(importData, options);
+        return importResult;
+      } catch (err) {
+        return { success: false, errors: [err.message] };
+      }
+    }
+    return { success: false };
+  });
+
+  // 取得匯出預覽
+  ipcMain.handle('get-export-preview', () => {
+    return getExportPreview();
   });
 
   // 選擇資料夾
@@ -195,6 +263,11 @@ function setupIpcHandlers() {
   // 取得應用程式版本
   ipcMain.handle('get-app-version', () => {
     return app.getVersion();
+  });
+
+  // 探測已安裝的終端
+  ipcMain.handle('detect-terminals', () => {
+    return detectInstalledTerminals();
   });
 
   // 記錄前端錯誤

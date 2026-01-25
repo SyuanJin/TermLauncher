@@ -34,26 +34,36 @@ let currentToastTimer = null;
 let isPersistent = false;
 
 /**
+ * 行動按鈕回調函數儲存
+ */
+let actionCallbacks = {};
+
+/**
  * 顯示 Toast 通知
  * @param {string} msg - 訊息內容
  * @param {string} type - 類型：'success' | 'error' | 'warning' | 'info'
  * @param {Object} [options] - 選項
  * @param {boolean} [options.persistent=false] - 是否持久顯示（需手動關閉）
  * @param {number} [options.duration=3000] - 自動消失時間（毫秒）
+ * @param {Array} [options.actions=[]] - 行動按鈕陣列
  */
 export function showToast(msg, type = ToastType.INFO, options = {}) {
-  const { persistent = false, duration = 3000 } = options;
+  const { persistent = false, duration = 3000, actions = [] } = options;
 
   const toast = document.getElementById('toast');
   const toastText = document.getElementById('toastText');
   const toastIcon = toast.querySelector('.toast-icon');
   const closeBtn = toast.querySelector('.toast-close');
+  let actionsContainer = toast.querySelector('.toast-actions');
 
   // 清除之前的計時器
   if (currentToastTimer) {
     clearTimeout(currentToastTimer);
     currentToastTimer = null;
   }
+
+  // 清除之前的回調
+  actionCallbacks = {};
 
   // 設定類型
   toast.className = 'toast ' + type;
@@ -62,17 +72,41 @@ export function showToast(msg, type = ToastType.INFO, options = {}) {
   toastText.textContent = msg;
   toastIcon.textContent = ToastIcons[type] || ToastIcons.info;
 
+  // 處理行動按鈕
+  if (!actionsContainer) {
+    actionsContainer = document.createElement('div');
+    actionsContainer.className = 'toast-actions';
+    toast.querySelector('.toast-content').appendChild(actionsContainer);
+  }
+
+  // 清空並重建行動按鈕
+  actionsContainer.innerHTML = '';
+  if (actions.length > 0) {
+    actionsContainer.style.display = 'flex';
+    actions.forEach((action, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'toast-action-btn';
+      btn.textContent = action.label;
+      btn.dataset.actionIndex = index;
+      actionCallbacks[index] = action.onClick;
+      actionsContainer.appendChild(btn);
+    });
+  } else {
+    actionsContainer.style.display = 'none';
+  }
+
   // 處理持久顯示
-  isPersistent = persistent;
+  const shouldPersist = persistent || actions.length > 0;
+  isPersistent = shouldPersist;
   if (closeBtn) {
-    closeBtn.style.display = persistent ? 'flex' : 'none';
+    closeBtn.style.display = shouldPersist ? 'flex' : 'none';
   }
 
   // 顯示 Toast
   toast.classList.add('show');
 
-  // 自動消失（非持久模式）
-  if (!persistent) {
+  // 自動消失（非持久模式且無行動按鈕）
+  if (!shouldPersist) {
     currentToastTimer = setTimeout(() => {
       hideToast();
     }, duration);
@@ -141,4 +175,17 @@ export function initToast() {
       hideToast();
     });
   }
+
+  // 監聽行動按鈕點擊
+  toast?.addEventListener('click', e => {
+    const btn = e.target.closest('.toast-action-btn');
+    if (btn) {
+      const index = parseInt(btn.dataset.actionIndex, 10);
+      const callback = actionCallbacks[index];
+      if (callback) {
+        callback();
+      }
+      hideToast();
+    }
+  });
 }

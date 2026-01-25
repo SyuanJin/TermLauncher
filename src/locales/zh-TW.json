@@ -169,7 +169,11 @@
         "deleteHasDirectories": "有 {count} 個目錄使用此終端",
         "replaceWith": "替代終端",
         "confirmDelete": "刪除",
-        "toggleVisibility": "切換顯示/隱藏"
+        "toggleVisibility": "切換顯示/隱藏",
+        "detectionTitle": "終端偵測狀態",
+        "detected": "已偵測",
+        "notDetected": "未偵測",
+        "distros": "個發行版"
       },
       "groups": {
         "title": "🏷️ 群組管理",
@@ -181,7 +185,25 @@
         "title": "💾 資料管理",
         "export": "匯出設定",
         "import": "匯入設定",
-        "openConfigDir": "設定目錄"
+        "openConfigDir": "設定目錄",
+        "exportAdvanced": "進階匯出",
+        "importAdvanced": "進階匯入",
+        "exportAdvancedTitle": "進階匯出設定",
+        "exportAdvancedDesc": "選擇要匯出的內容：",
+        "importAdvancedTitle": "進階匯入設定",
+        "importAdvancedDesc": "選擇匯入模式（勾選為合併，取消勾選為覆蓋）：",
+        "importMode": "匯入模式",
+        "exportTerminals": "自訂終端",
+        "exportGroups": "群組",
+        "exportDirectories": "目錄",
+        "exportFavorites": "最愛",
+        "exportSettings": "設定",
+        "mergeTerminals": "合併終端",
+        "mergeGroups": "合併群組",
+        "mergeDirectories": "合併目錄",
+        "mergeFavorites": "合併最愛",
+        "mergeSettings": "合併設定",
+        "mergeHint": "勾選表示保留現有資料並合併新資料，取消勾選表示覆蓋"
       },
       "advanced": {
         "title": "🔧 進階操作",
@@ -235,6 +257,7 @@
     "groupDeleted": "群組已刪除",
     "configExported": "設定已匯出",
     "configImported": "設定已匯入",
+    "configImportedWithWarnings": "設定已匯入（有部分警告）",
     "importFailed": "匯入失敗: {error}",
     "pressShortcut": "請按下快捷鍵...",
     "shortcutUpdated": "快捷鍵已更新為 {shortcut}",
@@ -256,7 +279,9 @@
     "removedFromFavorites": "已從最愛移除",
     "configDirOpened": "已開啟設定目錄",
     "logsCleared": "日誌已清除",
-    "settingsReset": "所有設定已重設"
+    "settingsReset": "所有設定已重設",
+    "previewFailed": "無法預覽命令",
+    "commandCopied": "命令已複製到剪貼簿"
   },
   "tray": {
     "showWindow": "顯示視窗",
@@ -280,6 +305,22 @@
   },
   "contextMenu": {
     "openDefault": "使用預設終端開啟",
-    "openWith": "選擇終端開啟"
+    "openWith": "選擇終端開啟",
+    "previewCommand": "預覽命令",
+    "previewTitle": "命令預覽",
+    "previewTerminal": "終端",
+    "previewOriginalPath": "原始路徑",
+    "previewFormattedPath": "格式化路徑",
+    "previewExecute": "執行",
+    "previewCopy": "複製命令"
+  },
+  "error": {
+    "action": {
+      "installWindowsTerminal": "安裝 Windows Terminal",
+      "installWsl": "安裝 WSL",
+      "installDistro": "安裝發行版",
+      "switchTerminal": "切換終端",
+      "editDirectory": "編輯目錄"
+    }
   }
 }

@@ -333,6 +333,228 @@ function saveConfig(config) {
   }
 }
 
+/**
+ * 匯出配置（進階版本）
+ * @param {Object} options - 匯出選項
+ * @param {boolean} options.includeTerminals - 是否包含終端配置
+ * @param {boolean} options.includeGroups - 是否包含群組配置
+ * @param {boolean} options.includeDirectories - 是否包含目錄配置
+ * @param {boolean} options.includeSettings - 是否包含設定
+ * @param {boolean} options.includeFavorites - 是否包含最愛
+ * @returns {Object} 匯出的配置物件
+ */
+function exportConfigAdvanced(options = {}) {
+  const {
+    includeTerminals = true,
+    includeGroups = true,
+    includeDirectories = true,
+    includeSettings = true,
+    includeFavorites = true,
+  } = options;
+
+  const config = loadConfig();
+
+  const exportData = {
+    version: '2.0',
+    exportedAt: new Date().toISOString(),
+    appVersion: require('../../package.json').version,
+  };
+
+  if (includeTerminals) {
+    // 只匯出自訂終端，不匯出內建終端
+    exportData.terminals = config.terminals?.filter(t => !t.isBuiltin) || [];
+  }
+
+  if (includeGroups) {
+    // 只匯出非預設群組
+    exportData.groups = config.groups?.filter(g => !g.isDefault) || [];
+  }
+
+  if (includeDirectories) {
+    exportData.directories = config.directories || [];
+  }
+
+  if (includeSettings) {
+    exportData.settings = config.settings || {};
+  }
+
+  if (includeFavorites) {
+    exportData.favorites = config.favorites || [];
+  }
+
+  return exportData;
+}
+
+/**
+ * 匯入配置（進階版本）
+ * @param {Object} importData - 匯入的配置資料
+ * @param {Object} options - 匯入選項
+ * @param {boolean} options.mergeTerminals - 是否合併終端（否則覆蓋）
+ * @param {boolean} options.mergeGroups - 是否合併群組
+ * @param {boolean} options.mergeDirectories - 是否合併目錄
+ * @param {boolean} options.mergeSettings - 是否合併設定
+ * @param {boolean} options.mergeFavorites - 是否合併最愛
+ * @returns {Object} { success: boolean, config?: Object, errors?: string[] }
+ */
+function importConfigAdvanced(importData, options = {}) {
+  const {
+    mergeTerminals = true,
+    mergeGroups = true,
+    mergeDirectories = true,
+    mergeSettings = true,
+    mergeFavorites = true,
+  } = options;
+
+  const errors = [];
+
+  // 驗證格式
+  if (!importData || typeof importData !== 'object') {
+    return { success: false, errors: ['Invalid import data format'] };
+  }
+
+  const currentConfig = loadConfig();
+  const newConfig = { ...currentConfig };
+
+  // 匯入終端
+  if (importData.terminals) {
+    if (mergeTerminals) {
+      // 合併模式：避免 ID 衝突
+      importData.terminals.forEach(importedTerminal => {
+        const existingIndex = newConfig.terminals.findIndex(t => t.id === importedTerminal.id);
+        if (existingIndex !== -1) {
+          // ID 衝突，生成新 ID
+          importedTerminal.id =
+            'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          logger.info(`Terminal ID conflict resolved, new ID: ${importedTerminal.id}`);
+        }
+        newConfig.terminals.push(importedTerminal);
+      });
+    } else {
+      // 覆蓋模式：保留內建終端，替換自訂終端
+      const builtinTerminals = newConfig.terminals.filter(t => t.isBuiltin);
+      newConfig.terminals = [...builtinTerminals, ...importData.terminals];
+    }
+  }
+
+  // 匯入群組
+  if (importData.groups) {
+    if (mergeGroups) {
+      // 合併模式：避免 ID 和名稱衝突
+      importData.groups.forEach(importedGroup => {
+        const idExists = newConfig.groups.some(g => g.id === importedGroup.id);
+        const nameExists = newConfig.groups.some(g => g.name === importedGroup.name);
+
+        if (idExists) {
+          importedGroup.id =
+            'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+        if (nameExists) {
+          importedGroup.name = importedGroup.name + ' (imported)';
+        }
+        // 設定 order
+        importedGroup.order = newConfig.groups.length;
+        newConfig.groups.push(importedGroup);
+      });
+    } else {
+      // 覆蓋模式：保留預設群組
+      const defaultGroup = newConfig.groups.find(g => g.isDefault);
+      newConfig.groups = [defaultGroup, ...importData.groups];
+    }
+  }
+
+  // 匯入目錄
+  if (importData.directories) {
+    if (mergeDirectories) {
+      // 合併模式：避免 ID 衝突，檢查終端和群組參照
+      const maxId = Math.max(0, ...newConfig.directories.map(d => d.id));
+      let nextId = maxId + 1;
+
+      importData.directories.forEach(importedDir => {
+        // 生成新 ID
+        importedDir.id = nextId++;
+
+        // 檢查終端 ID 是否存在
+        if (
+          importedDir.terminalId &&
+          !newConfig.terminals.some(t => t.id === importedDir.terminalId)
+        ) {
+          // 終端不存在，使用預設
+          errors.push(
+            `Terminal "${importedDir.terminalId}" not found for directory "${importedDir.name}", using default`
+          );
+          importedDir.terminalId = 'wsl-ubuntu';
+        }
+
+        // 檢查群組 ID 是否存在
+        if (importedDir.group && !newConfig.groups.some(g => g.id === importedDir.group)) {
+          // 群組不存在，使用預設
+          errors.push(
+            `Group "${importedDir.group}" not found for directory "${importedDir.name}", using default`
+          );
+          importedDir.group = 'default';
+        }
+
+        newConfig.directories.push(importedDir);
+      });
+    } else {
+      // 覆蓋模式
+      newConfig.directories = importData.directories;
+    }
+  }
+
+  // 匯入設定
+  if (importData.settings) {
+    if (mergeSettings) {
+      // 合併模式：深度合併
+      newConfig.settings = { ...newConfig.settings, ...importData.settings };
+    } else {
+      newConfig.settings = importData.settings;
+    }
+  }
+
+  // 匯入最愛
+  if (importData.favorites) {
+    if (mergeFavorites) {
+      // 合併模式：去重
+      const existingFavorites = new Set(newConfig.favorites);
+      importData.favorites.forEach(fav => {
+        if (!existingFavorites.has(fav)) {
+          newConfig.favorites.push(fav);
+        }
+      });
+    } else {
+      newConfig.favorites = importData.favorites;
+    }
+  }
+
+  // 儲存配置
+  const saveResult = saveConfig(newConfig);
+  if (!saveResult) {
+    return { success: false, errors: ['Failed to save config'] };
+  }
+
+  return {
+    success: true,
+    config: newConfig,
+    errors: errors.length > 0 ? errors : undefined,
+  };
+}
+
+/**
+ * 取得匯出預覽資訊
+ * @returns {Object} 預覽資訊
+ */
+function getExportPreview() {
+  const config = loadConfig();
+  return {
+    terminalsCount: config.terminals?.filter(t => !t.isBuiltin).length || 0,
+    groupsCount: config.groups?.filter(g => !g.isDefault).length || 0,
+    directoriesCount: config.directories?.length || 0,
+    favoritesCount: config.favorites?.length || 0,
+    hasSettings: !!config.settings,
+  };
+}
+
 module.exports = {
   loadConfig,
   saveConfig,
@@ -341,4 +563,7 @@ module.exports = {
   defaultTerminals,
   defaultGroups,
   configPath,
+  exportConfigAdvanced,
+  importConfigAdvanced,
+  getExportPreview,
 };

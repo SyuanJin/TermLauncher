@@ -2,10 +2,9 @@
  * 終端啟動模組
  * 處理終端的動態啟動邏輯
  */
-const { spawn, execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { spawn } = require('child_process');
 const { createLogger } = require('./logger');
+const { getValidator } = require('./validators');
 
 const logger = createLogger('Terminal');
 
@@ -22,18 +21,15 @@ const ErrorType = {
   SPAWN_FAILED: 'SPAWN_FAILED',
 };
 
+// 取得驗證器實例
+const validator = getValidator();
+
 /**
  * 檢測 Windows Terminal 是否已安裝
  * @returns {boolean}
  */
 function isWindowsTerminalInstalled() {
-  try {
-    // 嘗試執行 where wt.exe
-    execSync('where wt.exe', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
+  return validator.isWindowsTerminalInstalled();
 }
 
 /**
@@ -41,13 +37,7 @@ function isWindowsTerminalInstalled() {
  * @returns {boolean}
  */
 function isWslInstalled() {
-  try {
-    // 嘗試執行 wsl --status
-    execSync('wsl --status', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
+  return validator.isWslInstalled();
 }
 
 /**
@@ -55,17 +45,7 @@ function isWslInstalled() {
  * @returns {string[]}
  */
 function getWslDistros() {
-  try {
-    const output = execSync('wsl -l -q', { encoding: 'utf-8' });
-    // 移除 BOM 和空白字元，分割為陣列
-    return output
-      .replace(/\0/g, '') // 移除 null 字元
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
-  } catch {
-    return [];
-  }
+  return validator.getWslDistros();
 }
 
 /**
@@ -74,8 +54,7 @@ function getWslDistros() {
  * @returns {boolean}
  */
 function isWslDistroInstalled(distro) {
-  const distros = getWslDistros();
-  return distros.some(d => d.toLowerCase() === distro.toLowerCase());
+  return validator.isWslDistroInstalled(distro);
 }
 
 /**
@@ -84,9 +63,7 @@ function isWslDistroInstalled(distro) {
  * @returns {string|null} 發行版名稱或 null
  */
 function extractWslDistro(command) {
-  // 匹配 wsl.exe -d <distro> 或 wsl -d <distro>
-  const match = command.match(/wsl(?:\.exe)?\s+-d\s+([^\s]+)/i);
-  return match ? match[1] : null;
+  return validator.extractWslDistro(command);
 }
 
 /**
@@ -95,7 +72,7 @@ function extractWslDistro(command) {
  * @returns {boolean}
  */
 function usesWindowsTerminal(command) {
-  return /wt(?:\.exe)?[\s"]/i.test(command);
+  return validator.usesWindowsTerminal(command);
 }
 
 /**
@@ -104,7 +81,7 @@ function usesWindowsTerminal(command) {
  * @returns {boolean}
  */
 function usesWsl(command) {
-  return /wsl(?:\.exe)?/i.test(command);
+  return validator.usesWsl(command);
 }
 
 /**
@@ -178,51 +155,29 @@ function parseCommand(command) {
 }
 
 /**
- * 驗證終端啟動前置條件
+ * 驗證終端啟動前置條件（同步版本，保持向後相容）
  * @param {Object} dir - 目錄物件 { path }
  * @param {Object} terminal - 終端配置 { command, pathFormat }
  * @returns {Object} { valid: boolean, errorType?: string, errorDetail?: string }
  */
 function validatePrerequisites(dir, terminal) {
+  // 使用驗證器進行驗證
   // 1. 檢查配置有效性
-  if (!terminal || !terminal.command) {
-    return {
-      valid: false,
-      errorType: ErrorType.INVALID_CONFIG,
-      errorDetail: 'terminal.command',
-    };
+  const configResult = validator.validateConfig(terminal);
+  if (!configResult.valid) {
+    return configResult;
   }
 
-  // 2. 檢查路徑是否存在
-  if (!fs.existsSync(dir.path)) {
-    return {
-      valid: false,
-      errorType: ErrorType.PATH_NOT_FOUND,
-      errorDetail: dir.path,
-    };
+  // 2. 檢查路徑
+  const pathResult = validator.validatePath(dir.path);
+  if (!pathResult.valid) {
+    return pathResult;
   }
 
-  // 3. 檢查路徑是否為目錄
-  try {
-    const stat = fs.statSync(dir.path);
-    if (!stat.isDirectory()) {
-      return {
-        valid: false,
-        errorType: ErrorType.PATH_NOT_DIRECTORY,
-        errorDetail: dir.path,
-      };
-    }
-  } catch (err) {
-    return {
-      valid: false,
-      errorType: ErrorType.PATH_NOT_FOUND,
-      errorDetail: dir.path,
-    };
-  }
-
+  // 3. 檢查終端相關依賴（使用快取）
   const command = terminal.command;
 
-  // 4. 檢查 Windows Terminal（如果指令需要）
+  // 檢查 Windows Terminal
   if (usesWindowsTerminal(command)) {
     if (!isWindowsTerminalInstalled()) {
       return {
@@ -233,7 +188,7 @@ function validatePrerequisites(dir, terminal) {
     }
   }
 
-  // 5. 檢查 WSL（如果指令需要）
+  // 檢查 WSL
   if (usesWsl(command)) {
     if (!isWslInstalled()) {
       return {
@@ -243,7 +198,7 @@ function validatePrerequisites(dir, terminal) {
       };
     }
 
-    // 6. 檢查特定發行版
+    // 檢查特定發行版
     const distro = extractWslDistro(command);
     if (distro && !isWslDistroInstalled(distro)) {
       return {
@@ -255,6 +210,133 @@ function validatePrerequisites(dir, terminal) {
   }
 
   return { valid: true };
+}
+
+/**
+ * 探測已安裝的終端
+ * @returns {Object} 探測結果
+ */
+function detectInstalledTerminals() {
+  return validator.detectInstalledTerminals();
+}
+
+/**
+ * 清除驗證器快取
+ */
+function invalidateValidatorCache() {
+  validator.invalidateCache();
+}
+
+/**
+ * 建立帶有行動按鈕的錯誤結果
+ * @param {string} errorType - 錯誤類型
+ * @param {string|null} errorDetail - 錯誤詳情
+ * @returns {Object} 錯誤結果物件
+ */
+function createErrorResult(errorType, errorDetail) {
+  const result = {
+    success: false,
+    errorType,
+    errorDetail,
+    actions: [],
+  };
+
+  // 根據錯誤類型設定對應的行動
+  switch (errorType) {
+    case ErrorType.WINDOWS_TERMINAL_NOT_FOUND:
+      result.actions = [
+        {
+          type: 'url',
+          labelKey: 'error.action.installWindowsTerminal',
+          value: 'ms-windows-store://pdp/?productid=9N0DX20HK701',
+        },
+        {
+          type: 'internal',
+          labelKey: 'error.action.switchTerminal',
+          value: 'open-terminal-settings',
+        },
+      ];
+      break;
+
+    case ErrorType.WSL_NOT_FOUND:
+      result.actions = [
+        {
+          type: 'url',
+          labelKey: 'error.action.installWsl',
+          value: 'https://docs.microsoft.com/windows/wsl/install',
+        },
+        {
+          type: 'internal',
+          labelKey: 'error.action.switchTerminal',
+          value: 'open-terminal-settings',
+        },
+      ];
+      break;
+
+    case ErrorType.WSL_DISTRO_NOT_FOUND:
+      result.actions = [
+        {
+          type: 'url',
+          labelKey: 'error.action.installDistro',
+          value: 'ms-windows-store://search/?query=wsl',
+        },
+        {
+          type: 'internal',
+          labelKey: 'error.action.switchTerminal',
+          value: 'open-terminal-settings',
+        },
+      ];
+      break;
+
+    case ErrorType.PATH_NOT_FOUND:
+    case ErrorType.PATH_NOT_DIRECTORY:
+      result.actions = [
+        {
+          type: 'internal',
+          labelKey: 'error.action.editDirectory',
+          value: 'edit-directory',
+        },
+      ];
+      break;
+
+    default:
+      break;
+  }
+
+  return result;
+}
+
+/**
+ * 預覽將要執行的終端命令
+ * @param {Object} dir - 目錄物件 { path }
+ * @param {Object} terminal - 終端配置 { command, pathFormat }
+ * @returns {Object} { success: boolean, command?: string, formattedPath?: string, errorType?: string }
+ */
+function previewCommand(dir, terminal) {
+  // 驗證配置
+  const configResult = validator.validateConfig(terminal);
+  if (!configResult.valid) {
+    return {
+      success: false,
+      errorType: configResult.errorType,
+      errorDetail: configResult.errorDetail,
+    };
+  }
+
+  // 格式化路徑
+  const formattedPath = formatPath(dir.path, terminal.pathFormat);
+
+  // 替換佔位符
+  const command = terminal.command.replace(/\{path\}/g, formattedPath);
+
+  return {
+    success: true,
+    command,
+    formattedPath,
+    originalPath: dir.path,
+    terminalName: terminal.name,
+    pathFormat: terminal.pathFormat,
+  };
 }
 
 /**
@@ -271,11 +353,7 @@ function openTerminal(dir, terminal) {
       errorType: validation.errorType,
       errorDetail: validation.errorDetail,
     });
-    return {
-      success: false,
-      errorType: validation.errorType,
-      errorDetail: validation.errorDetail,
-    };
+    return createErrorResult(validation.errorType, validation.errorDetail);
   }
 
   // 根據路徑格式轉換路徑
@@ -309,10 +387,13 @@ module.exports = {
   formatPath,
   parseCommand,
   openTerminal,
+  previewCommand,
   validatePrerequisites,
   isWindowsTerminalInstalled,
   isWslInstalled,
   isWslDistroInstalled,
   getWslDistros,
+  detectInstalledTerminals,
+  invalidateValidatorCache,
   ErrorType,
 };

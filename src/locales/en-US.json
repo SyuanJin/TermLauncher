@@ -169,7 +169,11 @@
         "deleteHasDirectories": "{count} directories use this terminal",
         "replaceWith": "Replace with",
         "confirmDelete": "Delete",
-        "toggleVisibility": "Toggle visibility"
+        "toggleVisibility": "Toggle visibility",
+        "detectionTitle": "Terminal Detection Status",
+        "detected": "Detected",
+        "notDetected": "Not Detected",
+        "distros": "distros"
       },
       "groups": {
         "title": "🏷️ Group Management",
@@ -181,7 +185,25 @@
         "title": "💾 Data Management",
         "export": "Export Settings",
         "import": "Import Settings",
-        "openConfigDir": "Config Directory"
+        "openConfigDir": "Config Directory",
+        "exportAdvanced": "Advanced Export",
+        "importAdvanced": "Advanced Import",
+        "exportAdvancedTitle": "Advanced Export Settings",
+        "exportAdvancedDesc": "Select what to export:",
+        "importAdvancedTitle": "Advanced Import Settings",
+        "importAdvancedDesc": "Select import mode (checked = merge, unchecked = overwrite):",
+        "importMode": "Import Mode",
+        "exportTerminals": "Custom Terminals",
+        "exportGroups": "Groups",
+        "exportDirectories": "Directories",
+        "exportFavorites": "Favorites",
+        "exportSettings": "Settings",
+        "mergeTerminals": "Merge Terminals",
+        "mergeGroups": "Merge Groups",
+        "mergeDirectories": "Merge Directories",
+        "mergeFavorites": "Merge Favorites",
+        "mergeSettings": "Merge Settings",
+        "mergeHint": "Checked: keep existing and merge new. Unchecked: overwrite"
       },
       "advanced": {
         "title": "🔧 Advanced",
@@ -235,6 +257,7 @@
     "groupDeleted": "Group deleted",
     "configExported": "Settings exported",
     "configImported": "Settings imported",
+    "configImportedWithWarnings": "Settings imported (with warnings)",
     "importFailed": "Import failed: {error}",
     "pressShortcut": "Press a shortcut key...",
     "shortcutUpdated": "Shortcut updated to {shortcut}",
@@ -256,7 +279,9 @@
     "removedFromFavorites": "Removed from favorites",
     "configDirOpened": "Config directory opened",
     "logsCleared": "Logs cleared",
-    "settingsReset": "All settings have been reset"
+    "settingsReset": "All settings have been reset",
+    "previewFailed": "Failed to preview command",
+    "commandCopied": "Command copied to clipboard"
   },
   "tray": {
     "showWindow": "Show Window",
@@ -280,6 +305,22 @@
   },
   "contextMenu": {
     "openDefault": "Open with default terminal",
-    "openWith": "Open with..."
+    "openWith": "Open with...",
+    "previewCommand": "Preview Command",
+    "previewTitle": "Command Preview",
+    "previewTerminal": "Terminal",
+    "previewOriginalPath": "Original Path",
+    "previewFormattedPath": "Formatted Path",
+    "previewExecute": "Execute",
+    "previewCopy": "Copy Command"
+  },
+  "error": {
+    "action": {
+      "installWindowsTerminal": "Install Windows Terminal",
+      "installWsl": "Install WSL",
+      "installDistro": "Install Distribution",
+      "switchTerminal": "Switch Terminal",
+      "editDirectory": "Edit Directory"
+    }
   }
 }

@@ -25,6 +25,14 @@ export const api = {
   openTerminal: dir => window.electronAPI.openTerminal(dir),
 
   /**
+   * 預覽終端命令
+   * @param {Object} dir - 目錄物件
+   * @param {string} terminalId - 終端 ID（可選）
+   * @returns {Promise<Object>} { success: boolean, command?: string }
+   */
+  previewCommand: (dir, terminalId) => window.electronAPI.previewCommand(dir, terminalId),
+
+  /**
    * 選擇資料夾
    * @returns {Promise<Object>} { success: boolean, path?: string }
    */
@@ -41,6 +49,26 @@ export const api = {
    * @returns {Promise<Object>} { success: boolean, config?: Object, error?: string }
    */
   importConfig: () => window.electronAPI.importConfig(),
+
+  /**
+   * 進階匯出配置
+   * @param {Object} options - 匯出選項
+   * @returns {Promise<Object>} { success: boolean, path?: string, data?: Object }
+   */
+  exportConfigAdvanced: options => window.electronAPI.exportConfigAdvanced(options),
+
+  /**
+   * 進階匯入配置
+   * @param {Object} options - 匯入選項
+   * @returns {Promise<Object>} { success: boolean, config?: Object, errors?: string[] }
+   */
+  importConfigAdvanced: options => window.electronAPI.importConfigAdvanced(options),
+
+  /**
+   * 取得匯出預覽資訊
+   * @returns {Promise<Object>} 預覽資訊
+   */
+  getExportPreview: () => window.electronAPI.getExportPreview(),
 
   /**
    * 最小化視窗
@@ -133,4 +161,10 @@ export const api = {
    * @returns {Promise<void>}
    */
   logRendererError: (error, context) => window.electronAPI.logRendererError(error, context),
+
+  /**
+   * 探測已安裝的終端
+   * @returns {Promise<Object>} 探測結果
+   */
+  detectTerminals: () => window.electronAPI.detectTerminals(),
 };

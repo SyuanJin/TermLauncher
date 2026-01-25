@@ -14,6 +14,7 @@ import { showContextMenu } from './contextMenu.js';
 import {
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
+  showCommandPreview,
 } from '../utils/terminal.js';
 
 let allGroupsCollapsed = false;
@@ -452,6 +453,11 @@ function showDirectoryContextMenu(event, dirId) {
       icon: '▶',
       label: t('contextMenu.openWith'),
       submenu: terminalSubmenu,
+    },
+    {
+      icon: '👁️',
+      label: t('contextMenu.previewCommand'),
+      onClick: () => showCommandPreview(dirId),
     },
     { separator: true },
     {
