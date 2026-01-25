@@ -15,6 +15,7 @@ import { switchTab } from '../ui/tabs.js';
 const ErrorTypeToMessageKey = {
   PATH_NOT_FOUND: 'pathNotFound',
   PATH_NOT_DIRECTORY: 'pathNotDirectory',
+  PATH_UNSAFE: 'pathUnsafe',
   WINDOWS_TERMINAL_NOT_FOUND: 'windowsTerminalNotFound',
   WSL_NOT_FOUND: 'wslNotFound',
   WSL_DISTRO_NOT_FOUND: 'wslDistroNotFound',
@@ -29,7 +30,11 @@ export function getErrorMessage(result) {
   const messageKey = ErrorTypeToMessageKey[result.errorType];
 
   if (messageKey) {
-    if (result.errorType === 'PATH_NOT_FOUND' || result.errorType === 'PATH_NOT_DIRECTORY') {
+    if (
+      result.errorType === 'PATH_NOT_FOUND' ||
+      result.errorType === 'PATH_NOT_DIRECTORY' ||
+      result.errorType === 'PATH_UNSAFE'
+    ) {
       return t('toast.' + messageKey, { path: result.errorDetail });
     }
     if (result.errorType === 'WSL_DISTRO_NOT_FOUND') {

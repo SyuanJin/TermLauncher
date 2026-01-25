@@ -74,8 +74,58 @@ function parseCommand(command) {
   return args;
 }
 
+/**
+ * 檢查路徑是否包含危險的 shell 元字符
+ * 注意：此函數僅用於基本安全檢查，不能完全防止所有注入攻擊
+ * @param {string} path - 要檢查的路徑
+ * @returns {Object} { safe: boolean, reason?: string }
+ */
+function validatePathSafety(path) {
+  if (!path || typeof path !== 'string') {
+    return { safe: false, reason: 'INVALID_PATH' };
+  }
+
+  // 危險的 shell 元字符模式
+  // 注意：不包含 & 因為 Windows 文件名可能包含 &
+  // 注意：檢查順序很重要，更具體的模式應該在前面
+  const dangerousPatterns = [
+    { pattern: /\$\(/, reason: 'COMMAND_SUBSTITUTION' }, // $(cmd) - 要在 $ 之前檢查
+    { pattern: /[;|`$]/, reason: 'SHELL_METACHAR' }, // 命令分隔/管道/反引號/$
+    { pattern: />>|>|</, reason: 'REDIRECTION' }, // 重導向
+    { pattern: /\n|\r/, reason: 'NEWLINE' }, // 換行符
+  ];
+
+  for (const { pattern, reason } of dangerousPatterns) {
+    if (pattern.test(path)) {
+      return { safe: false, reason };
+    }
+  }
+
+  return { safe: true };
+}
+
+/**
+ * 對路徑進行轉義，使其可以安全地用於 shell 命令
+ * @param {string} path - 要轉義的路徑
+ * @param {string} format - 路徑格式 ('windows' | 'unix')
+ * @returns {string} 轉義後的路徑（已包含引號）
+ */
+function escapePathForShell(path, format) {
+  if (format === 'unix') {
+    // Unix/WSL: 使用單引號，並轉義內部的單引號
+    // 'path' -> 'path'
+    // path's -> 'path'\''s'
+    return "'" + path.replace(/'/g, "'\\''") + "'";
+  } else {
+    // Windows: 使用雙引號，並轉義內部的雙引號
+    return '"' + path.replace(/"/g, '""') + '"';
+  }
+}
+
 module.exports = {
   toWslPath,
   formatPath,
   parseCommand,
+  validatePathSafety,
+  escapePathForShell,
 };

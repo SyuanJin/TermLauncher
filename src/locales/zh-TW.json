@@ -242,6 +242,7 @@
     "openFailed": "開啟失敗: {error}",
     "pathNotFound": "路徑不存在: {path}",
     "pathNotDirectory": "路徑不是有效的目錄: {path}",
+    "pathUnsafe": "路徑包含不安全字符: {path}",
     "windowsTerminalNotFound": "Windows Terminal 未安裝，請先安裝後重試",
     "wslNotFound": "WSL 未安裝，請先安裝 WSL 環境",
     "wslDistroNotFound": "WSL 發行版本 {distro} 未安裝",

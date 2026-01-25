@@ -242,6 +242,7 @@
     "openFailed": "Failed to open: {error}",
     "pathNotFound": "Path not found: {path}",
     "pathNotDirectory": "Path is not a valid directory: {path}",
+    "pathUnsafe": "Path contains unsafe characters: {path}",
     "windowsTerminalNotFound": "Windows Terminal is not installed. Please install it first",
     "wslNotFound": "WSL is not installed. Please install WSL first",
     "wslDistroNotFound": "WSL distribution {distro} is not installed",

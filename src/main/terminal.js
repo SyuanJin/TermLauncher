@@ -5,7 +5,13 @@
 const { spawn } = require('child_process');
 const { createLogger } = require('./logger');
 const { getValidator } = require('./validators');
-const { toWslPath, formatPath, parseCommand } = require('./utils/path-utils');
+const {
+  toWslPath,
+  formatPath,
+  parseCommand,
+  validatePathSafety,
+  escapePathForShell,
+} = require('./utils/path-utils');
 
 const logger = createLogger('Terminal');
 
@@ -16,6 +22,7 @@ const ErrorType = {
   INVALID_CONFIG: 'INVALID_CONFIG',
   PATH_NOT_FOUND: 'PATH_NOT_FOUND',
   PATH_NOT_DIRECTORY: 'PATH_NOT_DIRECTORY',
+  PATH_UNSAFE: 'PATH_UNSAFE', // 路徑包含危險字符
   // Windows 專屬錯誤類型
   WINDOWS_TERMINAL_NOT_FOUND: 'WINDOWS_TERMINAL_NOT_FOUND',
   WSL_NOT_FOUND: 'WSL_NOT_FOUND',
@@ -352,6 +359,7 @@ function createErrorResult(errorType, errorDetail) {
 
     case ErrorType.PATH_NOT_FOUND:
     case ErrorType.PATH_NOT_DIRECTORY:
+    case ErrorType.PATH_UNSAFE:
       result.actions = [
         {
           type: 'internal',
@@ -388,8 +396,11 @@ function previewCommand(dir, terminal) {
   // 格式化路徑
   const formattedPath = formatPath(dir.path, terminal.pathFormat);
 
+  // 對路徑進行轉義（與 openTerminal 保持一致）
+  const safePath = escapePathForShell(formattedPath, terminal.pathFormat);
+
   // 替換佔位符
-  const command = terminal.command.replace(/\{path\}/g, formattedPath);
+  const command = terminal.command.replace(/\{path\}/g, safePath);
 
   return {
     success: true,
@@ -418,16 +429,33 @@ function openTerminal(dir, terminal) {
     return createErrorResult(validation.errorType, validation.errorDetail);
   }
 
+  // 安全性檢查：驗證路徑不包含危險字符
+  const pathSafety = validatePathSafety(dir.path);
+  if (!pathSafety.safe) {
+    logger.warn('Path contains unsafe characters', {
+      path: dir.path,
+      reason: pathSafety.reason,
+    });
+    return createErrorResult(ErrorType.PATH_UNSAFE, pathSafety.reason);
+  }
+
   // 根據路徑格式轉換路徑
   const formattedPath = formatPath(dir.path, terminal.pathFormat);
 
+  // 對路徑進行轉義以防止 shell 注入
+  const safePath = escapePathForShell(formattedPath, terminal.pathFormat);
+
   // 替換 {path} 佔位符
-  const commandWithPath = terminal.command.replace(/\{path\}/g, formattedPath);
+  const commandWithPath = terminal.command.replace(/\{path\}/g, safePath);
 
   logger.debug('Execute terminal command', commandWithPath);
 
   try {
-    // 直接使用 shell 執行完整指令，避免解析引號問題
+    // 使用 shell 執行指令
+    // 安全說明：
+    // 1. 路徑已通過 validatePathSafety 檢查危險字符
+    // 2. 路徑已通過 escapePathForShell 進行轉義
+    // 3. 命令來源是用戶自己配置的終端設定
     spawn(commandWithPath, [], {
       detached: true,
       stdio: 'ignore',
