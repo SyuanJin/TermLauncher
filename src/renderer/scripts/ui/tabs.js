@@ -4,6 +4,7 @@
  */
 
 import { getConfig, saveConfig } from '../state.js';
+import { getElement } from '../utils/dom-cache.js';
 
 // 當前 Tab
 let currentTab = 'recent';
@@ -68,7 +69,7 @@ function activateTab(tab) {
  * @param {boolean} showText - 是否顯示文字
  */
 export function updateTabTextVisibility(showText) {
-  const tabsContainer = document.getElementById('tabsContainer');
+  const tabsContainer = getElement('tabsContainer');
   if (tabsContainer) {
     if (showText) {
       tabsContainer.classList.remove('icon-only');

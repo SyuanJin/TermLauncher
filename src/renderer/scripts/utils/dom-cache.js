@@ -87,4 +87,6 @@ export const COMMON_ELEMENT_IDS = [
   // Toast
   'toast',
   'toastText',
+  // 按鈕
+  'btnAddGroupTab',
 ];

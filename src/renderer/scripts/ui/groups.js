@@ -9,6 +9,7 @@ import { openModal } from './modal.js';
 import { renderGroupFilter, renderGroupSelect, renderDirectories } from './directories.js';
 import { initGroupsDragDrop } from './dragDrop.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
+import { getElement } from '../utils/dom-cache.js';
 
 /**
  * 取得群組顯示名稱
@@ -65,11 +66,11 @@ function getSortedGroups() {
  * 渲染群組列表
  */
 export function renderGroupsTab() {
-  const container = document.getElementById('groupsListContainer');
+  const container = getElement('groupsListContainer');
   if (!container) return;
 
   const emptyState = getOrCreateEmptyState();
-  const searchInput = document.getElementById('groupsSearchInput');
+  const searchInput = getElement('groupsSearchInput');
   const search = searchInput?.value?.toLowerCase() || '';
 
   let groups = getSortedGroups();
@@ -389,12 +390,12 @@ function showDeleteGroupModal(groupId) {
  * 設定群組 Tab 的事件監聽
  */
 export function setupGroupsEvents() {
-  const searchInput = document.getElementById('groupsSearchInput');
+  const searchInput = getElement('groupsSearchInput');
   if (searchInput) {
     searchInput.addEventListener('input', renderGroupsTab);
   }
 
-  const addBtn = document.getElementById('btnAddGroupTab');
+  const addBtn = getElement('btnAddGroupTab');
   if (addBtn) {
     addBtn.addEventListener('click', showAddGroupModal);
   }

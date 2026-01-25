@@ -14,6 +14,7 @@ import {
   getErrorMessage,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
+import { getElement } from '../utils/dom-cache.js';
 
 // 延遲導入以避免循環依賴
 let showEditDirectoryModal = null;
@@ -110,11 +111,11 @@ function getOrCreateEmptyState() {
  * 渲染最愛列表
  */
 export function renderFavoritesList() {
-  const container = document.getElementById('favoritesListContainer');
+  const container = getElement('favoritesListContainer');
   if (!container) return;
 
   const emptyState = getOrCreateEmptyState();
-  const searchInput = document.getElementById('favoritesSearchInput');
+  const searchInput = getElement('favoritesSearchInput');
   const search = searchInput?.value?.toLowerCase() || '';
 
   let favoriteDirs = getFavoriteDirectories();
@@ -392,7 +393,7 @@ export function isFavorite(id) {
  * 設定最愛 Tab 的事件監聽
  */
 export function setupFavoritesEvents() {
-  const searchInput = document.getElementById('favoritesSearchInput');
+  const searchInput = getElement('favoritesSearchInput');
   if (searchInput) {
     searchInput.addEventListener('input', renderFavoritesList);
   }

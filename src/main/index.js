@@ -9,6 +9,7 @@ const { registerShortcut, unregisterAllShortcuts } = require('./shortcuts');
 const { setupIpcHandlers } = require('./ipc-handlers');
 const { loadLocale } = require('./i18n');
 const { loadConfig } = require('./config');
+const { logCacheStats } = require('./terminal');
 
 // 設定 IPC 事件處理器
 setupIpcHandlers();
@@ -37,5 +38,7 @@ app.on('activate', () => {
 });
 
 app.on('will-quit', () => {
+  // 記錄驗證器快取統計（用於性能分析）
+  logCacheStats();
   unregisterAllShortcuts();
 });

@@ -2,9 +2,10 @@
  * 應用程式入口
  * 初始化並整合所有模組
  */
-import { loadConfig, getConfig } from './state.js';
+import { loadConfig, getConfig, isConfigLoaded } from './state.js';
 import { api } from './api.js';
 import { initI18n, t } from './i18n.js';
+import { preCacheElements, COMMON_ELEMENT_IDS, getElement } from './utils/dom-cache.js';
 import { setupTabs, onTabChange } from './ui/tabs.js';
 import { renderRecentList, setupRecentEvents } from './ui/recent.js';
 import { renderFavoritesList, setupFavoritesEvents } from './ui/favorites.js';
@@ -30,8 +31,15 @@ import { initKeyboardShortcuts } from './utils/keyboard.js';
 
 /**
  * 渲染所有內容
+ * 在配置載入後才會執行渲染
  */
 async function renderAll() {
+  // 防禦性檢查：確保配置已載入
+  if (!isConfigLoaded()) {
+    console.warn('[App] Config not loaded, skipping renderAll');
+    return;
+  }
+
   renderRecentList();
   renderFavoritesList();
   renderGroupsTab();
@@ -125,6 +133,9 @@ async function checkStartupErrors() {
 async function init() {
   // 初始化全域錯誤攔截器（最先執行）
   initErrorHandler();
+
+  // 預先快取常用 DOM 元素
+  preCacheElements(COMMON_ELEMENT_IDS);
 
   await loadConfig();
 

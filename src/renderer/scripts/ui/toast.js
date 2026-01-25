@@ -2,6 +2,7 @@
  * Toast 通知模組
  * 顯示操作結果的通知提示
  */
+import { getElement } from '../utils/dom-cache.js';
 
 /**
  * Toast 類型
@@ -50,8 +51,8 @@ let actionCallbacks = {};
 export function showToast(msg, type = ToastType.INFO, options = {}) {
   const { persistent = false, duration = 3000, actions = [] } = options;
 
-  const toast = document.getElementById('toast');
-  const toastText = document.getElementById('toastText');
+  const toast = getElement('toast');
+  const toastText = getElement('toastText');
   const toastIcon = toast.querySelector('.toast-icon');
   const closeBtn = toast.querySelector('.toast-close');
   let actionsContainer = toast.querySelector('.toast-actions');
@@ -117,7 +118,7 @@ export function showToast(msg, type = ToastType.INFO, options = {}) {
  * 隱藏 Toast 通知
  */
 export function hideToast() {
-  const toast = document.getElementById('toast');
+  const toast = getElement('toast');
   toast.classList.remove('show');
   isPersistent = false;
 
@@ -167,7 +168,7 @@ export function showInfo(msg, options = {}) {
  * 初始化 Toast 關閉按鈕事件
  */
 export function initToast() {
-  const toast = document.getElementById('toast');
+  const toast = getElement('toast');
   const closeBtn = toast?.querySelector('.toast-close');
 
   if (closeBtn) {

@@ -36,6 +36,22 @@ const ErrorType = {
 const validator = getValidator();
 
 /**
+ * 取得驗證器快取統計資訊
+ * @returns {Object} 快取統計
+ */
+function getValidatorCacheStats() {
+  return validator.getCacheStats();
+}
+
+/**
+ * 記錄驗證器快取統計到日誌
+ */
+function logCacheStats() {
+  const stats = getValidatorCacheStats();
+  logger.info('Validator cache statistics', stats);
+}
+
+/**
  * 檢測 Windows Terminal 是否已安裝
  * @returns {boolean}
  */
@@ -485,5 +501,7 @@ module.exports = {
   getWslDistros,
   detectInstalledTerminals,
   invalidateValidatorCache,
+  getValidatorCacheStats,
+  logCacheStats,
   ErrorType,
 };

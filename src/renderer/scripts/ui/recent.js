@@ -13,6 +13,7 @@ import {
   getErrorMessage,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
+import { getElement } from '../utils/dom-cache.js';
 
 /**
  * 取得終端圖示
@@ -105,11 +106,11 @@ function getOrCreateEmptyState() {
  */
 export function renderRecentList() {
   const config = getConfig();
-  const container = document.getElementById('recentListContainer');
+  const container = getElement('recentListContainer');
   if (!container) return;
 
   const emptyState = getOrCreateEmptyState();
-  const searchInput = document.getElementById('recentSearchInput');
+  const searchInput = getElement('recentSearchInput');
   const search = searchInput?.value?.toLowerCase() || '';
 
   let recentDirs = getRecentDirectories();
@@ -335,7 +336,7 @@ export async function clearAllRecent() {
  * 設定最近使用 Tab 的事件監聽
  */
 export function setupRecentEvents() {
-  const searchInput = document.getElementById('recentSearchInput');
+  const searchInput = getElement('recentSearchInput');
   if (searchInput) {
     searchInput.addEventListener('input', renderRecentList);
   }
