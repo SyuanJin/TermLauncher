@@ -19,14 +19,32 @@ body {
   overflow: hidden;
 }
 
-/* 滾動條樣式 */
-.content::-webkit-scrollbar {
-  width: 8px;
+/* 全局滾動條樣式 - 精緻風格 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.content::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* 通用輸入框樣式 */
