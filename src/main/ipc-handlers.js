@@ -20,6 +20,16 @@ const { getMainWindow } = require('./window');
 const { getAvailableLocales, loadLocale } = require('./i18n');
 const { updateTrayMenu } = require('./tray');
 const { createLogger } = require('./logger');
+const {
+  validateConfig,
+  validateDirectory,
+  validateExportOptions,
+  validateImportOptions,
+  validateLocaleCode,
+  validateBoolean,
+  validateSafeUrl,
+  validateString,
+} = require('./utils/ipc-validators');
 
 const logger = createLogger('IPC');
 
@@ -34,6 +44,13 @@ function setupIpcHandlers() {
 
   // 儲存配置
   ipcMain.handle('save-config', (event, config) => {
+    // 驗證配置物件
+    const validation = validateConfig(config);
+    if (!validation.valid) {
+      logger.warn(`Invalid config: ${validation.error}`);
+      return false;
+    }
+
     const result = saveConfig(config);
     if (result) {
       registerShortcut(); // 重新註冊快捷鍵
@@ -43,6 +60,13 @@ function setupIpcHandlers() {
 
   // 開啟終端
   ipcMain.handle('open-terminal', (event, dir) => {
+    // 驗證目錄物件
+    const validation = validateDirectory(dir);
+    if (!validation.valid) {
+      logger.warn(`Invalid directory: ${validation.error}`);
+      return { success: false, error: validation.error };
+    }
+
     const config = loadConfig();
 
     // 更新最近使用時間
@@ -65,6 +89,22 @@ function setupIpcHandlers() {
 
   // 預覽終端命令
   ipcMain.handle('preview-command', (event, dir, terminalId) => {
+    // 驗證目錄物件
+    const validation = validateDirectory(dir);
+    if (!validation.valid) {
+      logger.warn(`Invalid directory: ${validation.error}`);
+      return { success: false, error: validation.error };
+    }
+
+    // 驗證 terminalId（如果提供）
+    if (terminalId !== undefined && terminalId !== null) {
+      const terminalValidation = validateString(terminalId, 'terminalId');
+      if (!terminalValidation.valid) {
+        logger.warn(`Invalid terminalId: ${terminalValidation.error}`);
+        return { success: false, error: terminalValidation.error };
+      }
+    }
+
     const config = loadConfig();
 
     // 取得終端配置
@@ -98,6 +138,13 @@ function setupIpcHandlers() {
 
   // 匯出配置（進階版）
   ipcMain.handle('export-config-advanced', async (event, options) => {
+    // 驗證匯出選項
+    const validation = validateExportOptions(options);
+    if (!validation.valid) {
+      logger.warn(`Invalid export options: ${validation.error}`);
+      return { success: false, error: validation.error };
+    }
+
     const mainWindow = getMainWindow();
     const result = await dialog.showSaveDialog(mainWindow, {
       title: '匯出設定',
@@ -137,6 +184,13 @@ function setupIpcHandlers() {
 
   // 匯入配置（進階版）
   ipcMain.handle('import-config-advanced', async (event, options) => {
+    // 驗證匯入選項
+    const validation = validateImportOptions(options);
+    if (!validation.valid) {
+      logger.warn(`Invalid import options: ${validation.error}`);
+      return { success: false, errors: [validation.error] };
+    }
+
     const mainWindow = getMainWindow();
     const result = await dialog.showOpenDialog(mainWindow, {
       title: '匯入設定',
@@ -183,6 +237,13 @@ function setupIpcHandlers() {
 
   // 載入語系
   ipcMain.handle('load-locale', (event, localeCode) => {
+    // 驗證語系代碼
+    const validation = validateLocaleCode(localeCode);
+    if (!validation.valid) {
+      logger.warn(`Invalid locale code: ${validation.error}`);
+      return null;
+    }
+
     const locale = loadLocale(localeCode);
     // 更新托盤選單語言
     updateTrayMenu();
@@ -191,6 +252,13 @@ function setupIpcHandlers() {
 
   // 設定開機自動啟動
   ipcMain.handle('set-auto-launch', (event, enabled) => {
+    // 驗證 enabled 參數
+    const validation = validateBoolean(enabled, 'enabled');
+    if (!validation.valid) {
+      logger.warn(`Invalid enabled value: ${validation.error}`);
+      return { success: false, enabled: false, reason: 'invalid-param' };
+    }
+
     // 開發模式下不支援自動啟動（會啟動空白 Electron）
     if (!app.isPackaged) {
       logger.warn('Auto-launch not supported in dev mode');
@@ -249,6 +317,13 @@ function setupIpcHandlers() {
 
   // 開啟外部連結
   ipcMain.handle('open-external', (event, url) => {
+    // 驗證 URL 是否安全（只允許 http/https）
+    const validation = validateSafeUrl(url);
+    if (!validation.valid) {
+      logger.warn(`Blocked unsafe URL: ${validation.error}`);
+      return { success: false, error: validation.error };
+    }
+
     shell.openExternal(url);
     return { success: true };
   });
