@@ -65,7 +65,7 @@ npm run build:installer
 
 1. 點擊「展開」按鈕
 2. 輸入名稱、選擇路徑
-3. 選擇類型（WSL / PowerShell）
+3. 選擇終端（WSL、PowerShell、Git Bash、自訂）
 4. 點擊「新增目錄」
 
 ### 開啟終端

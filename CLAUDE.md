@@ -83,6 +83,6 @@ Main Process (後端/系統整合)
 ## 開發注意事項
 
 - 前端使用 ES Modules，所有模組需透過 `import/export`
-- IPC 通訊需同時修改 `preload/index.js` 和 `ipc-handlers.js`
+- IPC 通訊需同時修改 `preload/preload.js` 和 `ipc-handlers.js`
 - 新增終端類型需修改 `terminal.js` 的路徑轉換邏輯
 - 國際化字串放在 `src/locales/` 下的 JSON 檔案
