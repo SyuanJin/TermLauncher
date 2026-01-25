@@ -173,4 +173,11 @@ export const api = {
    * @returns {Promise<string>} 平台名稱 ('win32' | 'darwin' | 'linux')
    */
   getPlatform: () => window.electronAPI.getPlatform(),
+
+  /**
+   * 批次驗證路徑是否存在
+   * @param {string[]} paths - 路徑陣列
+   * @returns {Promise<Object>} { path: boolean } 路徑存在狀態
+   */
+  validatePaths: paths => window.electronAPI.validatePaths(paths),
 };

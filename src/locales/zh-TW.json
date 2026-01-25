@@ -102,7 +102,8 @@
       "addToGroup": "新增目錄到此群組",
       "toggleAllGroups": "展開/收合所有群組",
       "expandAllGroups": "展開所有群組",
-      "collapseAllGroups": "收合所有群組"
+      "collapseAllGroups": "收合所有群組",
+      "pathInvalid": "路徑不存在或無法存取"
     },
     "settings": {
       "general": {

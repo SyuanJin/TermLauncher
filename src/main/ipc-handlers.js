@@ -378,6 +378,24 @@ function setupIpcHandlers() {
     }
   });
 
+  // 驗證多個路徑是否存在
+  ipcMain.handle('validate-paths', (event, paths) => {
+    if (!Array.isArray(paths)) {
+      return {};
+    }
+
+    const results = {};
+    for (const p of paths) {
+      if (typeof p !== 'string') continue;
+      try {
+        results[p] = fs.existsSync(p) && fs.statSync(p).isDirectory();
+      } catch {
+        results[p] = false;
+      }
+    }
+    return results;
+  });
+
   // 重設所有設定
   ipcMain.handle('reset-config', () => {
     try {

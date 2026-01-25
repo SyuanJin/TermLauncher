@@ -56,4 +56,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // 平台資訊
   getPlatform: () => ipcRenderer.invoke('get-platform'),
+
+  // 路徑驗證
+  validatePaths: paths => ipcRenderer.invoke('validate-paths', paths),
 });

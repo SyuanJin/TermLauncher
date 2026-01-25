@@ -2,7 +2,7 @@
  * 最愛 Tab 模組
  * 處理最愛目錄的顯示與管理
  */
-import { getConfig, saveConfig, loadConfig } from '../state.js';
+import { getConfig, saveConfig, loadConfig, isPathValid } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { t } from '../i18n.js';
@@ -150,9 +150,13 @@ export function renderFavoritesList() {
         const terminalId = dir.terminalId || 'wsl-ubuntu';
         const terminalIcon = getTerminalIcon(terminalId);
         const terminalName = getTerminalName(terminalId);
+        const pathValid = isPathValid(dir.path);
+        const isInvalid = pathValid === false;
 
         return (
-          '<div class="directory-item" data-id="' +
+          '<div class="directory-item' +
+          (isInvalid ? ' path-invalid' : '') +
+          '" data-id="' +
           dir.id +
           '" tabindex="0" role="button" aria-label="' +
           escapeAttr(t('ui.directory.openTerminal', { name: dir.name })) +
@@ -163,6 +167,11 @@ export function renderFavoritesList() {
           '</div><div class="dir-info"><div class="dir-name">' +
           (dir.icon ? '<span class="dir-emoji">' + escapeHtml(dir.icon) + '</span>' : '') +
           escapeHtml(dir.name) +
+          (isInvalid
+            ? '<span class="path-warning" title="' +
+              escapeAttr(t('ui.directory.pathInvalid')) +
+              '">⚠️</span>'
+            : '') +
           '<span class="tag">' +
           escapeHtml(terminalName) +
           '</span></div><div class="dir-path">' +

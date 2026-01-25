@@ -102,7 +102,8 @@
       "addToGroup": "Add directory to this group",
       "toggleAllGroups": "Expand/collapse all groups",
       "expandAllGroups": "Expand all groups",
-      "collapseAllGroups": "Collapse all groups"
+      "collapseAllGroups": "Collapse all groups",
+      "pathInvalid": "Path does not exist or is inaccessible"
     },
     "settings": {
       "general": {

@@ -10,6 +10,9 @@ import { api } from './api.js';
 // 全域配置狀態
 let config = null;
 
+// 路徑有效性狀態 { path: boolean }
+let pathValidityCache = {};
+
 /**
  * 取得當前配置
  * 注意：返回的是配置物件的直接引用，修改後需調用 saveConfig()
@@ -67,4 +70,51 @@ export function isConfigLoaded() {
  */
 export function resetConfig() {
   config = null;
+  pathValidityCache = {};
+}
+
+/**
+ * 驗證所有目錄路徑的有效性
+ * @returns {Promise<Object>} { path: boolean } 路徑有效性狀態
+ */
+export async function validateAllPaths() {
+  if (!config || !config.directories) {
+    return {};
+  }
+
+  const paths = config.directories.map(d => d.path);
+  const uniquePaths = [...new Set(paths)];
+
+  try {
+    pathValidityCache = await api.validatePaths(uniquePaths);
+  } catch (err) {
+    console.error('Failed to validate paths:', err);
+    pathValidityCache = {};
+  }
+
+  return pathValidityCache;
+}
+
+/**
+ * 檢查路徑是否有效
+ * @param {string} path - 路徑
+ * @returns {boolean|null} true=有效, false=無效, null=未知
+ */
+export function isPathValid(path) {
+  if (path in pathValidityCache) {
+    return pathValidityCache[path];
+  }
+  return null; // 未驗證
+}
+
+/**
+ * 取得無效路徑的目錄列表
+ * @returns {Array} 無效路徑的目錄
+ */
+export function getInvalidPathDirectories() {
+  if (!config || !config.directories) {
+    return [];
+  }
+
+  return config.directories.filter(d => pathValidityCache[d.path] === false);
 }

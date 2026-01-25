@@ -2,7 +2,7 @@
  * 應用程式入口
  * 初始化並整合所有模組
  */
-import { loadConfig, getConfig, isConfigLoaded } from './state.js';
+import { loadConfig, getConfig, isConfigLoaded, validateAllPaths } from './state.js';
 import { api } from './api.js';
 import { initI18n, t } from './i18n.js';
 import { preCacheElements, COMMON_ELEMENT_IDS, getElement } from './utils/dom-cache.js';
@@ -138,6 +138,9 @@ async function init() {
   preCacheElements(COMMON_ELEMENT_IDS);
 
   await loadConfig();
+
+  // 驗證所有目錄路徑（背景執行，不阻塞 UI）
+  validateAllPaths();
 
   // 應用保存的主題設定
   const config = getConfig();

@@ -2,7 +2,7 @@
  * 目錄列表模組
  * 處理目錄的顯示、新增、刪除等操作
  */
-import { getConfig, saveConfig, loadConfig } from '../state.js';
+import { getConfig, saveConfig, loadConfig, isPathValid } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { openModal } from './modal.js';
@@ -371,9 +371,13 @@ export function renderDirectories() {
             const favoriteTitle = dirIsFavorite
               ? t('common.removeFromFavorites')
               : t('common.addToFavorites');
+            const pathValid = isPathValid(dir.path);
+            const isInvalid = pathValid === false;
 
             return (
-              '<div class="directory-item" data-id="' +
+              '<div class="directory-item' +
+              (isInvalid ? ' path-invalid' : '') +
+              '" data-id="' +
               dir.id +
               '" tabindex="0" role="button" aria-label="' +
               escapeAttr(t('ui.directory.openTerminal', { name: dir.name })) +
@@ -384,6 +388,11 @@ export function renderDirectories() {
               '</div><div class="dir-info"><div class="dir-name">' +
               (dir.icon ? '<span class="dir-emoji">' + escapeHtml(dir.icon) + '</span>' : '') +
               escapeHtml(dir.name) +
+              (isInvalid
+                ? '<span class="path-warning" title="' +
+                  escapeAttr(t('ui.directory.pathInvalid')) +
+                  '">⚠️</span>'
+                : '') +
               '<span class="tag">' +
               escapeHtml(terminalName) +
               '</span></div><div class="dir-path">' +

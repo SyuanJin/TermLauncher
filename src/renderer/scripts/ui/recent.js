@@ -2,7 +2,7 @@
  * 最近使用 Tab 模組
  * 處理最近使用目錄的顯示與管理
  */
-import { getConfig, saveConfig, loadConfig } from '../state.js';
+import { getConfig, saveConfig, loadConfig, isPathValid } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { t } from '../i18n.js';
@@ -147,9 +147,13 @@ export function renderRecentList() {
         const terminalName = getTerminalName(terminalId);
         const relativeTime = formatRelativeTime(dir.lastUsed);
         const dirIsFavorite = config.favorites?.includes(dir.id);
+        const pathValid = isPathValid(dir.path);
+        const isInvalid = pathValid === false;
 
         return (
-          '<div class="directory-item" data-id="' +
+          '<div class="directory-item' +
+          (isInvalid ? ' path-invalid' : '') +
+          '" data-id="' +
           dir.id +
           '" tabindex="0" role="button" aria-label="' +
           escapeAttr(t('ui.directory.openTerminal', { name: dir.name })) +
@@ -158,6 +162,11 @@ export function renderRecentList() {
           '</div><div class="dir-info"><div class="dir-name">' +
           (dir.icon ? '<span class="dir-emoji">' + escapeHtml(dir.icon) + '</span>' : '') +
           escapeHtml(dir.name) +
+          (isInvalid
+            ? '<span class="path-warning" title="' +
+              escapeAttr(t('ui.directory.pathInvalid')) +
+              '">⚠️</span>'
+            : '') +
           (dirIsFavorite ? '<span class="favorite-badge">⭐</span>' : '') +
           '<span class="tag">' +
           escapeHtml(terminalName) +
