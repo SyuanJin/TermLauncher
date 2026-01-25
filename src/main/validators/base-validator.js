@@ -11,11 +11,24 @@ const logger = createLogger('BaseValidator');
  * 驗證器抽象基類
  */
 class BaseValidator {
-  constructor() {
+  /**
+   * @param {Object} options - 配置選項
+   * @param {number} [options.cacheTTL=300000] - 快取 TTL（毫秒），預設 5 分鐘
+   * @param {number} [options.maxCacheSize=100] - 最大快取項目數，預設 100
+   */
+  constructor(options = {}) {
     // 快取儲存
     this.cache = new Map();
     // 快取 TTL（預設 5 分鐘）
-    this.cacheTTL = 5 * 60 * 1000;
+    this.cacheTTL = options.cacheTTL || 5 * 60 * 1000;
+    // 最大快取大小
+    this.maxCacheSize = options.maxCacheSize || 100;
+    // 快取統計
+    this.cacheStats = {
+      hits: 0,
+      misses: 0,
+      evictions: 0,
+    };
   }
 
   /**
@@ -25,15 +38,20 @@ class BaseValidator {
    */
   getCache(key) {
     const cached = this.cache.get(key);
-    if (!cached) return undefined;
+    if (!cached) {
+      this.cacheStats.misses++;
+      return undefined;
+    }
 
     // 檢查是否過期
     if (Date.now() - cached.timestamp > this.cacheTTL) {
       this.cache.delete(key);
+      this.cacheStats.misses++;
       logger.debug(`Cache expired for key: ${key}`);
       return undefined;
     }
 
+    this.cacheStats.hits++;
     logger.debug(`Using cached result for key: ${key}`);
     return cached.value;
   }
@@ -44,11 +62,44 @@ class BaseValidator {
    * @param {*} value - 快取值
    */
   setCache(key, value) {
+    // 檢查快取大小限制，使用 LRU 策略移除最舊的項目
+    if (this.cache.size >= this.maxCacheSize) {
+      const oldestKey = this.cache.keys().next().value;
+      this.cache.delete(oldestKey);
+      this.cacheStats.evictions++;
+      logger.debug(`Cache evicted oldest key: ${oldestKey}`);
+    }
+
     this.cache.set(key, {
       value,
       timestamp: Date.now(),
     });
     logger.debug(`Cached result for key: ${key}`);
+  }
+
+  /**
+   * 取得快取統計資訊
+   * @returns {Object} 快取統計
+   */
+  getCacheStats() {
+    const total = this.cacheStats.hits + this.cacheStats.misses;
+    return {
+      ...this.cacheStats,
+      size: this.cache.size,
+      maxSize: this.maxCacheSize,
+      hitRate: total > 0 ? (this.cacheStats.hits / total * 100).toFixed(2) + '%' : '0%',
+    };
+  }
+
+  /**
+   * 重設快取統計
+   */
+  resetCacheStats() {
+    this.cacheStats = {
+      hits: 0,
+      misses: 0,
+      evictions: 0,
+    };
   }
 
   /**
