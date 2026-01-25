@@ -12,7 +12,7 @@
 
 ## 簡介
 
-TermLauncher 是一個 Windows 桌面應用，讓你能夠快速開啟 Windows Terminal 並自動進入指定的工作目錄。支援 **WSL Ubuntu** 和 **PowerShell**，特別適合需要頻繁在不同專案間切換的開發者。
+TermLauncher 是一個跨平台桌面應用，讓你能夠快速開啟終端並自動進入指定的工作目錄。在 Windows 上支援 **WSL**、**PowerShell**、**Git Bash** 等終端，在 macOS 和 Linux 上也提供實驗性支援。特別適合需要頻繁在不同專案間切換的開發者。
 
 ## ✨ 功能特色
 
@@ -91,9 +91,25 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 
 ## ⚙️ 系統需求
 
+### Windows（完整支援）
+
 - Windows 10 (1903+) / Windows 11
 - [Windows Terminal](https://aka.ms/terminal)
 - WSL 2 + Ubuntu（如需使用 WSL 功能）
+
+### macOS（實驗性支援）
+
+- macOS 10.15 (Catalina) 或更新版本
+- 支援的終端：Terminal.app、iTerm2、Hyper、Warp、Alacritty、Kitty
+- 需從原始碼建置（`npm run build:mac`）
+
+### Linux（實驗性支援）
+
+- Ubuntu 20.04+ / Fedora 35+ / Arch Linux 等主流發行版
+- 支援的終端：GNOME Terminal、Konsole、Tilix、Alacritty、Kitty、xterm、Terminator
+- 需從原始碼建置（`npm run build:linux`）
+
+> **注意**：macOS 和 Linux 支援目前為實驗性，部分功能可能無法正常運作。歡迎回報問題！
 
 ## 🛠️ 技術棧
 

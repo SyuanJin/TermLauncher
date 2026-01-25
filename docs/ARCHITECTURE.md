@@ -4,12 +4,12 @@
 
 ## 技術棧
 
-| 層級     | 技術                                    |
-| -------- | --------------------------------------- |
-| Frontend | Electron Renderer + HTML/CSS/ES Modules |
-| Preload  | Context Bridge (contextIsolation: true) |
-| Backend  | Electron Main + Node.js                 |
-| System   | Windows Terminal, WSL, Global Shortcuts |
+| 層級     | 技術                                                          |
+| -------- | ------------------------------------------------------------- |
+| Frontend | Electron Renderer + HTML/CSS/ES Modules                       |
+| Preload  | Context Bridge (contextIsolation: true)                       |
+| Backend  | Electron Main + Node.js                                       |
+| System   | 跨平台終端支援（Windows/macOS/Linux）、Global Shortcuts       |
 
 ## 專案結構
 
@@ -24,7 +24,15 @@ src/
 │   ├── shortcuts.js     # 全域快捷鍵
 │   ├── ipc-handlers.js  # IPC 處理
 │   ├── i18n.js          # 國際化
-│   └── logger.js        # 日誌記錄
+│   ├── logger.js        # 日誌記錄
+│   ├── validators/      # 跨平台終端驗證器
+│   │   ├── base-validator.js     # 驗證器基類（快取機制）
+│   │   ├── windows-validator.js  # Windows 終端驗證
+│   │   ├── macos-validator.js    # macOS 終端驗證
+│   │   └── linux-validator.js    # Linux 終端驗證
+│   └── utils/           # 工具函式
+│       ├── path-utils.js      # 路徑轉換與安全驗證
+│       └── ipc-validators.js  # IPC 參數驗證
 │
 ├── preload/preload.js   # Context Bridge API
 │
@@ -87,7 +95,10 @@ src/
 - `contextIsolation: true` + `nodeIntegration: false`
 - CSP 限制外部資源
 - 使用 `spawn` 而非 `exec` 避免 shell 注入
-- 路徑啟動前驗證存在性
+- 路徑啟動前驗證存在性與安全性
+- IPC 參數驗證防止惡意輸入
+- 日誌敏感資訊過濾
+- XSS 防護（HTML/屬性轉義）
 
 ## 錯誤處理
 
