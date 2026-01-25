@@ -64,6 +64,25 @@ export async function changeAutoLaunch() {
   const result = await api.setAutoLaunch(enabled);
   if (result.success) {
     showToast(enabled ? t('toast.autoLaunchEnabled') : t('toast.autoLaunchDisabled'), 'success');
+
+    // Portable 模式開啟時顯示提示
+    if (enabled && result.isPortable) {
+      openModal({
+        id: 'portable-notice-modal',
+        title: t('ui.settings.general.portableNoticeTitle'),
+        content: `
+          <div class="portable-notice">
+            <p>${t('ui.settings.general.portableNoticeMessage')}</p>
+            <ul>
+              <li>${t('ui.settings.general.portableNoticeItem1')}</li>
+              <li>${t('ui.settings.general.portableNoticeItem2')}</li>
+            </ul>
+          </div>
+        `,
+        confirmText: t('common.close'),
+        showCancel: false,
+      });
+    }
   } else if (result.reason === 'dev-mode') {
     // 開發模式下不支援，還原 checkbox 狀態
     checkbox.checked = false;

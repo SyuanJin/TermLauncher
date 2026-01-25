@@ -146,7 +146,10 @@ function setupIpcHandlers() {
     });
     config.settings.autoLaunch = enabled;
     saveConfig(config);
-    return { success: true, enabled };
+
+    // 回傳是否為 Portable 模式
+    const isPortable = !!process.env.PORTABLE_EXECUTABLE_FILE;
+    return { success: true, enabled, isPortable };
   });
 
   // 取得開機自動啟動狀態

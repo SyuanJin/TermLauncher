@@ -126,7 +126,11 @@
         "recordShortcut": "Record shortcut",
         "keyboardShortcuts": "Keyboard Shortcuts",
         "keyboardShortcutsDesc": "View global and in-app keyboard shortcuts",
-        "viewShortcuts": "View Shortcuts"
+        "viewShortcuts": "View Shortcuts",
+        "portableNoticeTitle": "Portable Version Notice",
+        "portableNoticeMessage": "You are using the portable version. Auto-launch has the following limitations:",
+        "portableNoticeItem1": "Re-enable auto-launch after moving the program",
+        "portableNoticeItem2": "Recommend placing the program in a fixed location"
       },
       "recent": {
         "title": "🕐 Recent",

@@ -126,7 +126,11 @@
         "recordShortcut": "按鍵錄製",
         "keyboardShortcuts": "鍵盤快捷鍵",
         "keyboardShortcutsDesc": "查看全域與應用內的鍵盤快捷鍵",
-        "viewShortcuts": "查看快捷鍵"
+        "viewShortcuts": "查看快捷鍵",
+        "portableNoticeTitle": "便攜版提示",
+        "portableNoticeMessage": "您正在使用便攜版，開機自動啟動功能有以下限制：",
+        "portableNoticeItem1": "移動程式位置後需重新設定自動啟動",
+        "portableNoticeItem2": "建議將程式放置在固定位置使用"
       },
       "recent": {
         "title": "🕐 最近使用",
