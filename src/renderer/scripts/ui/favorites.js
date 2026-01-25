@@ -13,6 +13,7 @@ import {
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
 } from '../utils/terminal.js';
+import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 // 延遲導入以避免循環依賴
 let showEditDirectoryModal = null;
@@ -153,36 +154,36 @@ export function renderFavoritesList() {
           '<div class="directory-item" data-id="' +
           dir.id +
           '" tabindex="0" role="button" aria-label="' +
-          t('ui.directory.openTerminal', { name: dir.name }) +
+          escapeAttr(t('ui.directory.openTerminal', { name: dir.name })) +
           '"><div class="drag-handle" title="' +
-          t('ui.favorites.dragHint') +
+          escapeAttr(t('ui.favorites.dragHint')) +
           '">⋮⋮</div><div class="dir-icon">' +
-          terminalIcon +
+          escapeHtml(terminalIcon) +
           '</div><div class="dir-info"><div class="dir-name">' +
-          (dir.icon ? '<span class="dir-emoji">' + dir.icon + '</span>' : '') +
-          dir.name +
+          (dir.icon ? '<span class="dir-emoji">' + escapeHtml(dir.icon) + '</span>' : '') +
+          escapeHtml(dir.name) +
           '<span class="tag">' +
-          terminalName +
+          escapeHtml(terminalName) +
           '</span></div><div class="dir-path">' +
-          dir.path +
+          escapeHtml(dir.path) +
           '</div></div><div class="dir-actions"><button class="btn-icon favorite active" data-toggle-favorite="' +
           dir.id +
           '" title="' +
-          t('common.removeFromFavorites') +
+          escapeAttr(t('common.removeFromFavorites')) +
           '" aria-label="' +
-          t('common.removeFromFavorites') +
+          escapeAttr(t('common.removeFromFavorites')) +
           '">⭐</button><button class="btn-icon edit" data-edit-dir="' +
           dir.id +
           '" title="' +
-          t('common.edit') +
+          escapeAttr(t('common.edit')) +
           '" aria-label="' +
-          t('ui.directory.editItem', { name: dir.name }) +
+          escapeAttr(t('ui.directory.editItem', { name: dir.name })) +
           '">✏️</button><button class="btn-icon delete" data-delete-dir="' +
           dir.id +
           '" title="' +
-          t('common.delete') +
+          escapeAttr(t('common.delete')) +
           '" aria-label="' +
-          t('ui.directory.deleteItem', { name: dir.name }) +
+          escapeAttr(t('ui.directory.deleteItem', { name: dir.name })) +
           '">🗑️</button></div></div>'
         );
       })

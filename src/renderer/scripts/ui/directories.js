@@ -16,6 +16,7 @@ import {
   getErrorMessage,
   showCommandPreview,
 } from '../utils/terminal.js';
+import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 let allGroupsCollapsed = false;
 let selectedGroupFilters = []; // 多選群組篩選
@@ -153,13 +154,13 @@ function renderFilterTags() {
       const displayName = getGroupDisplayName(group);
       return (
         '<span class="filter-tag">' +
-        (group.icon || '📁') +
+        escapeHtml(group.icon || '📁') +
         ' ' +
-        displayName +
+        escapeHtml(displayName) +
         '<button class="filter-tag-remove" data-remove-filter="' +
-        groupId +
+        escapeAttr(groupId) +
         '" title="' +
-        t('ui.search.removeFilter') +
+        escapeAttr(t('ui.search.removeFilter')) +
         '">×</button></span>'
       );
     })
@@ -347,17 +348,17 @@ export function renderDirectories() {
         '<div class="group-section' +
         (isCollapsed ? ' collapsed' : '') +
         '" data-group-id="' +
-        groupId +
+        escapeAttr(groupId) +
         '"><div class="group-header"><button class="group-toggle" data-toggle-group="' +
-        groupId +
+        escapeAttr(groupId) +
         '" aria-expanded="' +
         !isCollapsed +
         '">' +
         (isCollapsed ? '▶' : '▼') +
         '</button><span class="group-header-icon">' +
-        getGroupIcon(groupId) +
+        escapeHtml(getGroupIcon(groupId)) +
         '</span><h3>' +
-        getGroupName(groupId) +
+        escapeHtml(getGroupName(groupId)) +
         '</h3><span class="group-count">' +
         items.length +
         '</span></div><div class="directory-list">' +
@@ -375,40 +376,40 @@ export function renderDirectories() {
               '<div class="directory-item" data-id="' +
               dir.id +
               '" tabindex="0" role="button" aria-label="' +
-              t('ui.directory.openTerminal', { name: dir.name }) +
+              escapeAttr(t('ui.directory.openTerminal', { name: dir.name })) +
               '"><div class="drag-handle" title="' +
-              t('ui.favorites.dragHint') +
+              escapeAttr(t('ui.favorites.dragHint')) +
               '">⋮⋮</div><div class="dir-icon">' +
-              terminalIcon +
+              escapeHtml(terminalIcon) +
               '</div><div class="dir-info"><div class="dir-name">' +
-              (dir.icon ? '<span class="dir-emoji">' + dir.icon + '</span>' : '') +
-              dir.name +
+              (dir.icon ? '<span class="dir-emoji">' + escapeHtml(dir.icon) + '</span>' : '') +
+              escapeHtml(dir.name) +
               '<span class="tag">' +
-              terminalName +
+              escapeHtml(terminalName) +
               '</span></div><div class="dir-path">' +
-              dir.path +
+              escapeHtml(dir.path) +
               '</div></div><div class="dir-actions"><button class="btn-icon favorite' +
               (dirIsFavorite ? ' active' : '') +
               '" data-toggle-favorite="' +
               dir.id +
               '" title="' +
-              favoriteTitle +
+              escapeAttr(favoriteTitle) +
               '" aria-label="' +
-              favoriteTitle +
+              escapeAttr(favoriteTitle) +
               '">' +
               (dirIsFavorite ? '⭐' : '☆') +
               '</button><button class="btn-icon edit" data-edit-dir="' +
               dir.id +
               '" title="' +
-              t('common.edit') +
+              escapeAttr(t('common.edit')) +
               '" aria-label="' +
-              t('ui.directory.editItem', { name: dir.name }) +
+              escapeAttr(t('ui.directory.editItem', { name: dir.name })) +
               '">✏️</button><button class="btn-icon delete" data-delete-id="' +
               dir.id +
               '" title="' +
-              t('common.delete') +
+              escapeAttr(t('common.delete')) +
               '" aria-label="' +
-              t('ui.directory.deleteItem', { name: dir.name }) +
+              escapeAttr(t('ui.directory.deleteItem', { name: dir.name })) +
               '">🗑️</button></div></div>'
             );
           })
@@ -800,16 +801,7 @@ export function showEditDirectoryModal(dirId) {
   });
 }
 
-/**
- * HTML 跳脫
- * @param {string} text - 原始文字
- * @returns {string} 跳脫後的文字
- */
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// escapeHtml 已移至 utils/escape.js 統一管理
 
 /**
  * 刪除目錄

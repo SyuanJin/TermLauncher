@@ -15,6 +15,7 @@ import {
 } from './directories.js';
 import { renderRecentList } from './recent.js';
 import { renderGroupsTab } from './groups.js';
+import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 /**
  * 應用主題
@@ -159,11 +160,11 @@ export async function renderSettings() {
     .map(
       locale =>
         '<option value="' +
-        locale.code +
+        escapeAttr(locale.code) +
         '"' +
         (locale.code === currentLanguage ? ' selected' : '') +
         '>' +
-        locale.nativeName +
+        escapeHtml(locale.nativeName) +
         '</option>'
     )
     .join('');
@@ -375,17 +376,17 @@ export async function renderTerminalDetectionStatus() {
         (item.installed ? 'installed' : 'not-installed') +
         '">' +
         '<span class="detection-icon">' +
-        item.icon +
+        escapeHtml(item.icon) +
         '</span>' +
         '<span class="detection-name">' +
-        item.name +
+        escapeHtml(item.name) +
         '</span>' +
         '<span class="detection-status">' +
         (item.installed
-          ? '✓ ' + t('ui.settings.terminals.detected')
-          : '✕ ' + t('ui.settings.terminals.notDetected')) +
+          ? '✓ ' + escapeHtml(t('ui.settings.terminals.detected'))
+          : '✕ ' + escapeHtml(t('ui.settings.terminals.notDetected'))) +
         '</span>' +
-        (item.detail ? '<span class="detection-detail">(' + item.detail + ')</span>' : '') +
+        (item.detail ? '<span class="detection-detail">(' + escapeHtml(item.detail) + ')</span>' : '') +
         '</div>'
     )
     .join('');
@@ -406,33 +407,33 @@ export function renderTerminalsList() {
         (terminal.isBuiltin ? ' builtin' : '') +
         (terminal.hidden ? ' hidden-terminal' : '') +
         '" data-terminal-id="' +
-        terminal.id +
+        escapeAttr(terminal.id) +
         '"><div class="terminal-item-info"><span class="terminal-icon">' +
-        terminal.icon +
+        escapeHtml(terminal.icon) +
         '</span><div class="terminal-details"><span class="terminal-name">' +
-        terminal.name +
+        escapeHtml(terminal.name) +
         (terminal.isBuiltin
-          ? '<span class="builtin-badge">' + t('ui.settings.terminals.builtin') + '</span>'
+          ? '<span class="builtin-badge">' + escapeHtml(t('ui.settings.terminals.builtin')) + '</span>'
           : '') +
         '</span><span class="terminal-command">' +
         escapeHtml(terminal.command) +
         '</span></div></div><div class="terminal-actions">' +
         (terminal.isBuiltin
           ? '<label class="switch switch-sm" title="' +
-            t('ui.settings.terminals.toggleVisibility') +
+            escapeAttr(t('ui.settings.terminals.toggleVisibility')) +
             '"><input type="checkbox" data-toggle-terminal="' +
-            terminal.id +
+            escapeAttr(terminal.id) +
             '"' +
             (terminal.hidden ? '' : ' checked') +
             ' /><span class="slider"></span></label>'
           : '<button class="btn-icon edit" data-edit-terminal="' +
-            terminal.id +
+            escapeAttr(terminal.id) +
             '" title="' +
-            t('common.edit') +
+            escapeAttr(t('common.edit')) +
             '">✏️</button><button class="btn-icon delete" data-delete-terminal="' +
-            terminal.id +
+            escapeAttr(terminal.id) +
             '" title="' +
-            t('common.delete') +
+            escapeAttr(t('common.delete')) +
             '">🗑️</button>') +
         '</div></div>'
     )
@@ -441,11 +442,7 @@ export function renderTerminalsList() {
   bindTerminalEvents();
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// escapeHtml 已移至 utils/escape.js 統一管理
 
 function bindTerminalEvents() {
   document.querySelectorAll('[data-edit-terminal]').forEach(btn => {

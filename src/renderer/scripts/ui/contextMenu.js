@@ -2,6 +2,7 @@
  * 右鍵選單模組
  * 提供統一的右鍵選單功能
  */
+import { escapeHtml } from '../utils/escape.js';
 
 let currentMenu = null;
 
@@ -24,8 +25,8 @@ function createMenuItem(item) {
   if (item.submenu) {
     menuItem.className = 'context-menu-item context-menu-submenu';
     menuItem.innerHTML = `
-      <span class="context-menu-icon">${item.icon || ''}</span>
-      <span class="context-menu-label">${item.label}</span>
+      <span class="context-menu-icon">${escapeHtml(item.icon || '')}</span>
+      <span class="context-menu-label">${escapeHtml(item.label)}</span>
     `;
 
     const submenu = document.createElement('div');
@@ -53,8 +54,8 @@ function createMenuItem(item) {
     // 一般項目
     menuItem.className = `context-menu-item${item.danger ? ' danger' : ''}`;
     menuItem.innerHTML = `
-      <span class="context-menu-icon">${item.icon || ''}</span>
-      <span class="context-menu-label">${item.label}</span>
+      <span class="context-menu-icon">${escapeHtml(item.icon || '')}</span>
+      <span class="context-menu-label">${escapeHtml(item.label)}</span>
     `;
 
     if (item.onClick) {

@@ -8,6 +8,7 @@ import { t } from '../i18n.js';
 import { openModal } from './modal.js';
 import { renderGroupFilter, renderGroupSelect, renderDirectories } from './directories.js';
 import { initGroupsDragDrop } from './dragDrop.js';
+import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 /**
  * 取得群組顯示名稱
@@ -108,33 +109,33 @@ export function renderGroupsTab() {
           '<div class="group-card' +
           (group.isDefault ? ' default' : '') +
           '" data-group-id="' +
-          group.id +
+          escapeAttr(group.id) +
           '" tabindex="0" role="button"><div class="drag-handle" title="' +
-          t('ui.favorites.dragHint') +
+          escapeAttr(t('ui.favorites.dragHint')) +
           '">⋮⋮</div><div class="group-card-icon">' +
-          (group.icon || '📁') +
+          escapeHtml(group.icon || '📁') +
           '</div><div class="group-card-info"><div class="group-card-name">' +
-          displayName +
+          escapeHtml(displayName) +
           (group.isDefault
-            ? '<span class="default-badge">' + t('ui.groups.defaultBadge') + '</span>'
+            ? '<span class="default-badge">' + escapeHtml(t('ui.groups.defaultBadge')) + '</span>'
             : '') +
           '</div><div class="group-card-count">' +
-          t('ui.groups.directoryCount', { count: dirCount }) +
+          escapeHtml(t('ui.groups.directoryCount', { count: dirCount })) +
           '</div></div><div class="group-card-actions">' +
           (group.isDefault
             ? ''
             : '<button class="btn-icon edit" data-edit-group="' +
-              group.id +
+              escapeAttr(group.id) +
               '" title="' +
-              t('common.edit') +
+              escapeAttr(t('common.edit')) +
               '" aria-label="' +
-              t('ui.groups.editGroup', { name: displayName }) +
+              escapeAttr(t('ui.groups.editGroup', { name: displayName })) +
               '">✏️</button><button class="btn-icon delete" data-delete-group="' +
-              group.id +
+              escapeAttr(group.id) +
               '" title="' +
-              t('common.delete') +
+              escapeAttr(t('common.delete')) +
               '" aria-label="' +
-              t('ui.groups.deleteGroupLabel', { name: displayName }) +
+              escapeAttr(t('ui.groups.deleteGroupLabel', { name: displayName })) +
               '">🗑️</button>') +
           '</div></div>'
         );
@@ -195,18 +196,18 @@ export function showAddGroupModal() {
     '<div class="input-row">' +
     '<div class="input-group" style="max-width: 80px">' +
     '<label>' +
-    t('ui.groups.icon') +
+    escapeHtml(t('ui.groups.icon')) +
     '</label>' +
     '<input type="text" id="modalGroupIcon" placeholder="📁" maxlength="2" class="icon-input" title="' +
-    t('ui.addDirectory.iconHint') +
+    escapeAttr(t('ui.addDirectory.iconHint')) +
     '" />' +
     '</div>' +
     '<div class="input-group flex-1">' +
     '<label>' +
-    t('ui.groups.name') +
+    escapeHtml(t('ui.groups.name')) +
     '<span class="required-mark">*</span></label>' +
     '<input type="text" id="modalGroupName" placeholder="' +
-    t('ui.groups.namePlaceholder') +
+    escapeAttr(t('ui.groups.namePlaceholder')) +
     '" />' +
     '</div>' +
     '</div>' +
@@ -270,20 +271,20 @@ function showEditGroupModal(groupId) {
     '<div class="input-row">' +
     '<div class="input-group" style="max-width: 80px">' +
     '<label>' +
-    t('ui.groups.icon') +
+    escapeHtml(t('ui.groups.icon')) +
     '</label>' +
     '<input type="text" id="modalGroupIcon" value="' +
-    (group.icon || '') +
+    escapeAttr(group.icon || '') +
     '" maxlength="2" class="icon-input" title="' +
-    t('ui.addDirectory.iconHint') +
+    escapeAttr(t('ui.addDirectory.iconHint')) +
     '" />' +
     '</div>' +
     '<div class="input-group flex-1">' +
     '<label>' +
-    t('ui.groups.name') +
+    escapeHtml(t('ui.groups.name')) +
     '<span class="required-mark">*</span></label>' +
     '<input type="text" id="modalGroupName" value="' +
-    group.name +
+    escapeAttr(group.name) +
     '" />' +
     '</div>' +
     '</div>' +
@@ -338,16 +339,16 @@ function showDeleteGroupModal(groupId) {
   const dirCount = getDirectoryCount(groupId);
   const displayName = getGroupDisplayName(group);
 
-  let content = '<p>' + t('ui.groups.deleteConfirm', { name: displayName }) + '</p>';
+  let content = '<p>' + escapeHtml(t('ui.groups.deleteConfirm', { name: displayName })) + '</p>';
 
   if (dirCount > 0) {
     content +=
       '<p class="warning">' +
-      t('ui.groups.deleteHasDirectories', { count: dirCount }) +
+      escapeHtml(t('ui.groups.deleteHasDirectories', { count: dirCount })) +
       '</p><div class="radio-group"><label><input type="radio" name="deleteAction" value="move" checked /> ' +
-      t('ui.groups.moveToDefault') +
+      escapeHtml(t('ui.groups.moveToDefault')) +
       '</label><label><input type="radio" name="deleteAction" value="delete" /> ' +
-      t('ui.groups.deleteWithDirectories') +
+      escapeHtml(t('ui.groups.deleteWithDirectories')) +
       '</label></div>';
   }
 

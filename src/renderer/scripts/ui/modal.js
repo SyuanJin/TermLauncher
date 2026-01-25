@@ -3,6 +3,7 @@
  * 提供通用彈窗元件，支援新增/編輯/刪除確認等操作
  */
 import { t } from '../i18n.js';
+import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 // 當前開啟的彈窗
 let currentModal = null;
@@ -49,18 +50,18 @@ function createModalElement(options) {
   const closeLabel = t('common.close');
 
   const modalHtml = `
-    <div class="modal-overlay" id="${id}">
-      <div class="modal${modalClass ? ' ' + modalClass : ''}" role="dialog" aria-modal="true" aria-labelledby="${id}-title">
+    <div class="modal-overlay" id="${escapeAttr(id)}">
+      <div class="modal${modalClass ? ' ' + escapeAttr(modalClass) : ''}" role="dialog" aria-modal="true" aria-labelledby="${escapeAttr(id)}-title">
         <div class="modal-header">
-          <h3 id="${id}-title">${title}</h3>
-          <button class="modal-close" aria-label="${closeLabel}" data-action="close">✕</button>
+          <h3 id="${escapeAttr(id)}-title">${escapeHtml(title)}</h3>
+          <button class="modal-close" aria-label="${escapeAttr(closeLabel)}" data-action="close">✕</button>
         </div>
         <div class="modal-body">
           ${content}
         </div>
         <div class="modal-footer">
-          ${showCancel ? `<button class="btn btn-secondary" data-action="cancel">${finalCancelText}</button>` : ''}
-          <button class="btn ${confirmClass}" data-action="confirm">${finalConfirmText}</button>
+          ${showCancel ? `<button class="btn btn-secondary" data-action="cancel">${escapeHtml(finalCancelText)}</button>` : ''}
+          <button class="btn ${escapeAttr(confirmClass)}" data-action="confirm">${escapeHtml(finalConfirmText)}</button>
         </div>
       </div>
     </div>
@@ -257,25 +258,25 @@ export function createFormField(field) {
 
   if (type === 'select') {
     inputHtml = `
-      <select id="modal-${name}" name="${name}" class="${className}"${required ? ' required' : ''}>
-        ${options.map(opt => `<option value="${opt.value}"${opt.value === value ? ' selected' : ''}>${opt.label}</option>`).join('')}
+      <select id="modal-${escapeAttr(name)}" name="${escapeAttr(name)}" class="${escapeAttr(className)}"${required ? ' required' : ''}>
+        ${options.map(opt => `<option value="${escapeAttr(opt.value)}"${opt.value === value ? ' selected' : ''}>${escapeHtml(opt.label)}</option>`).join('')}
       </select>
     `;
   } else if (type === 'textarea') {
     inputHtml = `
-      <textarea id="modal-${name}" name="${name}" class="${className}" placeholder="${placeholder}"${required ? ' required' : ''}${maxLength ? ` maxlength="${maxLength}"` : ''}>${value}</textarea>
+      <textarea id="modal-${escapeAttr(name)}" name="${escapeAttr(name)}" class="${escapeAttr(className)}" placeholder="${escapeAttr(placeholder)}"${required ? ' required' : ''}${maxLength ? ` maxlength="${escapeAttr(maxLength)}"` : ''}>${escapeHtml(value)}</textarea>
     `;
   } else {
     inputHtml = `
-      <input type="${type}" id="modal-${name}" name="${name}" class="${className}" placeholder="${placeholder}" value="${value}"${required ? ' required' : ''}${maxLength ? ` maxlength="${maxLength}"` : ''} />
+      <input type="${escapeAttr(type)}" id="modal-${escapeAttr(name)}" name="${escapeAttr(name)}" class="${escapeAttr(className)}" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(value)}"${required ? ' required' : ''}${maxLength ? ` maxlength="${escapeAttr(maxLength)}"` : ''} />
     `;
   }
 
   return `
     <div class="input-group">
-      <label for="modal-${name}">${label}${required ? '<span class="required-mark">*</span>' : ''}</label>
+      <label for="modal-${escapeAttr(name)}">${escapeHtml(label)}${required ? '<span class="required-mark">*</span>' : ''}</label>
       ${inputHtml}
-      ${hint ? `<small class="hint">${hint}</small>` : ''}
+      ${hint ? `<small class="hint">${escapeHtml(hint)}</small>` : ''}
     </div>
   `;
 }

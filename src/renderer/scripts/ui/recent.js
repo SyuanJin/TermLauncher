@@ -12,6 +12,7 @@ import {
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
 } from '../utils/terminal.js';
+import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 /**
  * 取得終端圖示
@@ -150,25 +151,25 @@ export function renderRecentList() {
           '<div class="directory-item" data-id="' +
           dir.id +
           '" tabindex="0" role="button" aria-label="' +
-          t('ui.directory.openTerminal', { name: dir.name }) +
+          escapeAttr(t('ui.directory.openTerminal', { name: dir.name })) +
           '"><div class="dir-icon">' +
-          terminalIcon +
+          escapeHtml(terminalIcon) +
           '</div><div class="dir-info"><div class="dir-name">' +
-          (dir.icon ? '<span class="dir-emoji">' + dir.icon + '</span>' : '') +
-          dir.name +
+          (dir.icon ? '<span class="dir-emoji">' + escapeHtml(dir.icon) + '</span>' : '') +
+          escapeHtml(dir.name) +
           (dirIsFavorite ? '<span class="favorite-badge">⭐</span>' : '') +
           '<span class="tag">' +
-          terminalName +
+          escapeHtml(terminalName) +
           '</span></div><div class="dir-path">' +
-          dir.path +
+          escapeHtml(dir.path) +
           '</div><div class="dir-meta"><span class="last-used">' +
-          relativeTime +
+          escapeHtml(relativeTime) +
           '</span></div></div><div class="dir-actions"><button class="btn-icon delete" data-remove-recent="' +
           dir.id +
           '" title="' +
-          t('common.removeFromRecent') +
+          escapeAttr(t('common.removeFromRecent')) +
           '" aria-label="' +
-          t('common.removeFromRecent') +
+          escapeAttr(t('common.removeFromRecent')) +
           '">✕</button></div></div>'
         );
       })
