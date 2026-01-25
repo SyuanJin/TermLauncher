@@ -35,7 +35,10 @@ const SENSITIVE_PATTERNS = [
   // Linux 家目錄
   { pattern: /\/home\/[^/]+/gi, replacement: '/home/[USER]' },
   // 環境變數格式的敏感值
-  { pattern: /(?:password|secret|token|key|credential)s?\s*[=:]\s*\S+/gi, replacement: '[REDACTED]' },
+  {
+    pattern: /(?:password|secret|token|key|credential)s?\s*[=:]\s*\S+/gi,
+    replacement: '[REDACTED]',
+  },
   // Email 地址
   { pattern: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, replacement: '[EMAIL]' },
 ];

@@ -386,7 +386,9 @@ export async function renderTerminalDetectionStatus() {
           ? '✓ ' + escapeHtml(t('ui.settings.terminals.detected'))
           : '✕ ' + escapeHtml(t('ui.settings.terminals.notDetected'))) +
         '</span>' +
-        (item.detail ? '<span class="detection-detail">(' + escapeHtml(item.detail) + ')</span>' : '') +
+        (item.detail
+          ? '<span class="detection-detail">(' + escapeHtml(item.detail) + ')</span>'
+          : '') +
         '</div>'
     )
     .join('');
@@ -413,7 +415,9 @@ export function renderTerminalsList() {
         '</span><div class="terminal-details"><span class="terminal-name">' +
         escapeHtml(terminal.name) +
         (terminal.isBuiltin
-          ? '<span class="builtin-badge">' + escapeHtml(t('ui.settings.terminals.builtin')) + '</span>'
+          ? '<span class="builtin-badge">' +
+            escapeHtml(t('ui.settings.terminals.builtin')) +
+            '</span>'
           : '') +
         '</span><span class="terminal-command">' +
         escapeHtml(terminal.command) +

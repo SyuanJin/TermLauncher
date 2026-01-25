@@ -78,7 +78,10 @@ function validateSafeUrl(url) {
     const parsedUrl = new URL(url);
     const allowedProtocols = ['http:', 'https:'];
     if (!allowedProtocols.includes(parsedUrl.protocol)) {
-      return { valid: false, error: `URL protocol must be http or https, got: ${parsedUrl.protocol}` };
+      return {
+        valid: false,
+        error: `URL protocol must be http or https, got: ${parsedUrl.protocol}`,
+      };
     }
     return { valid: true };
   } catch (err) {
@@ -215,7 +218,7 @@ function validateLocaleCode(localeCode) {
  * @returns {Function} 包裝後的驗證函數
  */
 function createValidator(validator, handlerName) {
-  return (value) => {
+  return value => {
     const result = validator(value);
     if (!result.valid) {
       result.handlerName = handlerName;

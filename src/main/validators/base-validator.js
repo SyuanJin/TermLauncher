@@ -87,7 +87,7 @@ class BaseValidator {
       ...this.cacheStats,
       size: this.cache.size,
       maxSize: this.maxCacheSize,
-      hitRate: total > 0 ? (this.cacheStats.hits / total * 100).toFixed(2) + '%' : '0%',
+      hitRate: total > 0 ? ((this.cacheStats.hits / total) * 100).toFixed(2) + '%' : '0%',
     };
   }
 

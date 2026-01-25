@@ -160,7 +160,9 @@ describe('validateConfig', () => {
 
   it('應該拒絕非陣列欄位', () => {
     expect(validateConfig({ directories: {}, groups: [], terminals: [] }).valid).toBe(false);
-    expect(validateConfig({ directories: [], groups: 'not-array', terminals: [] }).valid).toBe(false);
+    expect(validateConfig({ directories: [], groups: 'not-array', terminals: [] }).valid).toBe(
+      false
+    );
   });
 });
 
@@ -168,13 +170,15 @@ describe('validateExportOptions', () => {
   it('應該接受有效匯出選項', () => {
     expect(validateExportOptions({}).valid).toBe(true);
     expect(validateExportOptions({ exportTerminals: true }).valid).toBe(true);
-    expect(validateExportOptions({
-      exportTerminals: true,
-      exportGroups: false,
-      exportDirectories: true,
-      exportFavorites: true,
-      exportSettings: false,
-    }).valid).toBe(true);
+    expect(
+      validateExportOptions({
+        exportTerminals: true,
+        exportGroups: false,
+        exportDirectories: true,
+        exportFavorites: true,
+        exportSettings: false,
+      }).valid
+    ).toBe(true);
   });
 
   it('應該拒絕非布林選項', () => {
@@ -187,13 +191,15 @@ describe('validateImportOptions', () => {
   it('應該接受有效匯入選項', () => {
     expect(validateImportOptions({}).valid).toBe(true);
     expect(validateImportOptions({ mergeTerminals: true }).valid).toBe(true);
-    expect(validateImportOptions({
-      mergeTerminals: true,
-      mergeGroups: false,
-      mergeDirectories: true,
-      mergeFavorites: true,
-      mergeSettings: false,
-    }).valid).toBe(true);
+    expect(
+      validateImportOptions({
+        mergeTerminals: true,
+        mergeGroups: false,
+        mergeDirectories: true,
+        mergeFavorites: true,
+        mergeSettings: false,
+      }).valid
+    ).toBe(true);
   });
 
   it('應該拒絕非布林選項', () => {

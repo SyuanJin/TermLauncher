@@ -4,12 +4,12 @@
 
 ## 技術棧
 
-| 層級     | 技術                                                          |
-| -------- | ------------------------------------------------------------- |
-| Frontend | Electron Renderer + HTML/CSS/ES Modules                       |
-| Preload  | Context Bridge (contextIsolation: true)                       |
-| Backend  | Electron Main + Node.js                                       |
-| System   | 跨平台終端支援（Windows/macOS/Linux）、Global Shortcuts       |
+| 層級     | 技術                                                    |
+| -------- | ------------------------------------------------------- |
+| Frontend | Electron Renderer + HTML/CSS/ES Modules                 |
+| Preload  | Context Bridge (contextIsolation: true)                 |
+| Backend  | Electron Main + Node.js                                 |
+| System   | 跨平台終端支援（Windows/macOS/Linux）、Global Shortcuts |
 
 ## 專案結構
 
