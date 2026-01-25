@@ -176,7 +176,13 @@ class MacOSValidator extends BaseValidator {
   extractTerminalType(command) {
     const lowerCommand = command.toLowerCase();
 
-    if (lowerCommand.includes('terminal.app') || lowerCommand.includes('terminal')) {
+    // macOS Terminal.app - 需精確匹配避免誤判其他終端（如 gnome-terminal）
+    // 常見啟動方式：open -a Terminal、open -a "Terminal.app"、完整路徑
+    if (
+      lowerCommand.includes('terminal.app') ||
+      lowerCommand.includes('/utilities/terminal') ||
+      /open\s+(-\w+\s+)*-a\s+["']?terminal["']?(\s|$)/i.test(command)
+    ) {
       return 'terminalApp';
     }
     if (lowerCommand.includes('iterm')) {
