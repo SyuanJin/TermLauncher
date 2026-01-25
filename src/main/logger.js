@@ -27,6 +27,72 @@ const currentLevel = isDev ? LogLevel.DEBUG : LogLevel.INFO;
 // 保留日誌天數
 const LOG_RETENTION_DAYS = 7;
 
+// 敏感資訊過濾設定
+const SENSITIVE_PATTERNS = [
+  // Windows 使用者路徑
+  { pattern: /C:\\Users\\[^\\]+/gi, replacement: 'C:\\Users\\[USER]' },
+  { pattern: /\/Users\/[^/]+/gi, replacement: '/Users/[USER]' },
+  // Linux 家目錄
+  { pattern: /\/home\/[^/]+/gi, replacement: '/home/[USER]' },
+  // 環境變數格式的敏感值
+  { pattern: /(?:password|secret|token|key|credential)s?\s*[=:]\s*\S+/gi, replacement: '[REDACTED]' },
+  // Email 地址
+  { pattern: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, replacement: '[EMAIL]' },
+];
+
+/**
+ * 過濾敏感資訊
+ * @param {string} text - 原始文字
+ * @returns {string} 過濾後的文字
+ */
+function filterSensitiveInfo(text) {
+  if (typeof text !== 'string') return text;
+
+  let filtered = text;
+  for (const { pattern, replacement } of SENSITIVE_PATTERNS) {
+    filtered = filtered.replace(pattern, replacement);
+  }
+  return filtered;
+}
+
+/**
+ * 遞迴過濾物件中的敏感資訊
+ * @param {*} data - 原始資料
+ * @returns {*} 過濾後的資料
+ */
+function filterSensitiveData(data) {
+  if (data === null || data === undefined) return data;
+
+  if (typeof data === 'string') {
+    return filterSensitiveInfo(data);
+  }
+
+  if (data instanceof Error) {
+    const filtered = new Error(filterSensitiveInfo(data.message));
+    filtered.stack = filterSensitiveInfo(data.stack);
+    return filtered;
+  }
+
+  if (Array.isArray(data)) {
+    return data.map(filterSensitiveData);
+  }
+
+  if (typeof data === 'object') {
+    const filtered = {};
+    for (const [key, value] of Object.entries(data)) {
+      // 對於明顯敏感的欄位，直接遮蔽
+      if (/password|secret|token|key|credential/i.test(key)) {
+        filtered[key] = '[REDACTED]';
+      } else {
+        filtered[key] = filterSensitiveData(value);
+      }
+    }
+    return filtered;
+  }
+
+  return data;
+}
+
 /**
  * 確保日誌目錄存在
  */
@@ -107,15 +173,18 @@ function writeToFile(level, module, message, data) {
   try {
     ensureLogDir();
     const timestamp = `${getDateString()} ${getTimeString()}`;
-    let logLine = `[${timestamp}] [${level}] [${module}] ${message}`;
+    // 過濾敏感資訊
+    const filteredMessage = filterSensitiveInfo(message);
+    let logLine = `[${timestamp}] [${level}] [${module}] ${filteredMessage}`;
 
     if (data !== undefined) {
-      if (data instanceof Error) {
-        logLine += `\n  Error: ${data.message}\n  Stack: ${data.stack}`;
-      } else if (typeof data === 'object') {
-        logLine += `\n  Data: ${JSON.stringify(data, null, 2)}`;
+      const filteredData = filterSensitiveData(data);
+      if (filteredData instanceof Error) {
+        logLine += `\n  Error: ${filteredData.message}\n  Stack: ${filteredData.stack}`;
+      } else if (typeof filteredData === 'object') {
+        logLine += `\n  Data: ${JSON.stringify(filteredData, null, 2)}`;
       } else {
-        logLine += ` | ${data}`;
+        logLine += ` | ${filteredData}`;
       }
     }
 
