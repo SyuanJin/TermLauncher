@@ -8,6 +8,9 @@
     "build": "electron-builder --win portable",
     "build:installer": "electron-builder --win nsis",
     "build:all": "npm run build && npm run build:installer",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -16,7 +19,8 @@
   "devDependencies": {
     "electron": "^33.0.0",
     "electron-builder": "^24.9.1",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "vitest": "^3.0.0"
   },
   "build": {
     "appId": "com.termlauncher.app",
