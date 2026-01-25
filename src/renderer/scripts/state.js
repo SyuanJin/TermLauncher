@@ -1,6 +1,9 @@
 /**
  * 狀態管理模組
  * 管理應用程式的全域狀態
+ *
+ * 注意：此模組直接返回配置物件的引用，調用者可以直接修改它。
+ * 修改後需要調用 saveConfig() 來持久化變更。
  */
 import { api } from './api.js';
 
@@ -9,10 +12,21 @@ let config = null;
 
 /**
  * 取得當前配置
+ * 注意：返回的是配置物件的直接引用，修改後需調用 saveConfig()
  * @returns {Object|null} 配置物件
  */
 export function getConfig() {
   return config;
+}
+
+/**
+ * 取得配置的深拷貝（只讀用途）
+ * 用於需要讀取配置但不想意外修改的場景
+ * @returns {Object|null} 配置物件的深拷貝
+ */
+export function getConfigSnapshot() {
+  if (!config) return null;
+  return JSON.parse(JSON.stringify(config));
 }
 
 /**
@@ -38,4 +52,19 @@ export async function loadConfig() {
  */
 export async function saveConfig() {
   return await api.saveConfig(config);
+}
+
+/**
+ * 檢查配置是否已載入
+ * @returns {boolean} 配置是否已載入
+ */
+export function isConfigLoaded() {
+  return config !== null;
+}
+
+/**
+ * 重設配置狀態（主要用於測試）
+ */
+export function resetConfig() {
+  config = null;
 }
