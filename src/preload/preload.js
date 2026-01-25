@@ -53,4 +53,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // 終端探測
   detectTerminals: () => ipcRenderer.invoke('detect-terminals'),
+
+  // 平台資訊
+  getPlatform: () => ipcRenderer.invoke('get-platform'),
 });

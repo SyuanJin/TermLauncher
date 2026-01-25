@@ -270,6 +270,11 @@ function setupIpcHandlers() {
     return detectInstalledTerminals();
   });
 
+  // 取得當前平台
+  ipcMain.handle('get-platform', () => {
+    return process.platform;
+  });
+
   // 記錄前端錯誤
   const rendererLogger = createLogger('Renderer');
   ipcMain.handle('log-renderer-error', (event, error, context) => {

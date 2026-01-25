@@ -15,9 +15,12 @@ const ErrorType = {
   INVALID_CONFIG: 'INVALID_CONFIG',
   PATH_NOT_FOUND: 'PATH_NOT_FOUND',
   PATH_NOT_DIRECTORY: 'PATH_NOT_DIRECTORY',
+  // Windows 專屬錯誤類型
   WINDOWS_TERMINAL_NOT_FOUND: 'WINDOWS_TERMINAL_NOT_FOUND',
   WSL_NOT_FOUND: 'WSL_NOT_FOUND',
   WSL_DISTRO_NOT_FOUND: 'WSL_DISTRO_NOT_FOUND',
+  // 通用錯誤類型
+  TERMINAL_NOT_FOUND: 'TERMINAL_NOT_FOUND',
   SPAWN_FAILED: 'SPAWN_FAILED',
 };
 
@@ -177,35 +180,75 @@ function validatePrerequisites(dir, terminal) {
   // 3. 檢查終端相關依賴（使用快取）
   const command = terminal.command;
 
-  // 檢查 Windows Terminal
-  if (usesWindowsTerminal(command)) {
-    if (!isWindowsTerminalInstalled()) {
-      return {
-        valid: false,
-        errorType: ErrorType.WINDOWS_TERMINAL_NOT_FOUND,
-        errorDetail: null,
-      };
-    }
-  }
-
-  // 檢查 WSL
-  if (usesWsl(command)) {
-    if (!isWslInstalled()) {
-      return {
-        valid: false,
-        errorType: ErrorType.WSL_NOT_FOUND,
-        errorDetail: null,
-      };
+  // Windows 專屬檢查
+  if (process.platform === 'win32') {
+    // 檢查 Windows Terminal
+    if (usesWindowsTerminal(command)) {
+      if (!isWindowsTerminalInstalled()) {
+        return {
+          valid: false,
+          errorType: ErrorType.WINDOWS_TERMINAL_NOT_FOUND,
+          errorDetail: null,
+        };
+      }
     }
 
-    // 檢查特定發行版
-    const distro = extractWslDistro(command);
-    if (distro && !isWslDistroInstalled(distro)) {
-      return {
-        valid: false,
-        errorType: ErrorType.WSL_DISTRO_NOT_FOUND,
-        errorDetail: distro,
-      };
+    // 檢查 WSL
+    if (usesWsl(command)) {
+      if (!isWslInstalled()) {
+        return {
+          valid: false,
+          errorType: ErrorType.WSL_NOT_FOUND,
+          errorDetail: null,
+        };
+      }
+
+      // 檢查特定發行版
+      const distro = extractWslDistro(command);
+      if (distro && !isWslDistroInstalled(distro)) {
+        return {
+          valid: false,
+          errorType: ErrorType.WSL_DISTRO_NOT_FOUND,
+          errorDetail: distro,
+        };
+      }
+    }
+  } else {
+    // macOS / Linux：使用驗證器的終端類型檢測方法
+    if (typeof validator.extractTerminalType === 'function') {
+      const terminalType = validator.extractTerminalType(command);
+
+      if (terminalType) {
+        // 根據終端類型檢查是否已安裝
+        const checkMethodMap = {
+          // macOS 終端
+          terminalApp: 'isTerminalAppInstalled',
+          iterm2: 'isITerm2Installed',
+          // Linux 終端
+          gnomeTerminal: 'isGnomeTerminalInstalled',
+          konsole: 'isKonsoleInstalled',
+          xterm: 'isXtermInstalled',
+          tilix: 'isTilixInstalled',
+          terminator: 'isTerminatorInstalled',
+          xfce4Terminal: 'isXfce4TerminalInstalled',
+          // 共用終端
+          alacritty: 'isAlacrittyInstalled',
+          kitty: 'isKittyInstalled',
+          hyper: 'isHyperInstalled',
+          warp: 'isWarpInstalled',
+        };
+
+        const checkMethod = checkMethodMap[terminalType];
+        if (checkMethod && typeof validator[checkMethod] === 'function') {
+          if (!validator[checkMethod]()) {
+            return {
+              valid: false,
+              errorType: ErrorType.TERMINAL_NOT_FOUND,
+              errorDetail: terminal.name || terminalType,
+            };
+          }
+        }
+      }
     }
   }
 
@@ -228,6 +271,67 @@ function invalidateValidatorCache() {
 }
 
 /**
+ * 取得終端的安裝連結（macOS）
+ * @param {string} terminalName - 終端名稱
+ * @returns {Object|null} { type, labelKey, value } 或 null
+ */
+function getMacOSInstallAction(terminalName) {
+  const lowerName = terminalName.toLowerCase();
+
+  // 終端安裝連結對照表
+  const installLinks = {
+    iterm2: 'https://iterm2.com/',
+    alacritty: 'https://alacritty.org/',
+    kitty: 'https://sw.kovidgoyal.net/kitty/',
+    hyper: 'https://hyper.is/',
+    warp: 'https://www.warp.dev/',
+  };
+
+  for (const [key, url] of Object.entries(installLinks)) {
+    if (lowerName.includes(key)) {
+      return {
+        type: 'url',
+        labelKey: 'error.action.installFromWebsite',
+        value: url,
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * 取得終端的安裝指令提示（Linux）
+ * @param {string} terminalName - 終端名稱
+ * @returns {string|null} 安裝指令提示或 null
+ */
+function getLinuxInstallHint(terminalName) {
+  const lowerName = terminalName.toLowerCase();
+
+  // 終端安裝指令對照表（以 apt 為例）
+  const installCommands = {
+    'gnome-terminal': 'apt install gnome-terminal',
+    gnometerminal: 'apt install gnome-terminal',
+    konsole: 'apt install konsole',
+    xterm: 'apt install xterm',
+    alacritty: 'apt install alacritty',
+    kitty: 'apt install kitty',
+    tilix: 'apt install tilix',
+    terminator: 'apt install terminator',
+    'xfce4-terminal': 'apt install xfce4-terminal',
+    xfce4terminal: 'apt install xfce4-terminal',
+  };
+
+  for (const [key, cmd] of Object.entries(installCommands)) {
+    if (lowerName.includes(key)) {
+      return cmd;
+    }
+  }
+
+  return null;
+}
+
+/**
  * 建立帶有行動按鈕的錯誤結果
  * @param {string} errorType - 錯誤類型
  * @param {string|null} errorDetail - 錯誤詳情
@@ -240,6 +344,8 @@ function createErrorResult(errorType, errorDetail) {
     errorDetail,
     actions: [],
   };
+
+  const platform = process.platform;
 
   // 根據錯誤類型設定對應的行動
   switch (errorType) {
@@ -286,6 +392,29 @@ function createErrorResult(errorType, errorDetail) {
           value: 'open-terminal-settings',
         },
       ];
+      break;
+
+    case ErrorType.TERMINAL_NOT_FOUND:
+      // 根據平台提供不同的行動建議
+      if (platform === 'darwin') {
+        // macOS: 提供官網下載連結
+        const macAction = getMacOSInstallAction(errorDetail || '');
+        if (macAction) {
+          result.actions.push(macAction);
+        }
+      } else if (platform === 'linux') {
+        // Linux: 提供套件管理器指令提示
+        const installHint = getLinuxInstallHint(errorDetail || '');
+        if (installHint) {
+          result.installHint = installHint;
+        }
+      }
+      // 都加上切換終端的選項
+      result.actions.push({
+        type: 'internal',
+        labelKey: 'error.action.switchTerminal',
+        value: 'open-terminal-settings',
+      });
       break;
 
     case ErrorType.PATH_NOT_FOUND:

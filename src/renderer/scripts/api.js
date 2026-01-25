@@ -167,4 +167,10 @@ export const api = {
    * @returns {Promise<Object>} 探測結果
    */
   detectTerminals: () => window.electronAPI.detectTerminals(),
+
+  /**
+   * 取得當前平台
+   * @returns {Promise<string>} 平台名稱 ('win32' | 'darwin' | 'linux')
+   */
+  getPlatform: () => window.electronAPI.getPlatform(),
 };

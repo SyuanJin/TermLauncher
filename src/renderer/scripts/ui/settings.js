@@ -185,6 +185,11 @@ export async function renderSettings() {
 let detectedTerminalsCache = null;
 
 /**
+ * 平台快取
+ */
+let platformCache = null;
+
+/**
  * 探測已安裝的終端
  * @returns {Promise<Object>} 探測結果
  */
@@ -196,6 +201,146 @@ export async function detectTerminals() {
 }
 
 /**
+ * 取得當前平台
+ * @returns {Promise<string>} 平台名稱
+ */
+async function getPlatform() {
+  if (!platformCache) {
+    platformCache = await api.getPlatform();
+  }
+  return platformCache;
+}
+
+/**
+ * 取得 Windows 平台的終端項目
+ * @param {Object} detected - 探測結果
+ * @returns {Array} 終端項目列表
+ */
+function getWindowsTerminalItems(detected) {
+  return [
+    {
+      name: 'Windows Terminal',
+      icon: '🖥️',
+      installed: detected.windowsTerminal,
+    },
+    {
+      name: 'WSL',
+      icon: '🐧',
+      installed: detected.wsl,
+      detail:
+        detected.wsl && detected.wslDistros?.length > 0
+          ? detected.wslDistros.length + ' ' + t('ui.settings.terminals.distros')
+          : null,
+    },
+    {
+      name: 'Git Bash',
+      icon: '🐱',
+      installed: detected.gitBash,
+    },
+    {
+      name: 'PowerShell',
+      icon: '⚡',
+      installed: detected.powerShell,
+    },
+    {
+      name: 'CMD',
+      icon: '📟',
+      installed: detected.cmd,
+    },
+  ];
+}
+
+/**
+ * 取得 macOS 平台的終端項目
+ * @param {Object} detected - 探測結果
+ * @returns {Array} 終端項目列表
+ */
+function getMacOSTerminalItems(detected) {
+  return [
+    {
+      name: 'Terminal.app',
+      icon: '🖥️',
+      installed: detected.terminalApp,
+    },
+    {
+      name: 'iTerm2',
+      icon: '🔲',
+      installed: detected.iterm2,
+    },
+    {
+      name: 'Alacritty',
+      icon: '⚡',
+      installed: detected.alacritty,
+    },
+    {
+      name: 'Kitty',
+      icon: '🐱',
+      installed: detected.kitty,
+    },
+    {
+      name: 'Hyper',
+      icon: '💠',
+      installed: detected.hyper,
+    },
+    {
+      name: 'Warp',
+      icon: '🚀',
+      installed: detected.warp,
+    },
+  ];
+}
+
+/**
+ * 取得 Linux 平台的終端項目
+ * @param {Object} detected - 探測結果
+ * @returns {Array} 終端項目列表
+ */
+function getLinuxTerminalItems(detected) {
+  return [
+    {
+      name: 'GNOME Terminal',
+      icon: '🖥️',
+      installed: detected.gnomeTerminal,
+    },
+    {
+      name: 'Konsole',
+      icon: '📺',
+      installed: detected.konsole,
+    },
+    {
+      name: 'xterm',
+      icon: '📟',
+      installed: detected.xterm,
+    },
+    {
+      name: 'Alacritty',
+      icon: '⚡',
+      installed: detected.alacritty,
+    },
+    {
+      name: 'Kitty',
+      icon: '🐱',
+      installed: detected.kitty,
+    },
+    {
+      name: 'Tilix',
+      icon: '🔲',
+      installed: detected.tilix,
+    },
+    {
+      name: 'Terminator',
+      icon: '🤖',
+      installed: detected.terminator,
+    },
+    {
+      name: 'Xfce Terminal',
+      icon: '🐭',
+      installed: detected.xfce4Terminal,
+    },
+  ];
+}
+
+/**
  * 渲染終端探測狀態
  */
 export async function renderTerminalDetectionStatus() {
@@ -203,46 +348,25 @@ export async function renderTerminalDetectionStatus() {
   if (!container) return;
 
   const detected = await detectTerminals();
-  const items = [];
+  const platform = await getPlatform();
 
-  // Windows Terminal
-  items.push({
-    name: 'Windows Terminal',
-    icon: '🖥️',
-    installed: detected.windowsTerminal,
-  });
+  let items = [];
 
-  // WSL
-  items.push({
-    name: 'WSL',
-    icon: '🐧',
-    installed: detected.wsl,
-    detail:
-      detected.wsl && detected.wslDistros.length > 0
-        ? detected.wslDistros.length + ' ' + t('ui.settings.terminals.distros')
-        : null,
-  });
-
-  // Git Bash
-  items.push({
-    name: 'Git Bash',
-    icon: '🐱',
-    installed: detected.gitBash,
-  });
-
-  // PowerShell
-  items.push({
-    name: 'PowerShell',
-    icon: '⚡',
-    installed: detected.powerShell,
-  });
-
-  // CMD
-  items.push({
-    name: 'CMD',
-    icon: '📟',
-    installed: detected.cmd,
-  });
+  // 根據平台選擇終端項目列表
+  switch (platform) {
+    case 'win32':
+      items = getWindowsTerminalItems(detected);
+      break;
+    case 'darwin':
+      items = getMacOSTerminalItems(detected);
+      break;
+    case 'linux':
+      items = getLinuxTerminalItems(detected);
+      break;
+    default:
+      // 預設使用 Linux 項目列表
+      items = getLinuxTerminalItems(detected);
+  }
 
   container.innerHTML = items
     .map(

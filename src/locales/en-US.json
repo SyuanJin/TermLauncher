@@ -245,6 +245,9 @@
     "windowsTerminalNotFound": "Windows Terminal is not installed. Please install it first",
     "wslNotFound": "WSL is not installed. Please install WSL first",
     "wslDistroNotFound": "WSL distribution {distro} is not installed",
+    "terminalNotFound": "Terminal {name} is not installed",
+    "terminalNotFoundMac": "Terminal {name} is not installed. Please download from App Store or official website",
+    "terminalNotFoundLinux": "Terminal {name} is not installed. Please install using your package manager",
     "shortcutConflict": "Shortcut {shortcut} may be occupied by another program",
     "shortcutRegistrationFailed": "Failed to register shortcut. Please try another combination",
     "configCorrupted": "Config file was corrupted. Default settings restored",
@@ -320,7 +323,10 @@
       "installWsl": "Install WSL",
       "installDistro": "Install Distribution",
       "switchTerminal": "Switch Terminal",
-      "editDirectory": "Edit Directory"
+      "editDirectory": "Edit Directory",
+      "installFromAppStore": "Install from App Store",
+      "installFromWebsite": "Download from Website",
+      "installFromPackageManager": "Install via Package Manager"
     }
   }
 }

@@ -245,6 +245,9 @@
     "windowsTerminalNotFound": "Windows Terminal 未安裝，請先安裝後重試",
     "wslNotFound": "WSL 未安裝，請先安裝 WSL 環境",
     "wslDistroNotFound": "WSL 發行版本 {distro} 未安裝",
+    "terminalNotFound": "終端 {name} 未安裝",
+    "terminalNotFoundMac": "終端 {name} 未安裝，請從 App Store 或官網下載",
+    "terminalNotFoundLinux": "終端 {name} 未安裝，請使用套件管理器安裝",
     "shortcutConflict": "快捷鍵 {shortcut} 可能已被其他程式佔用",
     "shortcutRegistrationFailed": "無法註冊快捷鍵，請更換其他組合",
     "configCorrupted": "配置檔已損壞，已恢復預設設定",
@@ -320,7 +323,10 @@
       "installWsl": "安裝 WSL",
       "installDistro": "安裝發行版",
       "switchTerminal": "切換終端",
-      "editDirectory": "編輯目錄"
+      "editDirectory": "編輯目錄",
+      "installFromAppStore": "從 App Store 安裝",
+      "installFromWebsite": "從官網下載",
+      "installFromPackageManager": "使用套件管理器安裝"
     }
   }
 }
