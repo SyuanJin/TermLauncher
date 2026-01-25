@@ -296,7 +296,7 @@ export function renderDirectories() {
   const searchInput = document.getElementById('searchInput');
   const search = searchInput?.value?.toLowerCase() || '';
 
-  let dirs = config.directories.filter(d => {
+  const dirs = config.directories.filter(d => {
     const matchSearch =
       !search || d.name.toLowerCase().includes(search) || d.path.toLowerCase().includes(search);
     const matchGroup = selectedGroupFilters.length === 0 || selectedGroupFilters.includes(d.group);

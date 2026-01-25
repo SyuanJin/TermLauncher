@@ -4,7 +4,7 @@
  */
 import { loadConfig, getConfig } from './state.js';
 import { api } from './api.js';
-import { initI18n } from './i18n.js';
+import { initI18n, t } from './i18n.js';
 import { setupTabs, onTabChange } from './ui/tabs.js';
 import { renderRecentList, setupRecentEvents } from './ui/recent.js';
 import { renderFavoritesList, setupFavoritesEvents } from './ui/favorites.js';
@@ -25,7 +25,6 @@ import {
 } from './ui/settings.js';
 import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
 import { initToast, showWarning } from './ui/toast.js';
-import { t } from './i18n.js';
 import { initErrorHandler } from './error-handler.js';
 import { initKeyboardShortcuts } from './utils/keyboard.js';
 
