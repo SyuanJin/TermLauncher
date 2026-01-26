@@ -1,6 +1,6 @@
 # 技術架構文檔
 
-> 版本：2.0.0 | 更新：2026-01-25
+> 版本：2.1.0 | 更新：2026-01-26
 
 ## 技術棧
 
@@ -74,21 +74,85 @@ src/
 
 ## IPC 通訊
 
-| Channel               | 說明             |
-| --------------------- | ---------------- |
-| get-config            | 取得配置         |
-| save-config           | 儲存配置         |
-| open-terminal         | 開啟終端         |
-| select-folder         | 資料夾選擇器     |
-| export/import-config  | 匯出/匯入配置    |
-| get/set-auto-launch   | 開機自動啟動     |
-| load-locale           | 載入語系         |
-| open-external         | 開啟外部連結     |
-| open-config-directory | 開啟設定目錄     |
-| get-app-version       | 取得應用程式版本 |
-| log-renderer-error    | 記錄前端錯誤     |
-| clear-logs            | 清除日誌         |
-| reset-config          | 重設所有設定     |
+共 28 個 Channel，依功能分組：
+
+### 配置管理
+
+| Channel                | 方式   | 說明                         |
+| ---------------------- | ------ | ---------------------------- |
+| get-config             | handle | 取得配置                     |
+| save-config            | handle | 儲存配置（含重新註冊快捷鍵） |
+| check-config-corrupted | handle | 檢查配置是否曾損壞           |
+| reset-config           | handle | 重設所有設定為預設值         |
+
+### 終端操作
+
+| Channel          | 方式   | 說明                   |
+| ---------------- | ------ | ---------------------- |
+| open-terminal    | handle | 開啟終端並進入指定目錄 |
+| preview-command  | handle | 預覽終端啟動命令與參數 |
+| detect-terminals | handle | 探測已安裝的終端       |
+
+### 檔案與路徑
+
+| Channel        | 方式   | 說明                 |
+| -------------- | ------ | -------------------- |
+| select-folder  | handle | 開啟資料夾選擇器     |
+| validate-paths | handle | 批次驗證路徑是否存在 |
+
+### 匯出匯入
+
+| Channel                | 方式   | 說明                       |
+| ---------------------- | ------ | -------------------------- |
+| export-config          | handle | 基本匯出（完整配置）       |
+| import-config          | handle | 基本匯入（完整覆蓋）       |
+| export-config-advanced | handle | 進階匯出（選擇性匯出項目） |
+| import-config-advanced | handle | 進階匯入（合併/覆蓋模式）  |
+| get-export-preview     | handle | 取得匯出預覽（各項目數量） |
+
+### 國際化
+
+| Channel               | 方式   | 說明             |
+| --------------------- | ------ | ---------------- |
+| get-available-locales | handle | 取得可用語系列表 |
+| load-locale           | handle | 載入指定語系     |
+
+### 自動啟動
+
+| Channel         | 方式   | 說明             |
+| --------------- | ------ | ---------------- |
+| set-auto-launch | handle | 設定開機自動啟動 |
+| get-auto-launch | handle | 取得自動啟動狀態 |
+
+### 系統資訊
+
+| Channel             | 方式   | 說明                 |
+| ------------------- | ------ | -------------------- |
+| get-app-version     | handle | 取得應用程式版本     |
+| get-platform        | handle | 取得當前作業系統平台 |
+| get-shortcut-status | handle | 取得快捷鍵註冊狀態   |
+
+### 外部操作
+
+| Channel               | 方式   | 說明                        |
+| --------------------- | ------ | --------------------------- |
+| open-external         | handle | 開啟外部連結（僅限 http/s） |
+| open-config-directory | handle | 開啟設定檔目錄              |
+
+### 錯誤與日誌
+
+| Channel            | 方式   | 說明             |
+| ------------------ | ------ | ---------------- |
+| log-renderer-error | handle | 記錄前端錯誤     |
+| clear-logs         | handle | 清除所有日誌檔案 |
+
+### 視窗控制
+
+| Channel         | 方式 | 說明            |
+| --------------- | ---- | --------------- |
+| minimize-window | on   | 最小化視窗      |
+| maximize-window | on   | 最大化/還原視窗 |
+| close-window    | on   | 關閉視窗        |
 
 ## 安全機制
 
