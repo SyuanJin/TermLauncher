@@ -1,6 +1,6 @@
 {
   "name": "termlauncher",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "TermLauncher - 快速開啟終端進入指定目錄",
   "main": "src/main/index.js",
   "scripts": {

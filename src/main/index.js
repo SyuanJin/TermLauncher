@@ -3,7 +3,7 @@
  * 應用程式生命週期管理
  */
 const { app, BrowserWindow } = require('electron');
-const { createWindow } = require('./window');
+const { createWindow, getMainWindow } = require('./window');
 const { createTray } = require('./tray');
 const { registerShortcut, unregisterAllShortcuts } = require('./shortcuts');
 const { setupIpcHandlers } = require('./ipc-handlers');
@@ -11,34 +11,54 @@ const { loadLocale } = require('./i18n');
 const { loadConfig } = require('./config');
 const { logCacheStats } = require('./terminal');
 
-// 設定 IPC 事件處理器
-setupIpcHandlers();
+// 單一實例鎖定
+const gotTheLock = app.requestSingleInstanceLock();
 
-// App 事件
-app.whenReady().then(() => {
-  // 載入配置並初始化語系
-  const config = loadConfig();
-  loadLocale(config.settings?.language || 'zh-TW');
+if (!gotTheLock) {
+  // 已有實例運行中，退出當前實例
+  app.quit();
+} else {
+  // 當第二個實例嘗試啟動時，聚焦到現有視窗
+  app.on('second-instance', () => {
+    const mainWindow = getMainWindow();
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
 
-  createWindow();
-  createTray();
-  registerShortcut();
-});
+  // 設定 IPC 事件處理器
+  setupIpcHandlers();
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
+  // App 事件
+  app.whenReady().then(() => {
+    // 載入配置並初始化語系
+    const config = loadConfig();
+    loadLocale(config.settings?.language || 'zh-TW');
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
-  }
-});
+    createTray();
+    registerShortcut();
+  });
 
-app.on('will-quit', () => {
-  // 記錄驗證器快取統計（用於性能分析）
-  logCacheStats();
-  unregisterAllShortcuts();
-});
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+
+  app.on('will-quit', () => {
+    // 記錄驗證器快取統計（用於性能分析）
+    logCacheStats();
+    unregisterAllShortcuts();
+  });
+}
