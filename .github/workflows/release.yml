@@ -72,6 +72,6 @@ jobs:
           body: ${{ steps.version.outputs.RELEASE_NOTES }}
           files: |
             dist/TermLauncher-Portable.exe
-            dist/TermLauncher-Setup-*.exe
+            dist/TermLauncher Setup *.exe
           draft: false
           prerelease: false
