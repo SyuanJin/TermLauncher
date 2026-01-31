@@ -29,13 +29,21 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Cache electron-builder
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~\AppData\Local\electron\Cache
+            ~\AppData\Local\electron-builder\Cache
+          key: electron-builder-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            electron-builder-${{ runner.os }}-
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build
-        run: |
-          npx electron-builder --win portable --publish never
-          npx electron-builder --win nsis --publish never
+        run: npx electron-builder --win portable nsis --publish never
 
       - name: Extract version info
         id: version
@@ -48,7 +56,7 @@ jobs:
           $content = Get-Content docs/CHANGELOG.md -Raw -Encoding UTF8
 
           # 提取標題（格式：## 🚀 vX.X.X - 標題 (日期)）
-          $titlePattern = "## 🚀\s*v$version\s*-\s*([^(\r\n]+)"
+          $titlePattern = "## 🚀 v$version\s*-\s*([^(\r\n]+)"
           if ($content -match $titlePattern) {
             $title = $Matches[1].Trim()
             "RELEASE_TITLE=🚀 v$version - $title" >> $env:GITHUB_OUTPUT
@@ -56,8 +64,8 @@ jobs:
             "RELEASE_TITLE=v$version" >> $env:GITHUB_OUTPUT
           }
 
-          # 匹配版本區塊（從 ## vX.X.X 到下一個 ## v 或檔案結尾）
-          $pattern = "(?s)## v$version[^\r\n]*\r?\n(.*?)(?=\r?\n## v|\z)"
+          # 匹配版本區塊（從 ## 🚀 vX.X.X 到下一個 ## 🚀 v 或檔案結尾）
+          $pattern = "(?s)## 🚀 v$version[^\r\n]*\r?\n(.*?)(?=\r?\n## 🚀 v|\z)"
           if ($content -match $pattern) {
             $notes = $Matches[1].Trim()
 
