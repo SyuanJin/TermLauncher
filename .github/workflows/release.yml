@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build:all
+
+      - name: Extract version info
+        id: version
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag -replace '^v', ''
+          "VERSION=$version" >> $env:GITHUB_OUTPUT
+
+          # 從 CHANGELOG.md 提取對應版本的內容
+          $content = Get-Content docs/CHANGELOG.md -Raw -Encoding UTF8
+
+          # 匹配版本區塊（從 ## vX.X.X 到下一個 ## v 或檔案結尾）
+          $pattern = "(?s)## v$version[^\r\n]*\r?\n(.*?)(?=\r?\n## v|\z)"
+          if ($content -match $pattern) {
+            $notes = $Matches[1].Trim()
+
+            # 處理多行輸出
+            $delimiter = "EOF_$([guid]::NewGuid().ToString('N'))"
+            "RELEASE_NOTES<<$delimiter" >> $env:GITHUB_OUTPUT
+            $notes >> $env:GITHUB_OUTPUT
+            $delimiter >> $env:GITHUB_OUTPUT
+          } else {
+            "RELEASE_NOTES=Release $tag" >> $env:GITHUB_OUTPUT
+          }
+        shell: pwsh
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.VERSION }}
+          body: ${{ steps.version.outputs.RELEASE_NOTES }}
+          files: |
+            dist/TermLauncher-Portable.exe
+            dist/TermLauncher-Setup-*.exe
+          draft: false
+          prerelease: false
