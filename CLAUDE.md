@@ -86,3 +86,11 @@ Main Process (後端/系統整合)
 - IPC 通訊需同時修改 `preload/preload.js` 和 `ipc-handlers.js`
 - 新增終端類型需修改 `terminal.js` 的路徑轉換邏輯
 - 國際化字串放在 `src/locales/` 下的 JSON 檔案
+
+## 相關文件
+
+| 文件                                    | 說明                           |
+| --------------------------------------- | ------------------------------ |
+| [RELEASE.md](docs/RELEASE.md)           | 發布指南、CHANGELOG 格式與模板 |
+| [CHANGELOG.md](docs/CHANGELOG.md)       | 版本變更記錄                   |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架構設計文件                   |

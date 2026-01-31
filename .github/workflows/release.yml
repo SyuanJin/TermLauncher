@@ -47,6 +47,15 @@ jobs:
           # 從 CHANGELOG.md 提取對應版本的內容
           $content = Get-Content docs/CHANGELOG.md -Raw -Encoding UTF8
 
+          # 提取標題（格式：## 🚀 vX.X.X - 標題 (日期)）
+          $titlePattern = "## 🚀\s*v$version\s*-\s*([^(\r\n]+)"
+          if ($content -match $titlePattern) {
+            $title = $Matches[1].Trim()
+            "RELEASE_TITLE=🚀 v$version - $title" >> $env:GITHUB_OUTPUT
+          } else {
+            "RELEASE_TITLE=v$version" >> $env:GITHUB_OUTPUT
+          }
+
           # 匹配版本區塊（從 ## vX.X.X 到下一個 ## v 或檔案結尾）
           $pattern = "(?s)## v$version[^\r\n]*\r?\n(.*?)(?=\r?\n## v|\z)"
           if ($content -match $pattern) {
@@ -68,7 +77,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ inputs.tag || github.ref_name }}
-          name: v${{ steps.version.outputs.VERSION }}
+          name: ${{ steps.version.outputs.RELEASE_TITLE }}
           body: ${{ steps.version.outputs.RELEASE_NOTES }}
           files: |
             dist/TermLauncher-Portable.exe
