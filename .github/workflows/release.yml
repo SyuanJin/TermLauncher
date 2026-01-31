@@ -33,7 +33,9 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build:all
+        run: |
+          npx electron-builder --win portable --publish never
+          npx electron-builder --win nsis --publish never
 
       - name: Extract version info
         id: version
