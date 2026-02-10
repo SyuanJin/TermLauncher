@@ -182,7 +182,7 @@
         "importAdvancedTitle": "Advanced Import Settings",
         "importAdvancedDesc": "Select import mode (checked = merge, unchecked = overwrite):",
         "importMode": "Import Mode",
-        "exportTerminals": "Custom Launchers",
+        "exportTerminals": "Launchers",
         "exportGroups": "Groups",
         "exportDirectories": "Directories",
         "exportFavorites": "Favorites",

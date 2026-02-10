@@ -397,8 +397,8 @@ function exportConfigAdvanced(options = {}) {
   };
 
   if (includeTerminals) {
-    // 只匯出自訂終端，不匯出內建終端
-    exportData.terminals = config.terminals?.filter(t => !t.isBuiltin) || [];
+    // 匯出全部終端（含內建的 hidden/order 狀態）
+    exportData.terminals = config.terminals || [];
   }
 
   if (includeGroups) {
@@ -453,9 +453,22 @@ function importConfigAdvanced(importData, options = {}) {
 
   // 匯入終端
   if (importData.terminals) {
+    const importedBuiltin = importData.terminals.filter(t => t.isBuiltin);
+    const importedCustom = importData.terminals.filter(t => !t.isBuiltin);
+
+    // 更新內建終端的使用者設定（hidden、order）
+    importedBuiltin.forEach(imported => {
+      const existing = newConfig.terminals.find(t => t.id === imported.id && t.isBuiltin);
+      if (existing) {
+        if (imported.hidden !== undefined) existing.hidden = imported.hidden;
+        if (imported.order !== undefined) existing.order = imported.order;
+      }
+    });
+
+    // 處理自訂終端
     if (mergeTerminals) {
       // 合併模式：避免 ID 衝突
-      importData.terminals.forEach(importedTerminal => {
+      importedCustom.forEach(importedTerminal => {
         const existingIndex = newConfig.terminals.findIndex(t => t.id === importedTerminal.id);
         if (existingIndex !== -1) {
           // ID 衝突，生成新 ID
@@ -468,7 +481,7 @@ function importConfigAdvanced(importData, options = {}) {
     } else {
       // 覆蓋模式：保留內建終端，替換自訂終端
       const builtinTerminals = newConfig.terminals.filter(t => t.isBuiltin);
-      newConfig.terminals = [...builtinTerminals, ...importData.terminals];
+      newConfig.terminals = [...builtinTerminals, ...importedCustom];
     }
   }
 
@@ -583,7 +596,7 @@ function importConfigAdvanced(importData, options = {}) {
 function getExportPreview() {
   const config = loadConfig();
   return {
-    terminalsCount: config.terminals?.filter(t => !t.isBuiltin).length || 0,
+    terminalsCount: config.terminals?.length || 0,
     groupsCount: config.groups?.filter(g => !g.isDefault).length || 0,
     directoriesCount: config.directories?.length || 0,
     favoritesCount: config.favorites?.length || 0,

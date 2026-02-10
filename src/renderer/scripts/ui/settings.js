@@ -328,11 +328,11 @@ export async function exportConfig() {
     '</p>' +
     '<div class="export-options">' +
     '<label class="checkbox-label">' +
-    '<input type="checkbox" id="exportTerminals" checked />' +
+    '<input type="checkbox" id="exportFavorites" checked />' +
     '<span>' +
-    t('ui.settings.data.exportTerminals') +
+    t('ui.settings.data.exportFavorites') +
     ' (' +
-    preview.terminalsCount +
+    preview.favoritesCount +
     ')</span>' +
     '</label>' +
     '<label class="checkbox-label">' +
@@ -352,11 +352,11 @@ export async function exportConfig() {
     ')</span>' +
     '</label>' +
     '<label class="checkbox-label">' +
-    '<input type="checkbox" id="exportFavorites" checked />' +
+    '<input type="checkbox" id="exportTerminals" checked />' +
     '<span>' +
-    t('ui.settings.data.exportFavorites') +
+    t('ui.settings.data.exportTerminals') +
     ' (' +
-    preview.favoritesCount +
+    preview.terminalsCount +
     ')</span>' +
     '</label>' +
     '<label class="checkbox-label">' +
@@ -404,9 +404,9 @@ export function importConfig() {
     t('ui.settings.data.importMode') +
     '</h4>' +
     '<label class="checkbox-label">' +
-    '<input type="checkbox" id="mergeTerminals" checked />' +
+    '<input type="checkbox" id="mergeFavorites" checked />' +
     '<span>' +
-    t('ui.settings.data.mergeTerminals') +
+    t('ui.settings.data.mergeFavorites') +
     '</span>' +
     '</label>' +
     '<label class="checkbox-label">' +
@@ -422,9 +422,9 @@ export function importConfig() {
     '</span>' +
     '</label>' +
     '<label class="checkbox-label">' +
-    '<input type="checkbox" id="mergeFavorites" checked />' +
+    '<input type="checkbox" id="mergeTerminals" checked />' +
     '<span>' +
-    t('ui.settings.data.mergeFavorites') +
+    t('ui.settings.data.mergeTerminals') +
     '</span>' +
     '</label>' +
     '<label class="checkbox-label">' +
@@ -462,6 +462,8 @@ export function importConfig() {
         await renderSettings();
         renderGroupsTab();
         renderLaunchersTab();
+        renderRecentList();
+        applyTheme(result.config.settings?.theme || 'dark');
 
         if (result.errors && result.errors.length > 0) {
           showToast(t('toast.configImportedWithWarnings'), 'warning');

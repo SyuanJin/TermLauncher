@@ -182,7 +182,7 @@
         "importAdvancedTitle": "進階匯入設定",
         "importAdvancedDesc": "選擇匯入模式（勾選為合併，取消勾選為覆蓋）：",
         "importMode": "匯入模式",
-        "exportTerminals": "自訂啟動器",
+        "exportTerminals": "啟動器",
         "exportGroups": "群組",
         "exportDirectories": "目錄",
         "exportFavorites": "最愛",
