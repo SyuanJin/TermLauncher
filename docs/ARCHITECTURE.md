@@ -1,15 +1,15 @@
 # 技術架構文檔
 
-> 版本：2.1.0 | 更新：2026-01-26
+> 版本：2.3.0 | 更新：2026-02-11
 
 ## 技術棧
 
-| 層級     | 技術                                                    |
-| -------- | ------------------------------------------------------- |
-| Frontend | Electron Renderer + HTML/CSS/ES Modules                 |
-| Preload  | Context Bridge (contextIsolation: true)                 |
-| Backend  | Electron Main + Node.js                                 |
-| System   | 跨平台終端支援（Windows/macOS/Linux）、Global Shortcuts |
+| 層級     | 技術                                                        |
+| -------- | ----------------------------------------------------------- |
+| Frontend | Electron Renderer + HTML/CSS/ES Modules                     |
+| Preload  | Context Bridge (contextIsolation: true)                     |
+| Backend  | Electron Main + Node.js                                     |
+| System   | 跨平台應用程式支援（Windows/macOS/Linux）、Global Shortcuts |
 
 ## 專案結構
 
@@ -18,7 +18,7 @@ src/
 ├── main/                 # Electron 主進程
 │   ├── index.js         # 入口、生命週期
 │   ├── config.js        # 配置管理
-│   ├── terminal.js      # 終端啟動
+│   ├── terminal.js      # 應用程式啟動
 │   ├── window.js        # 視窗管理
 │   ├── tray.js          # 系統托盤
 │   ├── shortcuts.js     # 全域快捷鍵
@@ -52,13 +52,13 @@ src/
 
 ## 核心模組
 
-| 模組            | 職責                         |
-| --------------- | ---------------------------- |
-| config.js       | 配置檔讀取、儲存、遷移       |
-| terminal.js     | 終端啟動、路徑轉換、前置驗證 |
-| ipc-handlers.js | 主進程 IPC 事件處理          |
-| state.js        | 前端全域配置狀態             |
-| ui/\*.js        | 各 Tab 的渲染與操作邏輯      |
+| 模組            | 職責                             |
+| --------------- | -------------------------------- |
+| config.js       | 配置檔讀取、儲存、遷移           |
+| terminal.js     | 應用程式啟動、路徑轉換、前置驗證 |
+| ipc-handlers.js | 主進程 IPC 事件處理              |
+| state.js        | 前端全域配置狀態                 |
+| ui/\*.js        | 各 Tab 的渲染與操作邏輯          |
 
 ## 配置檔
 
@@ -85,13 +85,13 @@ src/
 | check-config-corrupted | handle | 檢查配置是否曾損壞           |
 | reset-config           | handle | 重設所有設定為預設值         |
 
-### 終端操作
+### 啟動器操作
 
-| Channel          | 方式   | 說明                   |
-| ---------------- | ------ | ---------------------- |
-| open-terminal    | handle | 開啟終端並進入指定目錄 |
-| preview-command  | handle | 預覽終端啟動命令與參數 |
-| detect-terminals | handle | 探測已安裝的終端       |
+| Channel          | 方式   | 說明                     |
+| ---------------- | ------ | ------------------------ |
+| open-terminal    | handle | 開啟啟動器並進入指定目錄 |
+| preview-command  | handle | 預覽啟動器執行命令與參數 |
+| detect-terminals | handle | 探測已安裝的啟動器       |
 
 ### 檔案與路徑
 

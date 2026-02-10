@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 專案概述
 
-TermLauncher 是一個 Windows 桌面應用，用於快速開啟專案工作目錄。支援 WSL Ubuntu、PowerShell、Git Bash、檔案總管等多種啟動器。
+TermLauncher 是一個跨平台桌面應用，支援以任意應用程式開啟專案目錄 — 終端、編輯器、IDE、檔案總管等。Windows 完整支援，macOS/Linux 實驗性支援。
 
 ## 建置與執行命令
 
@@ -44,17 +44,17 @@ Main Process (後端/系統整合)
 
 ### 主進程模組 (`src/main/`)
 
-| 模組              | 職責                         |
-| ----------------- | ---------------------------- |
-| `index.js`        | 應用入口、生命週期管理       |
-| `config.js`       | 配置讀寫、版本遷移（v1→v2）  |
-| `terminal.js`     | 終端啟動、路徑轉換、前置驗證 |
-| `window.js`       | 主視窗管理                   |
-| `tray.js`         | 系統托盤                     |
-| `shortcuts.js`    | 全域快捷鍵註冊/註銷          |
-| `ipc-handlers.js` | IPC 事件處理                 |
-| `i18n.js`         | 國際化                       |
-| `logger.js`       | 日誌系統                     |
+| 模組              | 職責                             |
+| ----------------- | -------------------------------- |
+| `index.js`        | 應用入口、生命週期管理           |
+| `config.js`       | 配置讀寫、版本遷移（v1→v2）      |
+| `terminal.js`     | 應用程式啟動、路徑轉換、前置驗證 |
+| `window.js`       | 主視窗管理                       |
+| `tray.js`         | 系統托盤                         |
+| `shortcuts.js`    | 全域快捷鍵註冊/註銷              |
+| `ipc-handlers.js` | IPC 事件處理                     |
+| `i18n.js`         | 國際化                           |
+| `logger.js`       | 日誌系統                         |
 
 ### 前端模組 (`src/renderer/scripts/`)
 
