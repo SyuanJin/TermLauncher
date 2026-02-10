@@ -415,7 +415,18 @@ function exportConfigAdvanced(options = {}) {
   }
 
   if (includeFavorites) {
-    exportData.favorites = config.favorites || [];
+    const validDirIds = new Set(
+      (config.directories || [])
+        .filter(d => {
+          try {
+            return fs.existsSync(d.path);
+          } catch {
+            return false;
+          }
+        })
+        .map(d => d.id)
+    );
+    exportData.favorites = (config.favorites || []).filter(id => validDirIds.has(id));
   }
 
   return exportData;

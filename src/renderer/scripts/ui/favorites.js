@@ -69,6 +69,31 @@ function getGroupName(groupId) {
 }
 
 /**
+ * 清理 favorites 中的贓數據
+ * - 移除孤兒 ID（目錄 entry 已不存在）
+ * - 移除指向無效路徑的 ID（檔案系統路徑不存在）
+ * @returns {boolean} 是否有清理動作
+ */
+function cleanFavorites() {
+  const config = getConfig();
+  if (!config.favorites || config.favorites.length === 0) return false;
+
+  const originalLength = config.favorites.length;
+
+  config.favorites = config.favorites.filter(id => {
+    const dir = config.directories.find(d => d.id === id);
+    if (!dir) return false; // 孤兒 ID
+
+    const valid = isPathValid(dir.path);
+    if (valid === false) return false; // 路徑不存在
+
+    return true; // valid === true 或 null（未驗證）都保留
+  });
+
+  return config.favorites.length !== originalLength;
+}
+
+/**
  * 取得最愛目錄列表
  * @returns {Array} 最愛目錄
  */
@@ -112,6 +137,12 @@ function getOrCreateEmptyState() {
  * 渲染最愛列表
  */
 export function renderFavoritesList() {
+  // 清理贓數據
+  const cleaned = cleanFavorites();
+  if (cleaned) {
+    saveConfig();
+  }
+
   const container = getElement('favoritesListContainer');
   if (!container) return;
 
