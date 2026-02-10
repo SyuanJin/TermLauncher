@@ -859,7 +859,7 @@ export async function resetAllSettings() {
  * 開啟 GitHub
  */
 export function openGithub() {
-  api.openExternal?.('https://github.com/SyuanJin/TermLauncher');
+  api.openExternal?.('https://github.com/xjin9612/TermLauncher');
 }
 
 /**

@@ -26,7 +26,7 @@ git push origin main
 git push origin vX.X.X
 ```
 
-發布完成後可在 [Releases](https://github.com/SyuanJin/TermLauncher/releases) 頁面查看。
+發布完成後可在 [Releases](https://github.com/xjin9612/TermLauncher/releases) 頁面查看。
 
 ## 手動發布流程
 

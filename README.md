@@ -67,7 +67,7 @@ TermLauncher is a cross-platform desktop application that lets you quickly launc
 
 ```bash
 # Clone the repository
-git clone https://github.com/SyuanJin/TermLauncher.git
+git clone https://github.com/xjin9612/TermLauncher.git
 cd TermLauncher
 
 # Install dependencies

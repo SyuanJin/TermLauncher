@@ -67,7 +67,7 @@ TermLauncher 是一個跨平台桌面應用，讓你能夠快速開啟終端並�
 
 ```bash
 # 複製專案
-git clone https://github.com/SyuanJin/TermLauncher.git
+git clone https://github.com/xjin9612/TermLauncher.git
 cd TermLauncher
 
 # 安裝依賴

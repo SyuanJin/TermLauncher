@@ -18,6 +18,11 @@
   },
   "author": "User",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xjin9612/TermLauncher.git"
+  },
+  "homepage": "https://github.com/xjin9612/TermLauncher",
   "devDependencies": {
     "electron": "^33.0.0",
     "electron-builder": "^24.9.1",
