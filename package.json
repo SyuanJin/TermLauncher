@@ -23,6 +23,10 @@
     "url": "https://github.com/xjin9612/TermLauncher.git"
   },
   "homepage": "https://github.com/xjin9612/TermLauncher",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.25.1"
+  },
   "devDependencies": {
     "electron": "^33.0.0",
     "electron-builder": "^24.9.1",

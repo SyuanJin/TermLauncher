@@ -10,6 +10,7 @@ const { setupIpcHandlers } = require('./ipc-handlers');
 const { loadLocale } = require('./i18n');
 const { loadConfig } = require('./config');
 const { logCacheStats } = require('./terminal');
+const { startMcpServer, stopMcpServer } = require('./mcp');
 
 // 單一實例鎖定
 const gotTheLock = app.requestSingleInstanceLock();
@@ -42,6 +43,13 @@ if (!gotTheLock) {
     createWindow();
     createTray();
     registerShortcut();
+
+    // 依配置啟動 MCP Server
+    const mcpSettings = config.settings?.mcp;
+    if (mcpSettings?.enabled !== false) {
+      const port = mcpSettings?.port || 23549;
+      startMcpServer(port);
+    }
   });
 
   app.on('window-all-closed', () => {
@@ -60,5 +68,6 @@ if (!gotTheLock) {
     // 記錄驗證器快取統計（用於性能分析）
     logCacheStats();
     unregisterAllShortcuts();
+    stopMcpServer();
   });
 }

@@ -131,6 +131,109 @@ export async function changeRecentLimit() {
 }
 
 /**
+ * 更新 MCP 狀態顯示
+ */
+async function updateMcpStatus() {
+  const status = await api.getMcpStatus();
+  const el = document.getElementById('mcpStatus');
+  if (el) {
+    if (status.running) {
+      el.textContent = t('ui.settings.mcp.statusRunning') + ' (:' + status.port + ')';
+      el.className = 'mcp-status mcp-running';
+    } else {
+      el.textContent = t('ui.settings.mcp.statusStopped');
+      el.className = 'mcp-status mcp-stopped';
+    }
+  }
+}
+
+/**
+ * 變更 MCP 啟用狀態
+ */
+async function changeMcpEnabled() {
+  const config = getConfig();
+  const enabled = document.getElementById('mcpEnabled').checked;
+  if (!config.settings.mcp) config.settings.mcp = {};
+  config.settings.mcp.enabled = enabled;
+  await saveConfig();
+
+  if (enabled) {
+    const port = config.settings.mcp.port || 23549;
+    const result = await api.startMcpServer(port);
+    if (result.success) {
+      showToast(t('toast.mcpStarted'), 'success');
+    } else if (result.error === 'port-in-use') {
+      showToast(t('toast.mcpPortInUse', { port }), 'error');
+    } else {
+      showToast(t('toast.mcpStartFailed', { error: result.error }), 'error');
+    }
+  } else {
+    await api.stopMcpServer();
+    showToast(t('toast.mcpStopped'), 'success');
+  }
+
+  await updateMcpStatus();
+}
+
+/**
+ * 變更 MCP 埠號
+ */
+async function changeMcpPort() {
+  const config = getConfig();
+  const port = parseInt(document.getElementById('mcpPort').value, 10);
+  if (isNaN(port) || port < 1024 || port > 65535) return;
+
+  if (!config.settings.mcp) config.settings.mcp = {};
+  const oldPort = config.settings.mcp.port;
+  config.settings.mcp.port = port;
+  await saveConfig();
+
+  // 如果 MCP 正在運行且埠號變更，重啟
+  if (config.settings.mcp.enabled && port !== oldPort) {
+    await api.stopMcpServer();
+    const result = await api.startMcpServer(port);
+    if (result.success) {
+      showToast(t('toast.mcpStarted'), 'success');
+    } else if (result.error === 'port-in-use') {
+      showToast(t('toast.mcpPortInUse', { port }), 'error');
+    } else {
+      showToast(t('toast.mcpStartFailed', { error: result.error }), 'error');
+    }
+    await updateMcpStatus();
+  }
+}
+
+/**
+ * 複製 MCP Claude Code 配置到剪貼簿
+ */
+async function copyMcpConfig() {
+  const config = getConfig();
+  const port = config.settings?.mcp?.port || 23549;
+  const mcpConfig = {
+    mcpServers: {
+      termlauncher: {
+        type: 'http',
+        url: `http://127.0.0.1:${port}/mcp`,
+      },
+    },
+  };
+
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(mcpConfig, null, 2));
+    showToast(t('toast.mcpConfigCopied'), 'success');
+  } catch {
+    // fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = JSON.stringify(mcpConfig, null, 2);
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast(t('toast.mcpConfigCopied'), 'success');
+  }
+}
+
+/**
  * 渲染設定項目
  */
 export async function renderSettings() {
@@ -168,6 +271,12 @@ export async function renderSettings() {
   // 顯示版本號
   const version = (await api.getAppVersion?.()) || '2.0.0';
   document.getElementById('appVersion').textContent = 'v' + version;
+
+  // MCP 設定
+  const mcpSettings = config.settings?.mcp || {};
+  document.getElementById('mcpEnabled').checked = mcpSettings.enabled !== false;
+  document.getElementById('mcpPort').value = mcpSettings.port || 23549;
+  await updateMcpStatus();
 }
 
 /**
@@ -498,4 +607,9 @@ export function setupSettingsEvents() {
   document.getElementById('btnClearLogs')?.addEventListener('click', clearLogs);
   document.getElementById('btnResetSettings')?.addEventListener('click', resetAllSettings);
   document.getElementById('btnOpenGithub')?.addEventListener('click', openGithub);
+
+  // MCP 設定
+  document.getElementById('mcpEnabled')?.addEventListener('change', changeMcpEnabled);
+  document.getElementById('mcpPort')?.addEventListener('change', changeMcpPort);
+  document.getElementById('btnCopyMcpConfig')?.addEventListener('click', copyMcpConfig);
 }

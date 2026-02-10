@@ -59,4 +59,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // 路徑驗證
   validatePaths: paths => ipcRenderer.invoke('validate-paths', paths),
+
+  // MCP Server
+  startMcpServer: port => ipcRenderer.invoke('start-mcp-server', port),
+  stopMcpServer: () => ipcRenderer.invoke('stop-mcp-server'),
+  getMcpStatus: () => ipcRenderer.invoke('get-mcp-status'),
+
+  // 配置變更事件
+  onConfigChanged: callback => ipcRenderer.on('config-changed', callback),
 });

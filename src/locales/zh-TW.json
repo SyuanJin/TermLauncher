@@ -205,6 +205,25 @@
         "resetTitle": "重設所有設定",
         "resetConfirm": "確定要重設所有設定嗎？此操作將會清除所有目錄、群組和自訂設定，無法復原。"
       },
+      "mcp": {
+        "title": "🤖 MCP Server",
+        "enabled": "啟用 MCP Server",
+        "port": "連接埠",
+        "portDesc": "MCP Server 監聽的埠號",
+        "status": "狀態",
+        "statusRunning": "運行中",
+        "statusStopped": "已停止",
+        "availableTools": "可用工具",
+        "toolCategories": {
+          "projects": "專案",
+          "launchers": "啟動器",
+          "groups": "群組",
+          "favorites": "最愛",
+          "recent": "最近"
+        },
+        "copyConfig": "複製 Claude Code 配置",
+        "copyConfigDesc": "複製 MCP 連線配置到剪貼簿，貼入 Claude Code 設定檔使用"
+      },
       "about": {
         "title": "ℹ️ 關於",
         "description": "快速開啟專案的桌面工具",
@@ -272,6 +291,11 @@
     "configDirOpened": "已開啟設定目錄",
     "logsCleared": "日誌已清除",
     "settingsReset": "所有設定已重設",
+    "mcpStarted": "MCP Server 已啟動",
+    "mcpStopped": "MCP Server 已停止",
+    "mcpStartFailed": "MCP Server 啟動失敗: {error}",
+    "mcpPortInUse": "埠號 {port} 已被佔用",
+    "mcpConfigCopied": "MCP 配置已複製到剪貼簿",
     "previewFailed": "無法預覽命令",
     "commandCopied": "命令已複製到剪貼簿"
   },

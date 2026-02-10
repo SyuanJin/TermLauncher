@@ -180,4 +180,29 @@ export const api = {
    * @returns {Promise<Object>} { path: boolean } 路徑存在狀態
    */
   validatePaths: paths => window.electronAPI.validatePaths(paths),
+
+  /**
+   * 啟動 MCP Server
+   * @param {number} port - 埠號
+   * @returns {Promise<Object>} { success, port?, error? }
+   */
+  startMcpServer: port => window.electronAPI.startMcpServer(port),
+
+  /**
+   * 停止 MCP Server
+   * @returns {Promise<Object>} { success, error? }
+   */
+  stopMcpServer: () => window.electronAPI.stopMcpServer(),
+
+  /**
+   * 取得 MCP Server 狀態
+   * @returns {Promise<Object>} { running, port? }
+   */
+  getMcpStatus: () => window.electronAPI.getMcpStatus(),
+
+  /**
+   * 監聽配置變更事件
+   * @param {Function} callback - 回呼函式
+   */
+  onConfigChanged: callback => window.electronAPI.onConfigChanged(callback),
 };

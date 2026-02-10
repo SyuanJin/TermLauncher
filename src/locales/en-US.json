@@ -205,6 +205,25 @@
         "resetTitle": "Reset All Settings",
         "resetConfirm": "Are you sure you want to reset all settings? This will clear all directories, groups, and custom settings. This action cannot be undone."
       },
+      "mcp": {
+        "title": "🤖 MCP Server",
+        "enabled": "Enable MCP Server",
+        "port": "Port",
+        "portDesc": "Port number for MCP Server",
+        "status": "Status",
+        "statusRunning": "Running",
+        "statusStopped": "Stopped",
+        "availableTools": "Available Tools",
+        "toolCategories": {
+          "projects": "Projects",
+          "launchers": "Launchers",
+          "groups": "Groups",
+          "favorites": "Favorites",
+          "recent": "Recent"
+        },
+        "copyConfig": "Copy Claude Code Config",
+        "copyConfigDesc": "Copy MCP connection config to clipboard for Claude Code settings"
+      },
       "about": {
         "title": "ℹ️ About",
         "description": "A desktop tool for quickly launching projects",
@@ -272,6 +291,11 @@
     "configDirOpened": "Config directory opened",
     "logsCleared": "Logs cleared",
     "settingsReset": "All settings have been reset",
+    "mcpStarted": "MCP Server started",
+    "mcpStopped": "MCP Server stopped",
+    "mcpStartFailed": "MCP Server failed to start: {error}",
+    "mcpPortInUse": "Port {port} is already in use",
+    "mcpConfigCopied": "MCP config copied to clipboard",
     "previewFailed": "Failed to preview command",
     "commandCopied": "Command copied to clipboard"
   },

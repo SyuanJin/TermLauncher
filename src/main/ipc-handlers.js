@@ -19,6 +19,7 @@ const { registerShortcut, getLastRegistrationResult } = require('./shortcuts');
 const { getMainWindow } = require('./window');
 const { getAvailableLocales, loadLocale, t } = require('./i18n');
 const { updateTrayMenu } = require('./tray');
+const { startMcpServer, stopMcpServer, getMcpStatus } = require('./mcp');
 const { createLogger } = require('./logger');
 const {
   validateConfig,
@@ -407,6 +408,22 @@ function setupIpcHandlers() {
       logger.error('Failed to reset config', err);
       return { success: false, error: err.message };
     }
+  });
+
+  // MCP Server 控制
+  ipcMain.handle('start-mcp-server', async (event, port) => {
+    if (port !== undefined && (typeof port !== 'number' || port < 1024 || port > 65535)) {
+      return { success: false, error: 'invalid-port' };
+    }
+    return await startMcpServer(port);
+  });
+
+  ipcMain.handle('stop-mcp-server', async () => {
+    return await stopMcpServer();
+  });
+
+  ipcMain.handle('get-mcp-status', () => {
+    return getMcpStatus();
   });
 
   // 視窗控制

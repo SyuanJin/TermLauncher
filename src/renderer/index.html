@@ -502,6 +502,103 @@
               </div>
             </div>
 
+            <!-- MCP Server -->
+            <div class="settings-section">
+              <h3 data-i18n="ui.settings.mcp.title">🤖 MCP Server</h3>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.mcp.enabled">啟用 MCP Server</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="mcpEnabled" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.mcp.port">連接埠</span>
+                  <small data-i18n="ui.settings.mcp.portDesc">MCP Server 監聽的埠號</small>
+                </div>
+                <input
+                  type="number"
+                  class="shortcut-input"
+                  id="mcpPort"
+                  value="23549"
+                  min="1024"
+                  max="65535"
+                  style="width: 90px"
+                />
+              </div>
+              <div class="setting-item">
+                <div class="setting-label">
+                  <span data-i18n="ui.settings.mcp.status">狀態</span>
+                </div>
+                <span class="mcp-status" id="mcpStatus">—</span>
+              </div>
+              <!-- 可用工具總覽 -->
+              <div class="mcp-tools-overview">
+                <div class="mcp-tools-header">
+                  <span data-i18n="ui.settings.mcp.availableTools">可用工具</span>
+                  <span class="mcp-tools-count">(13)</span>
+                </div>
+                <div class="mcp-tool-category">
+                  <span class="mcp-tool-category-title"
+                    >📁 <span data-i18n="ui.settings.mcp.toolCategories.projects">專案</span></span
+                  >
+                  <div class="mcp-tool-list">
+                    <code class="mcp-tool-badge">list_projects</code>
+                    <code class="mcp-tool-badge">add_project</code>
+                    <code class="mcp-tool-badge">update_project</code>
+                    <code class="mcp-tool-badge">remove_project</code>
+                  </div>
+                </div>
+                <div class="mcp-tool-category">
+                  <span class="mcp-tool-category-title"
+                    >🚀
+                    <span data-i18n="ui.settings.mcp.toolCategories.launchers">啟動器</span></span
+                  >
+                  <div class="mcp-tool-list">
+                    <code class="mcp-tool-badge">list_launchers</code>
+                    <code class="mcp-tool-badge">open_in</code>
+                    <code class="mcp-tool-badge">detect_installed_launchers</code>
+                  </div>
+                </div>
+                <div class="mcp-tool-category">
+                  <span class="mcp-tool-category-title"
+                    >📂 <span data-i18n="ui.settings.mcp.toolCategories.groups">群組</span></span
+                  >
+                  <div class="mcp-tool-list">
+                    <code class="mcp-tool-badge">list_groups</code>
+                    <code class="mcp-tool-badge">add_group</code>
+                    <code class="mcp-tool-badge">remove_group</code>
+                  </div>
+                </div>
+                <div class="mcp-tool-category">
+                  <span class="mcp-tool-category-title"
+                    >⭐ <span data-i18n="ui.settings.mcp.toolCategories.favorites">最愛</span></span
+                  >
+                  <div class="mcp-tool-list">
+                    <code class="mcp-tool-badge">list_favorites</code>
+                    <code class="mcp-tool-badge">toggle_favorite</code>
+                  </div>
+                </div>
+                <div class="mcp-tool-category">
+                  <span class="mcp-tool-category-title"
+                    >🕐 <span data-i18n="ui.settings.mcp.toolCategories.recent">最近</span></span
+                  >
+                  <div class="mcp-tool-list">
+                    <code class="mcp-tool-badge">list_recent</code>
+                  </div>
+                </div>
+              </div>
+              <div class="setting-buttons-row">
+                <button class="btn btn-secondary" id="btnCopyMcpConfig">
+                  <span class="btn-emoji">📋</span>
+                  <span data-i18n="ui.settings.mcp.copyConfig">複製 Claude Code 配置</span>
+                </button>
+              </div>
+            </div>
+
             <!-- 關於 -->
             <div class="settings-section about-section">
               <h3 data-i18n="ui.settings.about.title">ℹ️ 關於</h3>

@@ -107,6 +107,10 @@ const defaultConfig = {
     language: 'zh-TW',
     showTabText: true,
     recentLimit: 10,
+    mcp: {
+      enabled: true,
+      port: 23549,
+    },
   },
 };
 
@@ -283,6 +287,12 @@ function migrateConfig(config) {
     // 新增 recentLimit 設定
     if (config.settings.recentLimit === undefined) {
       config.settings.recentLimit = 10;
+      needsSave = true;
+    }
+
+    // 新增 MCP 設定
+    if (config.settings.mcp === undefined) {
+      config.settings.mcp = { enabled: true, port: 23549 };
       needsSave = true;
     }
   }
