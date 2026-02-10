@@ -463,6 +463,7 @@ function importConfigAdvanced(importData, options = {}) {
   const newConfig = { ...currentConfig };
 
   // 匯入終端
+  const terminalIdMap = new Map();
   if (importData.terminals) {
     const importedBuiltin = importData.terminals.filter(t => t.isBuiltin);
     const importedCustom = importData.terminals.filter(t => !t.isBuiltin);
@@ -478,14 +479,24 @@ function importConfigAdvanced(importData, options = {}) {
 
     // 處理自訂終端
     if (mergeTerminals) {
-      // 合併模式：避免 ID 衝突
+      // 合併模式：用 name 語意去重
       importedCustom.forEach(importedTerminal => {
-        const existingIndex = newConfig.terminals.findIndex(t => t.id === importedTerminal.id);
-        if (existingIndex !== -1) {
+        const existingByName = newConfig.terminals.find(
+          t => !t.isBuiltin && t.name === importedTerminal.name
+        );
+        if (existingByName) {
+          // 同名終端已存在，跳過並建立 ID 映射
+          terminalIdMap.set(importedTerminal.id, existingByName.id);
+          logger.info(`Terminal "${importedTerminal.name}" already exists, skipped`);
+          return;
+        }
+        const existingById = newConfig.terminals.find(t => t.id === importedTerminal.id);
+        if (existingById) {
           // ID 衝突，生成新 ID
-          importedTerminal.id =
-            'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-          logger.info(`Terminal ID conflict resolved, new ID: ${importedTerminal.id}`);
+          const newId = 'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          terminalIdMap.set(importedTerminal.id, newId);
+          importedTerminal.id = newId;
+          logger.info(`Terminal ID conflict resolved, new ID: ${newId}`);
         }
         newConfig.terminals.push(importedTerminal);
       });
@@ -497,21 +508,24 @@ function importConfigAdvanced(importData, options = {}) {
   }
 
   // 匯入群組
+  const groupIdMap = new Map();
   if (importData.groups) {
     if (mergeGroups) {
-      // 合併模式：避免 ID 和名稱衝突
+      // 合併模式：用 name 語意去重
       importData.groups.forEach(importedGroup => {
+        const existingByName = newConfig.groups.find(g => g.name === importedGroup.name);
+        if (existingByName) {
+          // 同名群組已存在，跳過並建立 ID 映射
+          groupIdMap.set(importedGroup.id, existingByName.id);
+          logger.info(`Group "${importedGroup.name}" already exists, skipped`);
+          return;
+        }
         const idExists = newConfig.groups.some(g => g.id === importedGroup.id);
-        const nameExists = newConfig.groups.some(g => g.name === importedGroup.name);
-
         if (idExists) {
-          importedGroup.id =
-            'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          const newId = 'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          groupIdMap.set(importedGroup.id, newId);
+          importedGroup.id = newId;
         }
-        if (nameExists) {
-          importedGroup.name = importedGroup.name + ' (imported)';
-        }
-        // 設定 order
         importedGroup.order = newConfig.groups.length;
         newConfig.groups.push(importedGroup);
       });
@@ -523,15 +537,35 @@ function importConfigAdvanced(importData, options = {}) {
   }
 
   // 匯入目錄
+  const dirIdMap = new Map();
   if (importData.directories) {
     if (mergeDirectories) {
-      // 合併模式：避免 ID 衝突，檢查終端和群組參照
+      // 合併模式：用 path 語意去重，檢查終端和群組參照
       const maxId = Math.max(0, ...newConfig.directories.map(d => d.id));
       let nextId = maxId + 1;
 
       importData.directories.forEach(importedDir => {
+        const existingByPath = newConfig.directories.find(d => d.path === importedDir.path);
+        if (existingByPath) {
+          // 同路徑目錄已存在，跳過並建立 ID 映射
+          dirIdMap.set(importedDir.id, existingByPath.id);
+          logger.info(`Directory "${importedDir.path}" already exists, skipped`);
+          return;
+        }
+
         // 生成新 ID
+        const oldId = importedDir.id;
         importedDir.id = nextId++;
+        dirIdMap.set(oldId, importedDir.id);
+
+        // 映射 terminalId
+        if (importedDir.terminalId && terminalIdMap.has(importedDir.terminalId)) {
+          importedDir.terminalId = terminalIdMap.get(importedDir.terminalId);
+        }
+        // 映射 group
+        if (importedDir.group && groupIdMap.has(importedDir.group)) {
+          importedDir.group = groupIdMap.get(importedDir.group);
+        }
 
         // 檢查終端 ID 是否存在
         if (
@@ -575,11 +609,13 @@ function importConfigAdvanced(importData, options = {}) {
   // 匯入最愛
   if (importData.favorites) {
     if (mergeFavorites) {
-      // 合併模式：去重
+      // 合併模式：用 dirIdMap 映射後去重
       const existingFavorites = new Set(newConfig.favorites);
       importData.favorites.forEach(fav => {
-        if (!existingFavorites.has(fav)) {
-          newConfig.favorites.push(fav);
+        const mappedId = dirIdMap.has(fav) ? dirIdMap.get(fav) : fav;
+        if (!existingFavorites.has(mappedId)) {
+          newConfig.favorites.push(mappedId);
+          existingFavorites.add(mappedId);
         }
       });
     } else {
