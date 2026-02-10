@@ -124,7 +124,10 @@
       "detectionTitle": "🔍 Launcher Detection Status",
       "detected": "Detected",
       "notDetected": "Not Detected",
-      "distros": "distros"
+      "distros": "distros",
+      "searchPlaceholder": "Search launchers...",
+      "emptyFiltered": "No matching launchers",
+      "emptyFilteredHint": "Try a different search term"
     },
     "settings": {
       "general": {

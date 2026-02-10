@@ -124,7 +124,10 @@
       "detectionTitle": "🔍 啟動器偵測狀態",
       "detected": "已偵測",
       "notDetected": "未偵測",
-      "distros": "個發行版"
+      "distros": "個發行版",
+      "searchPlaceholder": "搜尋啟動器...",
+      "emptyFiltered": "沒有符合的啟動器",
+      "emptyFilteredHint": "嘗試其他搜尋關鍵字"
     },
     "settings": {
       "general": {

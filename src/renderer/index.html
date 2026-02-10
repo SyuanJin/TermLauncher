@@ -277,6 +277,36 @@
 
         <!-- 啟動器分頁 -->
         <div class="tab-content" id="launchers-tab">
+          <div class="search-bar">
+            <div class="search-input-wrapper">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                class="search-input"
+                id="launchersSearchInput"
+                placeholder="搜尋啟動器..."
+                data-i18n-placeholder="ui.launchers.searchPlaceholder"
+              />
+            </div>
+            <button
+              class="btn btn-primary btn-icon-only-btn"
+              id="btnAddTerminal"
+              data-i18n-title="ui.launchers.add"
+              title="新增啟動器"
+            >
+              +
+            </button>
+          </div>
           <div class="tab-scroll-content">
             <!-- 偵測狀態 -->
             <div class="settings-section">
@@ -285,17 +315,7 @@
             </div>
             <!-- 啟動器列表 -->
             <div class="settings-section">
-              <div class="settings-section-header">
-                <h3 data-i18n="ui.launchers.title">🚀 啟動器管理</h3>
-                <button
-                  class="btn btn-primary btn-icon-only-btn"
-                  id="btnAddTerminal"
-                  data-i18n-title="ui.launchers.add"
-                  title="新增啟動器"
-                >
-                  +
-                </button>
-              </div>
+              <h3 data-i18n="ui.launchers.title">🚀 啟動器管理</h3>
               <div class="terminals-list" id="terminalsList"></div>
             </div>
           </div>

@@ -234,7 +234,31 @@ export function renderTerminalsList() {
   const container = document.getElementById('terminalsList');
   if (!container || !config.terminals) return;
 
-  container.innerHTML = config.terminals
+  // 搜尋過濾
+  const searchInput = document.getElementById('launchersSearchInput');
+  const search = searchInput?.value?.toLowerCase() || '';
+
+  let terminals = config.terminals;
+  if (search) {
+    terminals = terminals.filter(
+      terminal =>
+        terminal.name.toLowerCase().includes(search) ||
+        terminal.command.toLowerCase().includes(search)
+    );
+  }
+
+  // 搜尋無結果時顯示空狀態
+  if (terminals.length === 0 && search) {
+    container.innerHTML =
+      '<div class="empty-state"><p>' +
+      escapeHtml(t('ui.launchers.emptyFiltered')) +
+      '</p><small>' +
+      escapeHtml(t('ui.launchers.emptyFilteredHint')) +
+      '</small></div>';
+    return;
+  }
+
+  container.innerHTML = terminals
     .map(
       terminal =>
         '<div class="terminal-item' +
@@ -591,4 +615,10 @@ export async function renderLaunchersTab() {
  */
 export function setupLaunchersEvents() {
   document.getElementById('btnAddTerminal')?.addEventListener('click', showAddTerminalModal);
+
+  // 搜尋輸入事件
+  const searchInput = document.getElementById('launchersSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', renderTerminalsList);
+  }
 }
