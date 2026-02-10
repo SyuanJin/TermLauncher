@@ -5,149 +5,149 @@
 </p>
 
 <p align="center">
-  <strong>Quick-launch any app to your project directory</strong>
+  <strong>一鍵啟動應用，直達專案目錄</strong>
 </p>
 
 <p align="center">
-  <a href="README_zh-TW.md">繁體中文</a> | English
+  繁體中文 | <a href="README_en.md">English</a>
 </p>
 
 ---
 
-## Introduction
+## 簡介
 
-TermLauncher is a cross-platform desktop application that lets you quickly open project directories with any application — terminals, editors, IDEs, and more. Experimental support is also available for macOS and Linux. It is designed for developers who frequently switch between different project directories.
+TermLauncher 是一個跨平台桌面應用，讓你能夠快速以任意應用程式開啟專案目錄 — 終端、編輯器、IDE 等。在 macOS 和 Linux 上也提供實驗性支援。特別適合需要頻繁在不同專案間切換的開發者。
 
-## Features
+## 功能特色
 
-| Feature                    | Description                                                                     |
-| -------------------------- | ------------------------------------------------------------------------------- |
-| **Multi-Terminal Support** | WSL, PowerShell, Git Bash, VS Code, JetBrains IDE, and more                     |
-| **Directory Grouping**     | Organize projects by work, personal, learning, etc.                             |
-| **Favorites**              | Mark frequently used directories for quick access                               |
-| **Search & Filter**        | Quickly find directories by name, path, or group                                |
-| **Recent History**         | View recently opened directories with configurable limit                        |
-| **Custom Launchers**       | Define custom launch commands for any application                               |
-| **Drag & Drop Sorting**    | Reorder favorites, groups, and directories via drag and drop                    |
-| **Context Menu**           | Right-click for quick actions (select launcher, add to favorites, edit, delete) |
-| **Invalid Path Warning**   | Automatically detect and highlight invalid paths                                |
-| **Auto Launch**            | Start on boot (supports both Portable and installer editions)                   |
-| **Advanced Export/Import** | Selective export, merge/overwrite import                                        |
-| **Keyboard Shortcuts**     | Global hotkey and in-app shortcuts                                              |
-| **Theme Switching**        | Dark / Light theme                                                              |
-| **Multi-Language**         | 繁體中文, English                                                               |
+| 功能             | 說明                                                 |
+| ---------------- | ---------------------------------------------------- |
+| **多終端支援**   | WSL、PowerShell、Git Bash、VS Code、JetBrains IDE 等 |
+| **目錄分組**     | 將專案按工作、個人、學習等分類                       |
+| **最愛功能**     | 標記常用目錄，快速存取                               |
+| **搜尋過濾**     | 依名稱、路徑、群組快速找到目標目錄                   |
+| **最近使用**     | 顯示最近開啟的目錄，可設定保留數量上限               |
+| **自訂啟動器**   | 自定義啟動指令，支援任意應用程式                     |
+| **拖拉排序**     | 最愛、群組、目錄皆可拖拉調整順序                     |
+| **右鍵選單**     | 快速操作（選擇啟動器、加入最愛、編輯、刪除）         |
+| **路徑失效預警** | 自動偵測並標示無效路徑                               |
+| **開機自動啟動** | 支援 Portable 與安裝版                               |
+| **進階匯出匯入** | 選擇性匯出、合併/覆蓋匯入                            |
+| **鍵盤快捷鍵**   | 全域快捷鍵與應用內快捷鍵                             |
+| **主題切換**     | 深色/淺色主題                                        |
+| **多語系**       | 繁體中文、English                                    |
 
-## Keyboard Shortcuts
+## 鍵盤快捷鍵
 
-### Global
+### 全域
 
-| Shortcut  | Action                            |
-| --------- | --------------------------------- |
-| Alt+Space | Show / hide window (customizable) |
+| 快捷鍵    | 動作                    |
+| --------- | ----------------------- |
+| Alt+Space | 顯示/隱藏視窗（可自訂） |
 
-### In-App
+### 應用內
 
-| Shortcut | Action                     |
-| -------- | -------------------------- |
-| Ctrl+1~5 | Switch tabs                |
-| Ctrl+N   | Add new directory          |
-| Ctrl+F   | Focus search               |
-| Escape   | Close modal / clear search |
-| Enter    | Open selected directory    |
+| 快捷鍵   | 動作              |
+| -------- | ----------------- |
+| Ctrl+1~5 | 切換分頁          |
+| Ctrl+N   | 新增目錄          |
+| Ctrl+F   | 搜尋              |
+| Escape   | 關閉彈窗/清空搜尋 |
+| Enter    | 開啟選取的目錄    |
 
-## Installation
+## 安裝方式
 
-### Option 1: Download exe (Recommended)
+### 方法一：下載 exe（推薦）
 
-1. Go to the [Releases](../../releases) page
-2. Download `TermLauncher-Portable.exe`
-3. Double-click to run
+1. 前往 [Releases](../../releases) 頁面
+2. 下載 `TermLauncher-Portable.exe`
+3. 雙擊執行即可
 
-### Option 2: Run from source
+### 方法二：從原始碼運行
 
 ```bash
-# Clone the repository
+# 複製專案
 git clone https://github.com/xjin9612/TermLauncher.git
 cd TermLauncher
 
-# Install dependencies
+# 安裝依賴
 npm install
 
-# Run
+# 運行
 npm start
 ```
 
-### Option 3: Build from source
+### 方法三：自行打包
 
 ```bash
-# Build Portable edition
+# 打包成 Portable 版
 npm run build
 
-# Build Installer edition
+# 打包成安裝版
 npm run build:installer
 ```
 
-## Usage
+## 使用方式
 
-### Add a Directory
+### 新增目錄
 
-1. Click the expand button
-2. Enter a name and select a path
-3. Choose a launcher (WSL, PowerShell, VS Code, Custom)
-4. Click "Add Directory"
+1. 點擊展開按鈕
+2. 輸入名稱、選擇路徑
+3. 選擇啟動器（WSL、PowerShell、VS Code、自訂）
+4. 點擊「新增目錄」
 
-### Open Directory
+### 開啟目錄
 
-Simply **click a directory card** to launch the application.
+直接 **點擊目錄卡片** 即可啟動應用。
 
-### Path Conversion
+### 路徑轉換
 
-Windows paths are automatically converted to WSL format:
+Windows 路徑會自動轉換為 WSL 格式：
 
 ```
 D:\Projects\my-app  →  /mnt/d/Projects/my-app
 ```
 
-## Documentation
+## 文檔
 
-| Document                                | Description                     |
-| --------------------------------------- | ------------------------------- |
-| [PRD.md](docs/PRD.md)                   | Product Requirements Document   |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical Architecture Document |
-| [UI_DESIGN.md](docs/UI_DESIGN.md)       | UI Design Specification         |
-| [CHANGELOG.md](docs/CHANGELOG.md)       | Version Changelog               |
+| 文檔                                    | 說明         |
+| --------------------------------------- | ------------ |
+| [PRD.md](docs/PRD.md)                   | 產品需求文檔 |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | 技術架構文檔 |
+| [UI_DESIGN.md](docs/UI_DESIGN.md)       | UI 設計規範  |
+| [CHANGELOG.md](docs/CHANGELOG.md)       | 版本變更記錄 |
 
-## System Requirements
+## 系統需求
 
-### Windows (Full Support)
+### Windows（完整支援）
 
 - Windows 10 (1903+) / Windows 11
 - [Windows Terminal](https://aka.ms/terminal)
-- WSL 2 + Ubuntu (if using WSL features)
+- WSL 2 + Ubuntu（如需使用 WSL 功能）
 
-### macOS (Experimental)
+### macOS（實驗性支援）
 
-- macOS 10.15 (Catalina) or later
-- Supported terminals: Terminal.app, iTerm2, Hyper, Warp, Alacritty, Kitty
-- Must build from source (`npm run build:mac`)
+- macOS 10.15 (Catalina) 或更新版本
+- 支援的終端：Terminal.app、iTerm2、Hyper、Warp、Alacritty、Kitty
+- 需從原始碼建置（`npm run build:mac`）
 
-### Linux (Experimental)
+### Linux（實驗性支援）
 
-- Ubuntu 20.04+ / Fedora 35+ / Arch Linux and other major distributions
-- Supported terminals: GNOME Terminal, Konsole, Tilix, Alacritty, Kitty, xterm, Terminator
-- Must build from source (`npm run build:linux`)
+- Ubuntu 20.04+ / Fedora 35+ / Arch Linux 等主流發行版
+- 支援的終端：GNOME Terminal、Konsole、Tilix、Alacritty、Kitty、xterm、Terminator
+- 需從原始碼建置（`npm run build:linux`）
 
-> **Note:** macOS and Linux support is currently experimental. Some features may not work as expected. Bug reports are welcome!
+> **注意**：macOS 和 Linux 支援目前為實驗性，部分功能可能無法正常運作。歡迎回報問題！
 
-## Tech Stack
+## 技術棧
 
-- **Electron** - Cross-platform desktop application framework
-- **Node.js** - Backend runtime
-- **HTML/CSS/JS** - Frontend UI (vanilla ES Modules, no framework)
-- **Vitest** - Unit testing framework
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
+- **Electron** - 跨平台桌面應用框架
+- **Node.js** - 後端運行環境
+- **HTML/CSS/JS** - 前端介面（原生 ES Modules，無前端框架）
+- **Vitest** - 單元測試框架
+- **ESLint** - 程式碼檢查
+- **Prettier** - 程式碼格式化
 
-## License
+## 授權
 
 MIT License © 2026
