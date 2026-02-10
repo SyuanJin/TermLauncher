@@ -80,6 +80,31 @@ export function updateTabTextVisibility(showText) {
 }
 
 /**
+ * 檢查 Tab 列是否溢出，溢出時自動切換為純圖示模式
+ * 當使用者手動關閉 Tab 文字時不介入
+ */
+export function checkTabsOverflow() {
+  const tabsContainer = getElement('tabsContainer');
+  if (!tabsContainer) return;
+
+  // 使用者已手動關閉 Tab 文字，不介入
+  if (document.body.classList.contains('hide-tab-text')) return;
+
+  // 暫時移除 icon-only 以測量完整文字寬度
+  tabsContainer.classList.remove('icon-only');
+
+  // 存取 scrollWidth 會強制瀏覽器回流，取得準確測量值
+  const isOverflowing = tabsContainer.scrollWidth > tabsContainer.clientWidth;
+
+  if (isOverflowing) {
+    tabsContainer.classList.add('icon-only');
+  }
+}
+
+/** resize 防抖計時器 */
+let resizeTimer = null;
+
+/**
  * 設定分頁切換事件監聽
  */
 export function setupTabs() {
@@ -95,4 +120,13 @@ export function setupTabs() {
     const showText = config.settings.showTabText !== false; // 預設顯示
     updateTabTextVisibility(showText);
   }
+
+  // 初始化時檢查溢出
+  checkTabsOverflow();
+
+  // 視窗大小變更時重新檢查
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(checkTabsOverflow, 100);
+  });
 }

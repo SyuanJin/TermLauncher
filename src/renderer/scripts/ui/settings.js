@@ -17,6 +17,7 @@ import { renderRecentList } from './recent.js';
 import { renderGroupsTab } from './groups.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { renderLaunchersTab } from './launchers.js';
+import { checkTabsOverflow } from './tabs.js';
 
 /**
  * 應用主題
@@ -54,6 +55,8 @@ export async function changeShowTabText() {
   const show = document.getElementById('showTabText').checked;
   config.settings.showTabText = show;
   applyShowTabText(show);
+  // 開啟文字顯示後重新檢查溢出
+  if (show) checkTabsOverflow();
   await saveConfig();
 }
 
@@ -109,6 +112,9 @@ export async function changeLanguage() {
   renderGroupsTab();
   renderLaunchersTab();
   renderRecentList();
+
+  // 語言切換後重新檢查 Tab 列是否溢出
+  checkTabsOverflow();
 
   showToast(t('toast.languageChanged'), 'success');
 }
