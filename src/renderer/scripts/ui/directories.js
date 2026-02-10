@@ -15,6 +15,7 @@ import {
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
   showCommandPreview,
+  getTerminalDisplayName,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
@@ -48,7 +49,7 @@ function getTerminalIcon(terminalId) {
  */
 function getTerminalName(terminalId) {
   const terminal = getTerminal(terminalId);
-  return terminal?.name || terminalId;
+  return terminal ? getTerminalDisplayName(terminal) : terminalId;
 }
 
 /**
@@ -96,7 +97,7 @@ function getTerminalOptionsHtml(selectedId = 'wsl-ubuntu') {
         '>' +
         terminal.icon +
         ' ' +
-        terminal.name +
+        getTerminalDisplayName(terminal) +
         '</option>'
     )
     .join('');
@@ -449,7 +450,7 @@ function showDirectoryContextMenu(event, dirId) {
     .filter(terminal => !terminal.hidden)
     .map(terminal => ({
       icon: terminal.icon || '💻',
-      label: terminal.name,
+      label: getTerminalDisplayName(terminal),
       onClick: () => openTerminalWithTypeUtil(dirId, terminal.id, refreshDirectoryViews),
     }));
 

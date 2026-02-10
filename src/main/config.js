@@ -37,6 +37,7 @@ function getFileManagerTerminal() {
 
 // 預設終端列表
 const defaultTerminals = [
+  { ...getFileManagerTerminal(), order: 0 },
   {
     id: 'wsl-ubuntu',
     name: 'WSL Ubuntu',
@@ -45,15 +46,7 @@ const defaultTerminals = [
     pathFormat: 'unix',
     isBuiltin: true,
     hidden: false,
-  },
-  {
-    id: 'powershell',
-    name: 'PowerShell',
-    icon: '⚡',
-    command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
-    pathFormat: 'windows',
-    isBuiltin: true,
-    hidden: false,
+    order: 1,
   },
   {
     id: 'git-bash',
@@ -63,8 +56,18 @@ const defaultTerminals = [
     pathFormat: 'windows',
     isBuiltin: true,
     hidden: false,
+    order: 2,
   },
-  getFileManagerTerminal(),
+  {
+    id: 'powershell',
+    name: 'PowerShell',
+    icon: '⚡',
+    command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
+    pathFormat: 'windows',
+    isBuiltin: true,
+    hidden: false,
+    order: 3,
+  },
 ];
 
 // 預設群組列表
@@ -129,22 +132,31 @@ function migrateConfig(config) {
         config.terminals.push(defaultTerm);
         needsSave = true;
       } else if (config.terminals[existingIndex].isBuiltin) {
-        // 保留使用者的 hidden 設定
+        // 保留使用者的 hidden 和 order 設定
         const userHidden = config.terminals[existingIndex].hidden;
+        const userOrder = config.terminals[existingIndex].order;
         config.terminals[existingIndex] = {
           ...defaultTerm,
           hidden: userHidden ?? false,
+          order: userOrder ?? defaultTerm.order,
         };
       }
     });
 
     // 為所有終端新增 hidden 欄位（如果不存在）
-    config.terminals.forEach(terminal => {
+    config.terminals.forEach((terminal, index) => {
       if (terminal.hidden === undefined) {
         terminal.hidden = false;
         needsSave = true;
       }
+      if (terminal.order === undefined) {
+        terminal.order = index;
+        needsSave = true;
+      }
     });
+
+    // 按 order 物理排序陣列
+    config.terminals.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }
 
   // === 群組遷移 ===

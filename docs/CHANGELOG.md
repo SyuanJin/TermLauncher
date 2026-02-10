@@ -6,6 +6,9 @@
 
 - 檔案管理器終端選項 - 新增內建「File Explorer」選項，可直接從 TermLauncher 開啟檔案總管進入指定目錄
 - 跨平台支援 - 自動偵測作業系統，Windows 使用 `explorer.exe`、macOS 使用 `open`（Finder）、Linux 使用 `xdg-open`
+- 終端排序 - 設定頁面支援拖拉排序終端列表，排序結果同步影響下拉選單與右鍵選單
+- 終端名稱國際化 - 內建終端名稱支援多語系顯示（如「檔案總管」）
+- 調整預設終端排序 - 預設順序改為檔案總管、WSL Ubuntu、Git Bash、PowerShell
 
 ## 🚀 v2.2.0 - 單一實例與自動發布 (2026-01-31)
 

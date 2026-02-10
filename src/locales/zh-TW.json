@@ -319,6 +319,12 @@
     "previewExecute": "執行",
     "previewCopy": "複製命令"
   },
+  "terminals": {
+    "wsl-ubuntu": "WSL Ubuntu",
+    "powershell": "PowerShell",
+    "git-bash": "Git Bash",
+    "file-manager": "檔案總管"
+  },
   "error": {
     "action": {
       "installWindowsTerminal": "安裝 Windows Terminal",

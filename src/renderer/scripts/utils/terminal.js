@@ -10,6 +10,21 @@ import { t } from '../i18n.js';
 import { switchTab } from '../ui/tabs.js';
 
 /**
+ * 取得終端顯示名稱（支援 i18n）
+ * 內建終端嘗試翻譯，自訂終端直接使用 name
+ * @param {Object} terminal - 終端配置物件
+ * @returns {string} 終端顯示名稱
+ */
+export function getTerminalDisplayName(terminal) {
+  if (terminal.isBuiltin) {
+    const key = 'terminals.' + terminal.id;
+    const translated = t(key);
+    return translated !== key ? translated : terminal.name;
+  }
+  return terminal.name;
+}
+
+/**
  * 錯誤類型對應訊息鍵
  */
 const ErrorTypeToMessageKey = {

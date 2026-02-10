@@ -11,6 +11,7 @@ import { isFavorite, toggleFavorite } from './favorites.js';
 import {
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
+  getTerminalDisplayName,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { getElement } from '../utils/dom-cache.js';
@@ -34,7 +35,7 @@ function getTerminalIcon(terminalId) {
 function getTerminalName(terminalId) {
   const config = getConfig();
   const terminal = config.terminals?.find(t => t.id === terminalId);
-  return terminal?.name || terminalId;
+  return terminal ? getTerminalDisplayName(terminal) : terminalId;
 }
 
 /**
@@ -258,7 +259,7 @@ function showRecentContextMenu(event, dirId) {
     .filter(terminal => !terminal.hidden)
     .map(terminal => ({
       icon: terminal.icon || '💻',
-      label: terminal.name,
+      label: getTerminalDisplayName(terminal),
       onClick: () => openTerminalWithTypeUtil(dirId, terminal.id, renderRecentList),
     }));
 

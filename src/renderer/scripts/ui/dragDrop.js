@@ -6,7 +6,7 @@ import { getConfig, saveConfig } from '../state.js';
 
 // 當前拖曳的元素
 let draggedElement = null;
-let draggedType = null; // 'favorite', 'group', 'directory'
+let draggedType = null; // 'favorite', 'group', 'directory', 'terminal'
 let placeholder = null;
 
 /**
@@ -307,6 +307,94 @@ async function saveDirectoriesOrder() {
       }
     });
   });
+
+  await saveConfig();
+}
+
+/**
+ * 初始化終端列表的拖拉排序
+ */
+export function initTerminalsDragDrop() {
+  const container = document.getElementById('terminalsList');
+  if (!container) return;
+
+  const items = container.querySelectorAll('.terminal-item');
+  items.forEach(item => {
+    item.setAttribute('draggable', 'true');
+
+    item.addEventListener('dragstart', e => {
+      draggedElement = item;
+      draggedType = 'terminal';
+      item.classList.add('dragging');
+      placeholder = createPlaceholder();
+
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', item.dataset.terminalId);
+
+      requestAnimationFrame(() => {
+        item.style.display = 'none';
+        container.insertBefore(placeholder, item);
+      });
+    });
+
+    item.addEventListener('dragend', async () => {
+      item.classList.remove('dragging');
+      item.style.display = '';
+
+      if (placeholder && placeholder.parentNode) {
+        placeholder.parentNode.removeChild(placeholder);
+      }
+
+      if (draggedType === 'terminal') {
+        await saveTerminalsOrder(container);
+      }
+
+      draggedElement = null;
+      draggedType = null;
+      placeholder = null;
+    });
+  });
+
+  container.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+
+    if (draggedType !== 'terminal' || !placeholder) return;
+
+    const afterElement = getDragAfterElement(container, e.clientY, '.terminal-item');
+    if (afterElement) {
+      container.insertBefore(placeholder, afterElement);
+    } else {
+      container.appendChild(placeholder);
+    }
+  });
+
+  container.addEventListener('drop', e => {
+    e.preventDefault();
+    if (draggedType !== 'terminal' || !draggedElement || !placeholder) return;
+
+    placeholder.parentNode.insertBefore(draggedElement, placeholder);
+  });
+}
+
+/**
+ * 儲存終端列表的順序
+ * @param {HTMLElement} container - 容器元素
+ */
+async function saveTerminalsOrder(container) {
+  const config = getConfig();
+  const items = container.querySelectorAll('.terminal-item');
+
+  items.forEach((item, index) => {
+    const terminalId = item.dataset.terminalId;
+    const terminal = config.terminals.find(t => t.id === terminalId);
+    if (terminal) {
+      terminal.order = index;
+    }
+  });
+
+  // 按 order 物理重排陣列
+  config.terminals.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   await saveConfig();
 }

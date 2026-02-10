@@ -319,6 +319,12 @@
     "previewExecute": "Execute",
     "previewCopy": "Copy Command"
   },
+  "terminals": {
+    "wsl-ubuntu": "WSL Ubuntu",
+    "powershell": "PowerShell",
+    "git-bash": "Git Bash",
+    "file-manager": "File Explorer"
+  },
   "error": {
     "action": {
       "installWindowsTerminal": "Install Windows Terminal",

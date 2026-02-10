@@ -16,6 +16,8 @@ import {
 import { renderRecentList } from './recent.js';
 import { renderGroupsTab } from './groups.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
+import { initTerminalsDragDrop } from './dragDrop.js';
+import { getTerminalDisplayName } from '../utils/terminal.js';
 
 /**
  * 應用主題
@@ -410,10 +412,12 @@ export function renderTerminalsList() {
         (terminal.hidden ? ' hidden-terminal' : '') +
         '" data-terminal-id="' +
         escapeAttr(terminal.id) +
-        '"><div class="terminal-item-info"><span class="terminal-icon">' +
+        '"><div class="drag-handle" title="' +
+        escapeAttr(t('ui.favorites.dragHint')) +
+        '">⋮⋮</div><div class="terminal-item-info"><span class="terminal-icon">' +
         escapeHtml(terminal.icon) +
         '</span><div class="terminal-details"><span class="terminal-name">' +
-        escapeHtml(terminal.name) +
+        escapeHtml(getTerminalDisplayName(terminal)) +
         (terminal.isBuiltin
           ? '<span class="builtin-badge">' +
             escapeHtml(t('ui.settings.terminals.builtin')) +
@@ -444,6 +448,7 @@ export function renderTerminalsList() {
     .join('');
 
   bindTerminalEvents();
+  initTerminalsDragDrop();
 }
 
 // escapeHtml 已移至 utils/escape.js 統一管理
@@ -693,7 +698,10 @@ function showDeleteTerminalModal(terminalId) {
       '</label>' +
       '<select id="modalReplaceTerminal">' +
       otherTerminals
-        .map(t => '<option value="' + t.id + '">' + t.icon + ' ' + t.name + '</option>')
+        .map(
+          t =>
+            '<option value="' + t.id + '">' + t.icon + ' ' + getTerminalDisplayName(t) + '</option>'
+        )
         .join('') +
       '</select>' +
       '</div>';
