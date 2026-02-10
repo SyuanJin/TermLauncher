@@ -12,6 +12,29 @@ const logger = createLogger('Config');
 // 配置檔路徑
 const configPath = path.join(app.getPath('userData'), 'config.json');
 
+/**
+ * 根據平台回傳對應的檔案管理器配置
+ * @returns {Object} 檔案管理器終端配置
+ */
+function getFileManagerTerminal() {
+  const base = { id: 'file-manager', icon: '📂', isBuiltin: true, hidden: false };
+
+  switch (process.platform) {
+    case 'darwin':
+      return { ...base, name: 'Finder', command: 'open {path}', pathFormat: 'unix' };
+    case 'linux':
+      return { ...base, name: 'File Manager', command: 'xdg-open {path}', pathFormat: 'unix' };
+    default:
+      // Windows
+      return {
+        ...base,
+        name: 'File Explorer',
+        command: 'explorer.exe {path}',
+        pathFormat: 'windows',
+      };
+  }
+}
+
 // 預設終端列表
 const defaultTerminals = [
   {
@@ -41,6 +64,7 @@ const defaultTerminals = [
     isBuiltin: true,
     hidden: false,
   },
+  getFileManagerTerminal(),
 ];
 
 // 預設群組列表

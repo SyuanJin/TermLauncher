@@ -1,5 +1,12 @@
 # Changelog
 
+## 🚀 v2.3.0 - 檔案管理器整合 (2026-02-10)
+
+### ✨ 新功能
+
+- 檔案管理器終端選項 - 新增內建「File Explorer」選項，可直接從 TermLauncher 開啟檔案總管進入指定目錄
+- 跨平台支援 - 自動偵測作業系統，Windows 使用 `explorer.exe`、macOS 使用 `open`（Finder）、Linux 使用 `xdg-open`
+
 ## 🚀 v2.2.0 - 單一實例與自動發布 (2026-01-31)
 
 ### ✨ 新功能
