@@ -1381,7 +1381,7 @@ body.hide-tab-text .tab {
 }
 
 /* 視窗過窄時自動隱藏 Tab 文字 */
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .tab-text {
     display: none !important;
   }
@@ -1438,6 +1438,13 @@ body.hide-tab-text .tab {
 .setting-buttons-row.no-flex .btn {
   flex: none;
   width: calc(50% - 4px);
+}
+
+/* 窄寬度時 no-flex 按鈕也需撐滿整行 */
+@media (max-width: 600px) {
+  .setting-buttons-row.no-flex .btn {
+    width: 100%;
+  }
 }
 
 /* 設定項的操作區域 */
