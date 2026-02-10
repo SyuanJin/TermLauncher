@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 專案概述
 
-TermLauncher 是一個 Windows 桌面應用，用於快速開啟 Windows Terminal 並自動進入指定的工作目錄。支援 WSL Ubuntu、PowerShell、Git Bash 等多種終端。
+TermLauncher 是一個 Windows 桌面應用，用於快速開啟專案工作目錄。支援 WSL Ubuntu、PowerShell、Git Bash、檔案總管等多種啟動器。
 
 ## 建置與執行命令
 
@@ -59,7 +59,7 @@ Main Process (後端/系統整合)
 ### 前端模組 (`src/renderer/scripts/`)
 
 - **核心**：`app.js`（入口）、`api.js`（IPC 封裝）、`state.js`（狀態管理）
-- **UI 模組**（`ui/`）：tabs、recent、favorites、groups、directories、settings、modal、toast、contextMenu、dragDrop
+- **UI 模組**（`ui/`）：tabs、recent、favorites、groups、directories、launchers、settings、modal、toast、contextMenu、dragDrop
 - **工具模組**（`utils/`）：keyboard、shortcuts、terminal
 
 ### 配置與日誌位置
@@ -84,7 +84,7 @@ Main Process (後端/系統整合)
 
 - 前端使用 ES Modules，所有模組需透過 `import/export`
 - IPC 通訊需同時修改 `preload/preload.js` 和 `ipc-handlers.js`
-- 新增終端類型需修改 `terminal.js` 的路徑轉換邏輯
+- 新增啟動器類型需修改 `terminal.js` 的路徑轉換邏輯
 - 國際化字串放在 `src/locales/` 下的 JSON 檔案
 
 ## 相關文件

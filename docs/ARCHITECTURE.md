@@ -44,7 +44,7 @@ src/
 │       ├── api.js       # IPC 封裝
 │       ├── state.js     # 狀態管理
 │       ├── i18n.js      # 前端翻譯
-│       ├── ui/          # UI 模組 (tabs, recent, favorites, groups, directories, settings, modal, contextMenu, dragDrop, toast)
+│       ├── ui/          # UI 模組 (tabs, recent, favorites, groups, directories, launchers, settings, modal, contextMenu, dragDrop, toast)
 │       └── utils/       # 工具函式
 │
 └── locales/             # 語系檔 (zh-TW, en-US)

@@ -83,6 +83,15 @@
         </button>
         <button
           class="tab"
+          data-tab="launchers"
+          data-tooltip="啟動器"
+          data-i18n-tooltip="ui.tabs.launchers"
+        >
+          <span class="tab-icon">🚀</span>
+          <span class="tab-text" data-i18n="ui.tabs.launchersText">啟動器</span>
+        </button>
+        <button
+          class="tab"
           data-tab="settings"
           data-tooltip="設定"
           data-i18n-tooltip="ui.tabs.settings"
@@ -266,6 +275,32 @@
           </div>
         </div>
 
+        <!-- 啟動器分頁 -->
+        <div class="tab-content" id="launchers-tab">
+          <div class="tab-scroll-content">
+            <!-- 偵測狀態 -->
+            <div class="settings-section">
+              <h3 data-i18n="ui.launchers.detectionTitle">🔍 啟動器偵測狀態</h3>
+              <div class="terminal-detection-status" id="terminalDetectionStatus"></div>
+            </div>
+            <!-- 啟動器列表 -->
+            <div class="settings-section">
+              <div class="settings-section-header">
+                <h3 data-i18n="ui.launchers.title">🚀 啟動器管理</h3>
+                <button
+                  class="btn btn-primary btn-icon-only-btn"
+                  id="btnAddTerminal"
+                  data-i18n-title="ui.launchers.add"
+                  title="新增啟動器"
+                >
+                  +
+                </button>
+              </div>
+              <div class="terminals-list" id="terminalsList"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- 設定分頁 -->
         <div class="tab-content" id="settings-tab">
           <div class="tab-scroll-content">
@@ -404,26 +439,6 @@
                   </button>
                 </div>
               </div>
-            </div>
-
-            <!-- 終端管理 -->
-            <div class="settings-section">
-              <div class="settings-section-header">
-                <h3 data-i18n="ui.settings.terminals.title">🖥️ 終端管理</h3>
-                <button
-                  class="btn btn-primary btn-icon-only-btn"
-                  id="btnAddTerminal"
-                  title="新增終端"
-                  data-i18n-title="ui.settings.terminals.add"
-                >
-                  +
-                </button>
-              </div>
-              <div class="terminal-detection">
-                <h4 data-i18n="ui.settings.terminals.detectionTitle">終端偵測狀態</h4>
-                <div class="terminal-detection-status" id="terminalDetectionStatus"></div>
-              </div>
-              <div class="terminals-list" id="terminalsList"></div>
             </div>
 
             <!-- 資料管理 -->

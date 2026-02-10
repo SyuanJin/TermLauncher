@@ -12,7 +12,8 @@ const TAB_MAP = {
   2: 'favorites',
   3: 'groups',
   4: 'directories',
-  5: 'settings',
+  5: 'launchers',
+  6: 'settings',
 };
 
 // 當前 Tab 對應的搜尋框 ID
@@ -94,7 +95,7 @@ function handleKeydown(e) {
   // Ctrl + 數字鍵 - 切換 Tab
   if (e.ctrlKey && !e.shiftKey && !e.altKey) {
     const num = parseInt(e.key);
-    if (num >= 1 && num <= 5) {
+    if (num >= 1 && num <= 6) {
       e.preventDefault();
       const tabId = TAB_MAP[num];
       if (tabId) {

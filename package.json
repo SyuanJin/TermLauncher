@@ -1,7 +1,7 @@
 {
   "name": "termlauncher",
   "version": "2.2.0",
-  "description": "TermLauncher - 快速開啟終端進入指定目錄",
+  "description": "TermLauncher - 快速開啟專案的桌面工具",
   "main": "src/main/index.js",
   "scripts": {
     "start": "electron .",

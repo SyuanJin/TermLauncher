@@ -19,11 +19,11 @@ import {
 } from './ui/directories.js';
 import {
   renderSettings,
-  renderTerminalsList,
   setupSettingsEvents,
   applyTheme,
   applyShowTabText,
 } from './ui/settings.js';
+import { renderLaunchersTab, setupLaunchersEvents } from './ui/launchers.js';
 import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
 import { initToast, showWarning } from './ui/toast.js';
 import { initErrorHandler } from './error-handler.js';
@@ -48,7 +48,7 @@ async function renderAll() {
   renderTerminalSelect();
   renderDirectories();
   await renderSettings();
-  renderTerminalsList();
+  await renderLaunchersTab();
 }
 
 /**
@@ -74,6 +74,9 @@ function setupEventListeners() {
         renderGroupFilter();
         renderDirectories();
         break;
+      case 'launchers':
+        renderLaunchersTab();
+        break;
     }
   });
 
@@ -88,6 +91,9 @@ function setupEventListeners() {
 
   // 目錄相關事件
   setupDirectoryEvents();
+
+  // 啟動器頁面事件
+  setupLaunchersEvents();
 
   // 設定頁面事件
   setupSettingsEvents();
