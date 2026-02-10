@@ -611,10 +611,108 @@ export async function renderLaunchersTab() {
 }
 
 /**
+ * 顯示啟動器設定指南彈窗
+ */
+function showLauncherGuideModal() {
+  const guides = [
+    {
+      category: t('ui.launchers.guide.editors'),
+      items: [
+        { icon: '💻', name: 'VS Code', command: 'code {path}', pathFormat: 'windows' },
+        {
+          icon: '💻',
+          name: 'VS Code (WSL)',
+          command: 'code --remote wsl+Ubuntu {path}',
+          pathFormat: 'unix',
+        },
+        { icon: '✏️', name: 'Sublime Text', command: 'subl {path}', pathFormat: 'windows' },
+      ],
+    },
+    {
+      category: t('ui.launchers.guide.jetbrains'),
+      items: [
+        { icon: '🧠', name: 'IntelliJ IDEA', command: 'idea {path}', pathFormat: 'windows' },
+        { icon: '🌐', name: 'WebStorm', command: 'webstorm {path}', pathFormat: 'windows' },
+        { icon: '🐍', name: 'PyCharm', command: 'pycharm {path}', pathFormat: 'windows' },
+        { icon: '🎯', name: 'GoLand', command: 'goland {path}', pathFormat: 'windows' },
+        { icon: '🅰️', name: 'Android Studio', command: 'studio {path}', pathFormat: 'windows' },
+      ],
+    },
+    {
+      category: t('ui.launchers.guide.terminals'),
+      items: [
+        {
+          icon: '⚡',
+          name: 'PowerShell',
+          command: 'powershell -NoExit -Command "cd \'{path}\'"',
+          pathFormat: 'windows',
+        },
+        { icon: '📟', name: 'CMD', command: 'cmd /k cd /d {path}', pathFormat: 'windows' },
+        { icon: '🐧', name: 'WSL', command: 'wsl -d Ubuntu --cd {path}', pathFormat: 'unix' },
+      ],
+    },
+  ];
+
+  const renderGuideItems = items =>
+    items
+      .map(
+        item =>
+          '<div class="guide-item" data-copy-command="' +
+          escapeAttr(item.command) +
+          '">' +
+          '<span class="guide-item-name">' +
+          item.icon +
+          ' ' +
+          escapeHtml(item.name) +
+          '</span>' +
+          '<code class="guide-item-command">' +
+          escapeHtml(item.command) +
+          '</code>' +
+          '</div>'
+      )
+      .join('');
+
+  const content =
+    guides
+      .map(
+        g =>
+          '<div class="shortcuts-section">' +
+          '<h4>' +
+          escapeHtml(g.category) +
+          '</h4>' +
+          '<div class="shortcuts-list">' +
+          renderGuideItems(g.items) +
+          '</div>' +
+          '</div>'
+      )
+      .join('') +
+    '<p class="guide-hint">' +
+    escapeHtml(t('ui.launchers.guide.hint')) +
+    '</p>';
+
+  openModal({
+    title: t('ui.launchers.guideTitle'),
+    content,
+    confirmText: t('common.close'),
+    showCancel: false,
+    modalClass: 'launcher-guide-modal',
+    onOpen: () => {
+      document.querySelectorAll('[data-copy-command]').forEach(el => {
+        el.addEventListener('click', () => {
+          navigator.clipboard.writeText(el.dataset.copyCommand);
+          showToast(t('toast.commandCopied'), 'success');
+        });
+      });
+    },
+  });
+}
+
+/**
  * 設定啟動器 Tab 的事件監聽
  */
 export function setupLaunchersEvents() {
   document.getElementById('btnAddTerminal')?.addEventListener('click', showAddTerminalModal);
+  document.getElementById('btnLauncherGuide')?.addEventListener('click', showLauncherGuideModal);
 
   // 搜尋輸入事件
   const searchInput = document.getElementById('launchersSearchInput');

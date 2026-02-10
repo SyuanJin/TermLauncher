@@ -127,7 +127,14 @@
       "distros": "個發行版",
       "searchPlaceholder": "搜尋啟動器...",
       "emptyFiltered": "沒有符合的啟動器",
-      "emptyFilteredHint": "嘗試其他搜尋關鍵字"
+      "emptyFilteredHint": "嘗試其他搜尋關鍵字",
+      "guideTitle": "啟動器設定指南",
+      "guide": {
+        "editors": "編輯器",
+        "jetbrains": "JetBrains IDE",
+        "terminals": "終端",
+        "hint": "複製指令後在「新增啟動器」中貼上使用"
+      }
     },
     "settings": {
       "general": {

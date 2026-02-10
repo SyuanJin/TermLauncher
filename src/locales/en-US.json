@@ -127,7 +127,14 @@
       "distros": "distros",
       "searchPlaceholder": "Search launchers...",
       "emptyFiltered": "No matching launchers",
-      "emptyFilteredHint": "Try a different search term"
+      "emptyFilteredHint": "Try a different search term",
+      "guideTitle": "Launcher Setup Guide",
+      "guide": {
+        "editors": "Editors",
+        "jetbrains": "JetBrains IDE",
+        "terminals": "Terminals",
+        "hint": "Copy a command and paste it in \"Add Launcher\""
+      }
     },
     "settings": {
       "general": {

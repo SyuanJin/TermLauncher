@@ -632,7 +632,7 @@ input:checked + .slider:before {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 100;
+  z-index: 1200;
 }
 
 .toast.show {
@@ -1871,4 +1871,56 @@ body.hide-tab-text .tab {
   right: 100%;
   margin-left: 0;
   margin-right: 2px;
+}
+
+/* ===== 啟動器設定指南 ===== */
+.modal.launcher-guide-modal {
+  max-width: 540px;
+}
+
+.launcher-guide-modal .modal-footer {
+  border-top: none;
+}
+
+.guide-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  gap: 12px;
+}
+
+.guide-item-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.guide-item-command {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guide-item:hover {
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.guide-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 0;
+  padding-top: 4px;
 }
