@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>One-click terminal launch, straight to your working directory</strong>
+  <strong>Quick-launch any app to your project directory</strong>
 </p>
 
 <p align="center">
@@ -16,20 +16,20 @@
 
 ## Introduction
 
-TermLauncher is a cross-platform desktop application that lets you quickly launch a terminal and automatically navigate to a specified working directory. On Windows, it supports **WSL**, **PowerShell**, **Git Bash**, and more. Experimental support is also available for macOS and Linux. It is designed for developers who frequently switch between different project directories.
+TermLauncher is a cross-platform desktop application that lets you quickly open project directories with any application — terminals, editors, IDEs, and more. Experimental support is also available for macOS and Linux. It is designed for developers who frequently switch between different project directories.
 
 ## Features
 
 | Feature                    | Description                                                                     |
 | -------------------------- | ------------------------------------------------------------------------------- |
-| **Multi-Terminal Support** | WSL, PowerShell, Git Bash, CMD, and custom terminals                            |
+| **Multi-Terminal Support** | WSL, PowerShell, Git Bash, VS Code, JetBrains IDE, and more                     |
 | **Directory Grouping**     | Organize projects by work, personal, learning, etc.                             |
 | **Favorites**              | Mark frequently used directories for quick access                               |
 | **Search & Filter**        | Quickly find directories by name, path, or group                                |
 | **Recent History**         | View recently opened directories with configurable limit                        |
-| **Custom Terminals**       | Define custom terminal commands and arguments                                   |
+| **Custom Launchers**       | Define custom launch commands for any application                               |
 | **Drag & Drop Sorting**    | Reorder favorites, groups, and directories via drag and drop                    |
-| **Context Menu**           | Right-click for quick actions (select terminal, add to favorites, edit, delete) |
+| **Context Menu**           | Right-click for quick actions (select launcher, add to favorites, edit, delete) |
 | **Invalid Path Warning**   | Automatically detect and highlight invalid paths                                |
 | **Auto Launch**            | Start on boot (supports both Portable and installer editions)                   |
 | **Advanced Export/Import** | Selective export, merge/overwrite import                                        |
@@ -93,12 +93,12 @@ npm run build:installer
 
 1. Click the expand button
 2. Enter a name and select a path
-3. Choose a terminal (WSL, PowerShell, Git Bash, Custom)
+3. Choose a launcher (WSL, PowerShell, VS Code, Custom)
 4. Click "Add Directory"
 
-### Open Terminal
+### Open Directory
 
-Simply **click a directory card** to launch the terminal.
+Simply **click a directory card** to launch the application.
 
 ### Path Conversion
 

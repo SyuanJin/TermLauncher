@@ -23,6 +23,11 @@
   gap: 8px;
 }
 
+.titlebar-icon {
+  width: 16px;
+  height: 16px;
+}
+
 .titlebar-buttons {
   display: flex;
   gap: 4px;
