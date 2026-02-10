@@ -25,7 +25,6 @@
     },
     "search": {
       "placeholder": "Search directories...",
-      "allGroups": "All groups",
       "filterGroups": "Filter groups",
       "selectedGroups": "Selected:",
       "removeFilter": "Remove filter",
@@ -35,9 +34,6 @@
       "directories": "directories"
     },
     "addDirectory": {
-      "sectionTitle": "Add Directory",
-      "expand": "Expand",
-      "collapse": "Collapse",
       "name": "Name",
       "namePlaceholder": "e.g., My Project",
       "icon": "Icon",
@@ -48,11 +44,9 @@
       "browse": "Browse...",
       "group": "Group",
       "addButton": "Add Directory",
-      "title": "Add Directory",
-      "add": "Add"
+      "title": "Add Directory"
     },
     "recent": {
-      "title": "🕐 Recent",
       "searchPlaceholder": "Search recent...",
       "empty": "No recent directories",
       "emptyHint": "Directories you open will appear here",
@@ -101,7 +95,6 @@
       "deleteItem": "Delete {name}",
       "editItem": "Edit {name}",
       "editTitle": "Edit Directory",
-      "addToGroup": "Add directory to this group",
       "toggleAllGroups": "Expand/collapse all groups",
       "expandAllGroups": "Expand all groups",
       "collapseAllGroups": "Collapse all groups",
@@ -111,12 +104,8 @@
       "title": "🚀 Launcher Management",
       "builtin": "Built-in",
       "add": "Add Launcher",
-      "addNew": "Add Custom Launcher",
       "addTitle": "Add Launcher",
       "editTitle": "Edit Launcher",
-      "editExisting": "Edit Launcher",
-      "hideBuiltin": "Hide Built-in Launchers",
-      "hideBuiltinDesc": "Don't show built-in launchers in dropdown",
       "name": "Name",
       "namePlaceholder": "e.g., Git Bash",
       "icon": "Icon",
@@ -126,9 +115,6 @@
       "pathFormat": "Path Format",
       "pathWindows": "Windows (C:\\path)",
       "pathUnix": "WSL (/mnt/c/path)",
-      "update": "Update Launcher",
-      "editLauncher": "Edit launcher {name}",
-      "deleteLauncher": "Delete launcher {name}",
       "deleteTitle": "Delete Launcher",
       "deleteConfirm": "Are you sure you want to delete launcher \"{name}\"?",
       "deleteHasDirectories": "{count} directories use this launcher",
@@ -159,7 +145,6 @@
         "minimizeToTrayDesc": "Minimize instead of quit when closing",
         "globalShortcut": "Global shortcut",
         "globalShortcutDesc": "Press to show/hide window",
-        "recordShortcut": "Record shortcut",
         "keyboardShortcuts": "Keyboard Shortcuts",
         "keyboardShortcutsDesc": "View global and in-app keyboard shortcuts",
         "viewShortcuts": "View Shortcuts",
@@ -169,7 +154,6 @@
         "portableNoticeItem2": "Recommend placing the program in a fixed location"
       },
       "recent": {
-        "title": "🕐 Recent",
         "limit": "Display Limit",
         "limitDesc": "Maximum number of items in recent list",
         "clearRecent": "Clear Recent History",
@@ -178,19 +162,11 @@
         "clearTitle": "Clear Recent History",
         "clearConfirm": "Are you sure you want to clear all recent records? This action cannot be undone."
       },
-      "groups": {
-        "title": "🏷️ Group Management",
-        "newGroupPlaceholder": "New group name",
-        "add": "Add",
-        "deleteGroup": "Delete group {name}"
-      },
       "data": {
         "title": "💾 Data Management",
         "export": "Export Settings",
         "import": "Import Settings",
         "openConfigDir": "Config Directory",
-        "exportAdvanced": "Advanced Export",
-        "importAdvanced": "Advanced Import",
         "exportAdvancedTitle": "Advanced Export Settings",
         "exportAdvancedDesc": "Select what to export:",
         "importAdvancedTitle": "Advanced Import Settings",
@@ -209,7 +185,6 @@
         "mergeHint": "Checked: keep existing and merge new. Unchecked: overwrite"
       },
       "advanced": {
-        "title": "🔧 Advanced",
         "clearLogs": "Clear Logs",
         "clearLogsTitle": "Clear Logs",
         "clearLogsConfirm": "Are you sure you want to clear all log records?",
@@ -220,8 +195,7 @@
       "about": {
         "title": "ℹ️ About",
         "description": "A desktop tool for quickly launching projects",
-        "github": "GitHub",
-        "issues": "Report Issue"
+        "github": "GitHub"
       }
     },
     "shortcuts": {
@@ -250,8 +224,6 @@
     "wslNotFound": "WSL is not installed. Please install WSL first",
     "wslDistroNotFound": "WSL distribution {distro} is not installed",
     "terminalNotFound": "Launcher {name} is not installed",
-    "terminalNotFoundMac": "Launcher {name} is not installed. Please download from App Store or official website",
-    "terminalNotFoundLinux": "Launcher {name} is not installed. Please install using your package manager",
     "shortcutConflict": "Shortcut {shortcut} may be occupied by another program",
     "shortcutRegistrationFailed": "Failed to register shortcut. Please try another combination",
     "configCorrupted": "Config file was corrupted. Default settings restored",

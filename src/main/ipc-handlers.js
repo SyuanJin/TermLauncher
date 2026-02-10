@@ -17,7 +17,7 @@ const {
 const { openTerminal, previewCommand, detectInstalledTerminals } = require('./terminal');
 const { registerShortcut, getLastRegistrationResult } = require('./shortcuts');
 const { getMainWindow } = require('./window');
-const { getAvailableLocales, loadLocale } = require('./i18n');
+const { getAvailableLocales, loadLocale, t } = require('./i18n');
 const { updateTrayMenu } = require('./tray');
 const { createLogger } = require('./logger');
 const {
@@ -123,7 +123,7 @@ function setupIpcHandlers() {
   ipcMain.handle('export-config', async () => {
     const mainWindow = getMainWindow();
     const result = await dialog.showSaveDialog(mainWindow, {
-      title: '匯出設定',
+      title: t('dialog.exportTitle'),
       defaultPath: 'termlauncher-config.json',
       filters: [{ name: 'JSON', extensions: ['json'] }],
     });
@@ -147,7 +147,7 @@ function setupIpcHandlers() {
 
     const mainWindow = getMainWindow();
     const result = await dialog.showSaveDialog(mainWindow, {
-      title: '匯出設定',
+      title: t('dialog.exportTitle'),
       defaultPath: 'termlauncher-config.json',
       filters: [{ name: 'JSON', extensions: ['json'] }],
     });
@@ -164,7 +164,7 @@ function setupIpcHandlers() {
   ipcMain.handle('import-config', async () => {
     const mainWindow = getMainWindow();
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: '匯入設定',
+      title: t('dialog.importTitle'),
       filters: [{ name: 'JSON', extensions: ['json'] }],
       properties: ['openFile'],
     });
@@ -193,7 +193,7 @@ function setupIpcHandlers() {
 
     const mainWindow = getMainWindow();
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: '匯入設定',
+      title: t('dialog.importTitle'),
       filters: [{ name: 'JSON', extensions: ['json'] }],
       properties: ['openFile'],
     });
@@ -202,8 +202,8 @@ function setupIpcHandlers() {
       try {
         const data = fs.readFileSync(result.filePaths[0], 'utf-8');
         const importData = JSON.parse(data);
-        const importResult = importConfigAdvanced(importData, options);
-        return importResult;
+
+        return importConfigAdvanced(importData, options);
       } catch (err) {
         return { success: false, errors: [err.message] };
       }
@@ -220,7 +220,7 @@ function setupIpcHandlers() {
   ipcMain.handle('select-folder', async () => {
     const mainWindow = getMainWindow();
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: '選擇資料夾',
+      title: t('dialog.selectFolder'),
       properties: ['openDirectory'],
     });
 

@@ -25,7 +25,6 @@
     },
     "search": {
       "placeholder": "搜尋目錄...",
-      "allGroups": "所有群組",
       "filterGroups": "篩選群組",
       "selectedGroups": "已選擇:",
       "removeFilter": "移除篩選",
@@ -35,9 +34,6 @@
       "directories": "個目錄"
     },
     "addDirectory": {
-      "sectionTitle": "新增目錄",
-      "expand": "展開",
-      "collapse": "收起",
       "name": "名稱",
       "namePlaceholder": "例如：我的專案",
       "icon": "圖示",
@@ -48,11 +44,9 @@
       "browse": "瀏覽...",
       "group": "群組",
       "addButton": "新增目錄",
-      "title": "新增目錄",
-      "add": "新增"
+      "title": "新增目錄"
     },
     "recent": {
-      "title": "🕐 最近使用",
       "searchPlaceholder": "搜尋最近使用...",
       "empty": "尚無最近使用紀錄",
       "emptyHint": "開啟目錄後會自動記錄在這裡",
@@ -101,7 +95,6 @@
       "deleteItem": "刪除 {name}",
       "editItem": "編輯 {name}",
       "editTitle": "編輯目錄",
-      "addToGroup": "新增目錄到此群組",
       "toggleAllGroups": "展開/收合所有群組",
       "expandAllGroups": "展開所有群組",
       "collapseAllGroups": "收合所有群組",
@@ -111,12 +104,8 @@
       "title": "🚀 啟動器管理",
       "builtin": "內建",
       "add": "新增啟動器",
-      "addNew": "新增自訂啟動器",
       "addTitle": "新增啟動器",
       "editTitle": "編輯啟動器",
-      "editExisting": "編輯啟動器",
-      "hideBuiltin": "隱藏內建啟動器",
-      "hideBuiltinDesc": "在下拉選單中不顯示內建啟動器選項",
       "name": "名稱",
       "namePlaceholder": "例如：Git Bash",
       "icon": "圖示",
@@ -126,9 +115,6 @@
       "pathFormat": "路徑格式",
       "pathWindows": "Windows (C:\\path)",
       "pathUnix": "WSL (/mnt/c/path)",
-      "update": "更新啟動器",
-      "editLauncher": "編輯啟動器 {name}",
-      "deleteLauncher": "刪除啟動器 {name}",
       "deleteTitle": "刪除啟動器",
       "deleteConfirm": "確定要刪除啟動器「{name}」嗎？",
       "deleteHasDirectories": "有 {count} 個目錄使用此啟動器",
@@ -159,7 +145,6 @@
         "minimizeToTrayDesc": "點擊關閉按鈕時最小化而非結束",
         "globalShortcut": "全域快捷鍵",
         "globalShortcutDesc": "按下快捷鍵顯示/隱藏視窗",
-        "recordShortcut": "按鍵錄製",
         "keyboardShortcuts": "鍵盤快捷鍵",
         "keyboardShortcutsDesc": "查看全域與應用內的鍵盤快捷鍵",
         "viewShortcuts": "查看快捷鍵",
@@ -169,7 +154,6 @@
         "portableNoticeItem2": "建議將程式放置在固定位置使用"
       },
       "recent": {
-        "title": "🕐 最近使用",
         "limit": "顯示數量上限",
         "limitDesc": "最近使用清單最多顯示的項目數量",
         "clearRecent": "清除最近使用記錄",
@@ -178,19 +162,11 @@
         "clearTitle": "清除最近使用",
         "clearConfirm": "確定要清除所有最近使用記錄嗎？此操作無法復原。"
       },
-      "groups": {
-        "title": "🏷️ 群組管理",
-        "newGroupPlaceholder": "新群組名稱",
-        "add": "新增",
-        "deleteGroup": "刪除群組 {name}"
-      },
       "data": {
         "title": "💾 資料管理",
         "export": "匯出設定",
         "import": "匯入設定",
         "openConfigDir": "設定目錄",
-        "exportAdvanced": "進階匯出",
-        "importAdvanced": "進階匯入",
         "exportAdvancedTitle": "進階匯出設定",
         "exportAdvancedDesc": "選擇要匯出的內容：",
         "importAdvancedTitle": "進階匯入設定",
@@ -209,7 +185,6 @@
         "mergeHint": "勾選表示保留現有資料並合併新資料，取消勾選表示覆蓋"
       },
       "advanced": {
-        "title": "🔧 進階操作",
         "clearLogs": "清除日誌",
         "clearLogsTitle": "清除日誌",
         "clearLogsConfirm": "確定要清除所有日誌記錄嗎？",
@@ -220,8 +195,7 @@
       "about": {
         "title": "ℹ️ 關於",
         "description": "快速開啟專案的桌面工具",
-        "github": "GitHub",
-        "issues": "回報問題"
+        "github": "GitHub"
       }
     },
     "shortcuts": {
@@ -250,8 +224,6 @@
     "wslNotFound": "WSL 未安裝，請先安裝 WSL 環境",
     "wslDistroNotFound": "WSL 發行版本 {distro} 未安裝",
     "terminalNotFound": "啟動器 {name} 未安裝",
-    "terminalNotFoundMac": "啟動器 {name} 未安裝，請從 App Store 或官網下載",
-    "terminalNotFoundLinux": "啟動器 {name} 未安裝，請使用套件管理器安裝",
     "shortcutConflict": "快捷鍵 {shortcut} 可能已被其他程式佔用",
     "shortcutRegistrationFailed": "無法註冊快捷鍵，請更換其他組合",
     "configCorrupted": "配置檔已損壞，已恢復預設設定",

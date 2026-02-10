@@ -34,6 +34,7 @@ const ErrorTypeToMessageKey = {
   WINDOWS_TERMINAL_NOT_FOUND: 'windowsTerminalNotFound',
   WSL_NOT_FOUND: 'wslNotFound',
   WSL_DISTRO_NOT_FOUND: 'wslDistroNotFound',
+  TERMINAL_NOT_FOUND: 'terminalNotFound',
 };
 
 /**
@@ -54,6 +55,9 @@ export function getErrorMessage(result) {
     }
     if (result.errorType === 'WSL_DISTRO_NOT_FOUND') {
       return t('toast.' + messageKey, { distro: result.errorDetail });
+    }
+    if (result.errorType === 'TERMINAL_NOT_FOUND') {
+      return t('toast.' + messageKey, { name: result.errorDetail });
     }
     return t('toast.' + messageKey);
   }
