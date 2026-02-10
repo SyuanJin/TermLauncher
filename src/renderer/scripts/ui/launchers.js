@@ -450,7 +450,7 @@ function showEditTerminalModal(terminalId) {
     t('ui.launchers.name') +
     '<span class="required-mark">*</span></label>' +
     '<input type="text" id="modalTerminalName" value="' +
-    escapeHtml(terminal.name) +
+    escapeAttr(terminal.name) +
     '" />' +
     '</div>' +
     '<div class="input-group" style="max-width: 80px">' +
@@ -469,7 +469,7 @@ function showEditTerminalModal(terminalId) {
     t('ui.launchers.command') +
     '<span class="required-mark">*</span></label>' +
     '<input type="text" id="modalTerminalCommand" value="' +
-    escapeHtml(terminal.command) +
+    escapeAttr(terminal.command) +
     '" class="mono-input" />' +
     '<small class="hint">' +
     t('ui.launchers.commandHint') +
@@ -617,6 +617,7 @@ function showLauncherGuideModal() {
   const guides = [
     {
       category: t('ui.launchers.guide.editors'),
+      hint: t('ui.launchers.guide.editorsHint'),
       items: [
         { icon: '💻', name: 'VS Code', command: 'code {path}', pathFormat: 'windows' },
         {
@@ -630,16 +631,22 @@ function showLauncherGuideModal() {
     },
     {
       category: t('ui.launchers.guide.jetbrains'),
+      hint: t('ui.launchers.guide.jetbrainsHint'),
       items: [
         { icon: '🧠', name: 'IntelliJ IDEA', command: 'idea {path}', pathFormat: 'windows' },
         { icon: '🌐', name: 'WebStorm', command: 'webstorm {path}', pathFormat: 'windows' },
         { icon: '🐍', name: 'PyCharm', command: 'pycharm {path}', pathFormat: 'windows' },
-        { icon: '🎯', name: 'GoLand', command: 'goland {path}', pathFormat: 'windows' },
-        { icon: '🅰️', name: 'Android Studio', command: 'studio {path}', pathFormat: 'windows' },
+        {
+          icon: '🤖',
+          name: 'Android Studio',
+          command: '"C:\\Program Files\\Android\\Android Studio\\bin\\studio64.exe" {path}',
+          pathFormat: 'windows',
+        },
       ],
     },
     {
       category: t('ui.launchers.guide.terminals'),
+      hint: t('ui.launchers.guide.terminalsHint'),
       items: [
         {
           icon: '⚡',
@@ -673,6 +680,9 @@ function showLauncherGuideModal() {
       .join('');
 
   const content =
+    '<p class="guide-hint">' +
+    escapeHtml(t('ui.launchers.guide.hint')) +
+    '</p>' +
     guides
       .map(
         g =>
@@ -680,15 +690,13 @@ function showLauncherGuideModal() {
           '<h4>' +
           escapeHtml(g.category) +
           '</h4>' +
+          (g.hint ? '<small class="hint">' + escapeHtml(g.hint) + '</small>' : '') +
           '<div class="shortcuts-list">' +
           renderGuideItems(g.items) +
           '</div>' +
           '</div>'
       )
-      .join('') +
-    '<p class="guide-hint">' +
-    escapeHtml(t('ui.launchers.guide.hint')) +
-    '</p>';
+      .join('');
 
   openModal({
     title: t('ui.launchers.guideTitle'),

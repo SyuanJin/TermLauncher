@@ -131,9 +131,12 @@
       "guideTitle": "啟動器設定指南",
       "guide": {
         "editors": "編輯器",
+        "editorsHint": "安裝時通常會自動加入 PATH",
         "jetbrains": "JetBrains IDE",
+        "jetbrainsHint": "透過 Toolbox 安裝會自動加入 PATH；獨立安裝需使用 bin 目錄下的完整路徑",
         "terminals": "終端",
-        "hint": "複製指令後在「新增啟動器」中貼上使用"
+        "terminalsHint": "不透過 Windows Terminal 的獨立啟動方式",
+        "hint": "點擊指令即可複製，在「新增啟動器」中貼上使用"
       }
     },
     "settings": {

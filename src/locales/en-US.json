@@ -131,9 +131,12 @@
       "guideTitle": "Launcher Setup Guide",
       "guide": {
         "editors": "Editors",
+        "editorsHint": "Usually added to PATH during installation",
         "jetbrains": "JetBrains IDE",
+        "jetbrainsHint": "Toolbox adds commands to PATH automatically; standalone installs require full path from bin directory",
         "terminals": "Terminals",
-        "hint": "Copy a command and paste it in \"Add Launcher\""
+        "terminalsHint": "Standalone launch commands without Windows Terminal",
+        "hint": "Click a command to copy, then paste it in \"Add Launcher\""
       }
     },
     "settings": {
