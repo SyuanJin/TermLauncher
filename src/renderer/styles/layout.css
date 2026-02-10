@@ -290,7 +290,14 @@
 /* 響應式設計 */
 @media (max-width: 600px) {
   .search-bar {
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .search-bar .search-input-wrapper {
+    flex-basis: 100%;
   }
 
   .filter-select {
