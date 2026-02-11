@@ -169,50 +169,67 @@ export function renderRecentList() {
       })
       .join('') +
     '</div>';
-
-  bindRecentEvents();
 }
 
 /**
- * 綁定最近使用項目的事件
+ * 初始化最近使用列表的事件委派（僅需呼叫一次）
  */
-function bindRecentEvents() {
-  document.querySelectorAll('#recentListContainer .directory-item').forEach(item => {
-    const handleOpen = e => {
-      if (e.target.closest('.btn-icon')) return;
+let recentDelegationInitialized = false;
+function initRecentEventDelegation() {
+  if (recentDelegationInitialized) return;
+  recentDelegationInitialized = true;
+
+  const container = document.getElementById('recentListContainer');
+  if (!container) return;
+
+  // 點擊事件委派
+  container.addEventListener('click', e => {
+    // 移除按鈕
+    const removeBtn = e.target.closest('[data-remove-recent]');
+    if (removeBtn) {
+      e.stopPropagation();
+      const id = parseInt(removeBtn.dataset.removeRecent, 10);
+      removeFromRecent(id);
+      return;
+    }
+
+    // 目錄項目（排除按鈕區域）
+    if (e.target.closest('.btn-icon')) return;
+    const item = e.target.closest('.directory-item');
+    if (item) {
       const id = parseInt(item.dataset.id, 10);
       openTerminalUtil(id, renderRecentList);
-    };
-
-    item.addEventListener('click', handleOpen);
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleOpen(e);
-      }
-    });
-
-    // 右鍵選單
-    item.addEventListener('contextmenu', e => {
-      const id = parseInt(item.dataset.id, 10);
-      showRecentContextMenu(e, id);
-    });
+    }
   });
 
-  document.querySelectorAll('[data-remove-recent]').forEach(btn => {
-    const handleRemove = e => {
-      e.stopPropagation();
-      const id = parseInt(btn.dataset.removeRecent, 10);
-      removeFromRecent(id);
-    };
+  // 鍵盤事件委派
+  container.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
 
-    btn.addEventListener('click', handleRemove);
-    btn.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleRemove(e);
-      }
-    });
+    const removeBtn = e.target.closest('[data-remove-recent]');
+    if (removeBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = parseInt(removeBtn.dataset.removeRecent, 10);
+      removeFromRecent(id);
+      return;
+    }
+
+    const item = e.target.closest('.directory-item');
+    if (item) {
+      e.preventDefault();
+      const id = parseInt(item.dataset.id, 10);
+      openTerminalUtil(id, renderRecentList);
+    }
+  });
+
+  // 右鍵選單事件委派
+  container.addEventListener('contextmenu', e => {
+    const item = e.target.closest('.directory-item');
+    if (item) {
+      const id = parseInt(item.dataset.id, 10);
+      showRecentContextMenu(e, id);
+    }
   });
 }
 
@@ -313,4 +330,5 @@ export function setupRecentEvents() {
   if (searchInput) {
     searchInput.addEventListener('input', debounce(renderRecentList, 150));
   }
+  initRecentEventDelegation();
 }
