@@ -156,10 +156,3 @@ function handleEscKey(e) {
     closeContextMenu();
   }
 }
-
-/**
- * 獲取當前是否有選單開啟
- */
-export function isContextMenuOpen() {
-  return currentMenu !== null;
-}

@@ -58,12 +58,3 @@ export function initErrorHandler() {
     logError(message, 'console.error');
   };
 }
-
-/**
- * 手動記錄錯誤（供其他模組使用）
- * @param {Error|string} error - 錯誤物件或訊息
- * @param {string} context - 錯誤發生的上下文
- */
-export function reportError(error, context) {
-  logError(error, context);
-}
