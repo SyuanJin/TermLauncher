@@ -17,41 +17,13 @@ import {
   showCommandPreview,
   getTerminalDisplayName,
   getDefaultTerminalId,
+  getTerminalIcon,
+  getTerminalName,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 let allGroupsCollapsed = false;
 let selectedGroupFilters = []; // 多選群組篩選
-
-/**
- * 取得終端配置
- * @param {string} terminalId - 終端 ID
- * @returns {Object|null} 終端配置物件
- */
-function getTerminal(terminalId) {
-  const config = getConfig();
-  return config.terminals?.find(t => t.id === terminalId) || null;
-}
-
-/**
- * 取得終端圖示
- * @param {string} terminalId - 終端 ID
- * @returns {string} 終端圖示
- */
-function getTerminalIcon(terminalId) {
-  const terminal = getTerminal(terminalId);
-  return terminal?.icon || '💻';
-}
-
-/**
- * 取得終端名稱
- * @param {string} terminalId - 終端 ID
- * @returns {string} 終端名稱
- */
-function getTerminalName(terminalId) {
-  const terminal = getTerminal(terminalId);
-  return terminal ? getTerminalDisplayName(terminal) : terminalId;
-}
 
 /**
  * 檢查是否為最愛

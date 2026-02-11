@@ -36,6 +36,28 @@ export function getTerminalDisplayName(terminal) {
 }
 
 /**
+ * 取得終端圖示
+ * @param {string} terminalId - 終端 ID
+ * @returns {string} 終端圖示
+ */
+export function getTerminalIcon(terminalId) {
+  const config = getConfig();
+  const terminal = config.terminals?.find(t => t.id === terminalId);
+  return terminal?.icon || '💻';
+}
+
+/**
+ * 取得終端名稱（支援 i18n）
+ * @param {string} terminalId - 終端 ID
+ * @returns {string} 終端名稱
+ */
+export function getTerminalName(terminalId) {
+  const config = getConfig();
+  const terminal = config.terminals?.find(t => t.id === terminalId);
+  return terminal ? getTerminalDisplayName(terminal) : terminalId;
+}
+
+/**
  * 錯誤類型對應訊息鍵
  */
 const ErrorTypeToMessageKey = {

@@ -13,31 +13,11 @@ import {
   getErrorMessage,
   getTerminalDisplayName,
   getDefaultTerminalId,
+  getTerminalIcon,
+  getTerminalName,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { getElement } from '../utils/dom-cache.js';
-
-/**
- * 取得終端圖示
- * @param {string} terminalId - 終端 ID
- * @returns {string} 終端圖示
- */
-function getTerminalIcon(terminalId) {
-  const config = getConfig();
-  const terminal = config.terminals?.find(t => t.id === terminalId);
-  return terminal?.icon || '💻';
-}
-
-/**
- * 取得終端名稱
- * @param {string} terminalId - 終端 ID
- * @returns {string} 終端名稱
- */
-function getTerminalName(terminalId) {
-  const config = getConfig();
-  const terminal = config.terminals?.find(t => t.id === terminalId);
-  return terminal ? getTerminalDisplayName(terminal) : terminalId;
-}
 
 /**
  * 格式化相對時間
