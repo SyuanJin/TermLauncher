@@ -3,7 +3,6 @@
  * 處理主進程與渲染進程之間的通訊
  */
 const { ipcMain, dialog, app, shell } = require('electron');
-const fs = require('fs');
 const fsPromises = require('fs/promises');
 const path = require('path');
 const {
