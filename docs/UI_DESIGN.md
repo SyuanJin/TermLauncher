@@ -25,8 +25,8 @@
 
 ## 字體
 
-- **介面文字**：Noto Sans TC, system-ui
-- **路徑顯示**：JetBrains Mono (等寬)
+- **介面文字**：system-ui, -apple-system, Segoe UI, Noto Sans TC, ...
+- **等寬字體**：Cascadia Code, JetBrains Mono, Fira Code, Consolas, monospace
 - **字級範圍**：10px (標籤) ~ 16px (標題)
 
 ## 互動規範
