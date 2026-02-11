@@ -8,6 +8,7 @@ import { showToast } from '../ui/toast.js';
 import { openModal } from '../ui/modal.js';
 import { t } from '../i18n.js';
 import { switchTab } from '../ui/tabs.js';
+import { escapeHtml } from './escape.js';
 
 /**
  * 取得預設終端 ID（從配置中取得第一個非檔案管理器的終端）
@@ -240,15 +241,4 @@ export async function showCommandPreview(dirId, terminalId) {
       return true;
     },
   });
-}
-
-/**
- * HTML 轉義
- * @param {string} text - 原始文字
- * @returns {string} 轉義後的文字
- */
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
 }
