@@ -42,10 +42,13 @@
     <!-- 主容器 -->
     <div class="main-container">
       <!-- 分頁標籤 -->
-      <div class="tabs" id="tabsContainer">
+      <div class="tabs" id="tabsContainer" role="tablist">
         <button
           class="tab active"
           data-tab="recent"
+          role="tab"
+          aria-selected="true"
+          aria-controls="recent-tab"
           data-tooltip="最近使用"
           data-i18n-tooltip="ui.tabs.recent"
         >
@@ -55,6 +58,9 @@
         <button
           class="tab"
           data-tab="favorites"
+          role="tab"
+          aria-selected="false"
+          aria-controls="favorites-tab"
           data-tooltip="最愛"
           data-i18n-tooltip="ui.tabs.favorites"
         >
@@ -64,6 +70,9 @@
         <button
           class="tab"
           data-tab="groups"
+          role="tab"
+          aria-selected="false"
+          aria-controls="groups-tab"
           data-tooltip="群組"
           data-i18n-tooltip="ui.tabs.groups"
         >
@@ -73,6 +82,9 @@
         <button
           class="tab"
           data-tab="directories"
+          role="tab"
+          aria-selected="false"
+          aria-controls="directories-tab"
           data-tooltip="目錄"
           data-i18n-tooltip="ui.tabs.directories"
         >
@@ -82,6 +94,9 @@
         <button
           class="tab"
           data-tab="launchers"
+          role="tab"
+          aria-selected="false"
+          aria-controls="launchers-tab"
           data-tooltip="啟動器"
           data-i18n-tooltip="ui.tabs.launchers"
         >
@@ -91,6 +106,9 @@
         <button
           class="tab"
           data-tab="settings"
+          role="tab"
+          aria-selected="false"
+          aria-controls="settings-tab"
           data-tooltip="設定"
           data-i18n-tooltip="ui.tabs.settings"
         >
@@ -102,7 +120,7 @@
       <!-- 內容區 -->
       <div class="content">
         <!-- 最近使用分頁 -->
-        <div class="tab-content active" id="recent-tab">
+        <div class="tab-content active" id="recent-tab" role="tabpanel">
           <div class="search-bar">
             <div class="search-input-wrapper">
               <svg
@@ -122,10 +140,12 @@
                 id="recentSearchInput"
                 placeholder="搜尋最近使用..."
                 data-i18n-placeholder="ui.recent.searchPlaceholder"
+                aria-label="搜尋最近使用"
+                data-i18n-aria="ui.recent.searchPlaceholder"
               />
             </div>
           </div>
-          <div class="recent-list-container" id="recentListContainer">
+          <div class="recent-list-container" id="recentListContainer" role="list">
             <div class="empty-state" id="recentEmptyState">
               <span class="empty-icon">🕐</span>
               <p data-i18n="ui.recent.empty">尚無最近使用紀錄</p>
@@ -135,7 +155,7 @@
         </div>
 
         <!-- 最愛分頁 -->
-        <div class="tab-content" id="favorites-tab">
+        <div class="tab-content" id="favorites-tab" role="tabpanel">
           <div class="search-bar">
             <div class="search-input-wrapper">
               <svg
@@ -155,10 +175,12 @@
                 id="favoritesSearchInput"
                 placeholder="搜尋最愛..."
                 data-i18n-placeholder="ui.favorites.searchPlaceholder"
+                aria-label="搜尋最愛"
+                data-i18n-aria="ui.favorites.searchPlaceholder"
               />
             </div>
           </div>
-          <div class="favorites-list-container" id="favoritesListContainer">
+          <div class="favorites-list-container" id="favoritesListContainer" role="list">
             <div class="empty-state" id="favoritesEmptyState">
               <span class="empty-icon">⭐</span>
               <p data-i18n="ui.favorites.empty">尚無最愛目錄</p>
@@ -168,7 +190,7 @@
         </div>
 
         <!-- 群組分頁 -->
-        <div class="tab-content" id="groups-tab">
+        <div class="tab-content" id="groups-tab" role="tabpanel">
           <div class="search-bar">
             <div class="search-input-wrapper">
               <svg
@@ -188,6 +210,8 @@
                 id="groupsSearchInput"
                 placeholder="搜尋群組..."
                 data-i18n-placeholder="ui.groups.searchPlaceholder"
+                aria-label="搜尋群組"
+                data-i18n-aria="ui.groups.searchPlaceholder"
               />
             </div>
             <button
@@ -199,7 +223,7 @@
               +
             </button>
           </div>
-          <div class="groups-list-container" id="groupsListContainer">
+          <div class="groups-list-container" id="groupsListContainer" role="list">
             <div class="empty-state" id="groupsEmptyState" style="display: none">
               <span class="empty-icon">🏷️</span>
               <p data-i18n="ui.groups.empty">尚無群組</p>
@@ -209,7 +233,7 @@
         </div>
 
         <!-- 目錄分頁 -->
-        <div class="tab-content" id="directories-tab">
+        <div class="tab-content" id="directories-tab" role="tabpanel">
           <!-- 搜尋列 -->
           <div class="search-bar">
             <div class="search-input-wrapper">
@@ -274,7 +298,7 @@
         </div>
 
         <!-- 啟動器分頁 -->
-        <div class="tab-content" id="launchers-tab">
+        <div class="tab-content" id="launchers-tab" role="tabpanel">
           <div class="search-bar">
             <div class="search-input-wrapper">
               <svg
@@ -294,6 +318,8 @@
                 id="launchersSearchInput"
                 placeholder="搜尋啟動器..."
                 data-i18n-placeholder="ui.launchers.searchPlaceholder"
+                aria-label="搜尋啟動器"
+                data-i18n-aria="ui.launchers.searchPlaceholder"
               />
             </div>
             <button
@@ -328,7 +354,7 @@
         </div>
 
         <!-- 設定分頁 -->
-        <div class="tab-content" id="settings-tab">
+        <div class="tab-content" id="settings-tab" role="tabpanel">
           <div class="tab-scroll-content">
             <!-- 一般設定 -->
             <div class="settings-section">

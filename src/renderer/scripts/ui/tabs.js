@@ -47,11 +47,15 @@ function activateTab(tab) {
   const tabId = tab.dataset.tab;
 
   // 移除所有 active 狀態
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
   // 設定當前分頁為 active
   tab.classList.add('active');
+  tab.setAttribute('aria-selected', 'true');
   const tabContent = document.getElementById(tabId + '-tab');
   if (tabContent) {
     tabContent.classList.add('active');
