@@ -9,6 +9,7 @@ import { t } from '../i18n.js';
 import { showContextMenu } from './contextMenu.js';
 import { isFavorite, toggleFavorite } from './favorites.js';
 import {
+  openTerminal as openTerminalUtil,
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
   getTerminalDisplayName,
@@ -179,7 +180,7 @@ function bindRecentEvents() {
     const handleOpen = e => {
       if (e.target.closest('.btn-icon')) return;
       const id = parseInt(item.dataset.id);
-      openTerminal(id);
+      openTerminalUtil(id, renderRecentList);
     };
 
     item.addEventListener('click', handleOpen);
@@ -248,7 +249,7 @@ function showRecentContextMenu(event, dirId) {
     {
       icon: getTerminalIcon(dir.terminalId || getDefaultTerminalId()),
       label: t('contextMenu.openDefault'),
-      onClick: () => openTerminal(dirId),
+      onClick: () => openTerminalUtil(dirId, renderRecentList),
     },
     {
       icon: '▶',
@@ -270,26 +271,6 @@ function showRecentContextMenu(event, dirId) {
   ];
 
   showContextMenu(event, menuItems);
-}
-
-/**
- * 開啟終端
- * @param {number} id - 目錄 ID
- */
-async function openTerminal(id) {
-  const config = getConfig();
-  const dir = config.directories.find(d => d.id === id);
-  if (!dir) return;
-
-  const result = await api.openTerminal(dir);
-  if (result.success) {
-    showToast(t('toast.openingDirectory', { name: dir.name }), 'success');
-    await loadConfig();
-    renderRecentList();
-  } else {
-    const errorMessage = getErrorMessage(result);
-    showToast(errorMessage, 'error');
-  }
 }
 
 /**
