@@ -51,12 +51,20 @@ function createMcpServer(McpServer, z) {
 }
 
 /**
- * 讀取 HTTP 請求 body
+ * 讀取 HTTP 請求 body（限制 1MB）
  */
+const MAX_BODY_SIZE = 1024 * 1024; // 1MB
+
 function readRequestBody(req) {
   return new Promise((resolve, reject) => {
     let data = '';
-    req.on('data', chunk => (data += chunk));
+    req.on('data', chunk => {
+      data += chunk;
+      if (data.length > MAX_BODY_SIZE) {
+        req.destroy();
+        reject(new Error('Request body too large'));
+      }
+    });
     req.on('end', () => {
       try {
         resolve(data ? JSON.parse(data) : undefined);
