@@ -409,7 +409,8 @@ function importConfigAdvanced(importData, options = {}) {
         const existingById = newConfig.terminals.find(t => t.id === importedTerminal.id);
         if (existingById) {
           // ID 衝突，生成新 ID
-          const newId = 'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          const newId =
+            'imported-' + Date.now() + '-' + Math.random().toString(36).substring(2, 11);
           terminalIdMap.set(importedTerminal.id, newId);
           importedTerminal.id = newId;
           logger.info(`Terminal ID conflict resolved, new ID: ${newId}`);
@@ -438,7 +439,8 @@ function importConfigAdvanced(importData, options = {}) {
         }
         const idExists = newConfig.groups.some(g => g.id === importedGroup.id);
         if (idExists) {
-          const newId = 'imported-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+          const newId =
+            'imported-' + Date.now() + '-' + Math.random().toString(36).substring(2, 11);
           groupIdMap.set(importedGroup.id, newId);
           importedGroup.id = newId;
         }
