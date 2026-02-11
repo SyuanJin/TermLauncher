@@ -77,7 +77,13 @@ src/
 
 ## 配置檔
 
-**位置**：`%APPDATA%/termlauncher/config.json`
+**位置**（由 `app.getPath('userData')` 決定）：
+
+| 平台    | 路徑                                                  |
+| ------- | ----------------------------------------------------- |
+| Windows | `%APPDATA%\termlauncher\config.json`                  |
+| macOS   | `~/Library/Application Support/termlauncher/config.json` |
+| Linux   | `~/.config/termlauncher/config.json`                  |
 
 **結構摘要**：
 
@@ -224,6 +230,6 @@ termlauncher.exe --mcp
 
 ## 日誌
 
-- **位置**：`%APPDATA%/termlauncher/logs/`
+- **位置**：`<userData>/logs/`（各平台路徑同上配置檔）
 - **格式**：`termlauncher-YYYY-MM-DD.log`
 - **清理**：自動刪除 7 天前的日誌

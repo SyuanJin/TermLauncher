@@ -75,8 +75,16 @@ Main Process (後端/系統整合)
 
 ### 配置與日誌位置
 
-- 配置檔：`%APPDATA%/termlauncher/config.json`
-- 日誌目錄：`%APPDATA%/termlauncher/logs/`
+由 `app.getPath('userData')` 決定，依平台不同：
+
+| 平台    | 基礎路徑                                    |
+| ------- | ------------------------------------------- |
+| Windows | `%APPDATA%\termlauncher\`                   |
+| macOS   | `~/Library/Application Support/termlauncher/` |
+| Linux   | `~/.config/termlauncher/`                   |
+
+- 配置檔：`<基礎路徑>/config.json`
+- 日誌目錄：`<基礎路徑>/logs/`
 
 ## 安全機制
 
