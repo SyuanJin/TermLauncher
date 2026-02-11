@@ -76,11 +76,11 @@ function validateSafeUrl(url) {
 
   try {
     const parsedUrl = new URL(url);
-    const allowedProtocols = ['http:', 'https:'];
+    const allowedProtocols = ['http:', 'https:', 'ms-windows-store:'];
     if (!allowedProtocols.includes(parsedUrl.protocol)) {
       return {
         valid: false,
-        error: `URL protocol must be http or https, got: ${parsedUrl.protocol}`,
+        error: `URL protocol not allowed, got: ${parsedUrl.protocol}`,
       };
     }
     return { valid: true };
