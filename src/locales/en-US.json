@@ -307,6 +307,8 @@
   },
   "tray": {
     "showWindow": "Show Window",
+    "favorites": "Favorites",
+    "recent": "Recent",
     "quit": "Quit"
   },
   "dialog": {

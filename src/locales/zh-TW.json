@@ -307,6 +307,8 @@
   },
   "tray": {
     "showWindow": "顯示視窗",
+    "favorites": "最愛",
+    "recent": "最近使用",
     "quit": "結束"
   },
   "dialog": {

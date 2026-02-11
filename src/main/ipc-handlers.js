@@ -57,6 +57,7 @@ function setupIpcHandlers() {
     const result = saveConfig(config);
     if (result) {
       registerShortcut(); // 重新註冊快捷鍵
+      updateTrayMenu(); // 更新托盤選單（最愛/最近可能變更）
     }
     return result;
   });
