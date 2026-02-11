@@ -74,10 +74,24 @@ function registerProjectTools(server, z) {
         };
       }
 
-      // 驗證路徑是否存在
+      // 驗證路徑是否存在且為目錄
       if (!fs.existsSync(path)) {
         return {
           content: [{ type: 'text', text: JSON.stringify({ error: 'Path does not exist' }) }],
+          isError: true,
+        };
+      }
+
+      try {
+        if (!fs.statSync(path).isDirectory()) {
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ error: 'Path is not a directory' }) }],
+            isError: true,
+          };
+        }
+      } catch {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: 'Cannot access path' }) }],
           isError: true,
         };
       }
@@ -165,6 +179,21 @@ function registerProjectTools(server, z) {
         if (!fs.existsSync(path)) {
           return {
             content: [{ type: 'text', text: JSON.stringify({ error: 'Path does not exist' }) }],
+            isError: true,
+          };
+        }
+        try {
+          if (!fs.statSync(path).isDirectory()) {
+            return {
+              content: [
+                { type: 'text', text: JSON.stringify({ error: 'Path is not a directory' }) },
+              ],
+              isError: true,
+            };
+          }
+        } catch {
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ error: 'Cannot access path' }) }],
             isError: true,
           };
         }
