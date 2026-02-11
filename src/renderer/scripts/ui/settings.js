@@ -318,7 +318,12 @@ export function showShortcutsModal() {
   const renderShortcuts = shortcuts =>
     shortcuts
       .map(
-        s => '<div class="shortcut-item"><kbd>' + s.key + '</kbd><span>' + s.desc + '</span></div>'
+        s =>
+          '<div class="shortcut-item"><kbd>' +
+          escapeHtml(s.key) +
+          '</kbd><span>' +
+          escapeHtml(s.desc) +
+          '</span></div>'
       )
       .join('');
 
