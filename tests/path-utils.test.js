@@ -134,4 +134,3 @@ describe('escapePathForShell', () => {
     expect(escapePathForShell('C:\\Program Files', 'windows')).toBe('"C:\\Program Files"');
   });
 });
-

@@ -9,7 +9,7 @@ import { describe, it, expect, vi } from 'vitest';
 // Mock validators
 vi.mock('../src/main/validators', () => ({
   getValidator: () => ({
-    validateConfig: (terminal) => {
+    validateConfig: terminal => {
       if (!terminal || !terminal.command) {
         return { valid: false, errorType: 'INVALID_CONFIG', errorDetail: 'Missing command' };
       }
