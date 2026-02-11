@@ -111,8 +111,6 @@ function usesWsl(command) {
   return validator.usesWsl(command);
 }
 
-// toWslPath, formatPath, parseCommand 已移至 utils/path-utils.js
-
 /**
  * 驗證終端啟動前置條件（同步版本，保持向後相容）
  * @param {Object} dir - 目錄物件 { path }
