@@ -45,10 +45,12 @@ function validatePathSafety(path) {
 
   // 危險的 shell 元字符模式
   // 注意：不包含 & 因為 Windows 文件名可能包含 &
+  // 注意：不封鎖單獨的 $，因為 Unix 路徑可能包含 $（如 /home/$USER）
   // 注意：檢查順序很重要，更具體的模式應該在前面
   const dangerousPatterns = [
-    { pattern: /\$\(/, reason: 'COMMAND_SUBSTITUTION' }, // $(cmd) - 要在 $ 之前檢查
-    { pattern: /[;|`$]/, reason: 'SHELL_METACHAR' }, // 命令分隔/管道/反引號/$
+    { pattern: /\$\(/, reason: 'COMMAND_SUBSTITUTION' }, // $(cmd)
+    { pattern: /\$\{/, reason: 'COMMAND_SUBSTITUTION' }, // ${var} - shell 變數展開
+    { pattern: /[;|`]/, reason: 'SHELL_METACHAR' }, // 命令分隔/管道/反引號
     { pattern: />>|>|</, reason: 'REDIRECTION' }, // 重導向
     { pattern: /\n|\r/, reason: 'NEWLINE' }, // 換行符
   ];
