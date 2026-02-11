@@ -217,7 +217,7 @@ export function openConfirmModal(options) {
   return openModal({
     id: 'confirm-modal',
     title,
-    content: `<p class="confirm-message">${message}</p>`,
+    content: '<p class="confirm-message">' + escapeHtml(message) + '</p>',
     confirmText,
     cancelText,
     confirmClass: danger ? 'btn-danger' : 'btn-primary',
