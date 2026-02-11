@@ -13,6 +13,7 @@ import {
   openTerminalWithType as openTerminalWithTypeUtil,
   getErrorMessage,
   getTerminalDisplayName,
+  getDefaultTerminalId,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { getElement } from '../utils/dom-cache.js';
@@ -179,7 +180,7 @@ export function renderFavoritesList() {
     '<div class="directory-list">' +
     favoriteDirs
       .map(dir => {
-        const terminalId = dir.terminalId || 'wsl-ubuntu';
+        const terminalId = dir.terminalId || getDefaultTerminalId();
         const terminalIcon = getTerminalIcon(terminalId);
         const terminalName = getTerminalName(terminalId);
         const pathValid = isPathValid(dir.path);
@@ -330,7 +331,7 @@ function showFavoritesContextMenu(event, dirId) {
 
   const menuItems = [
     {
-      icon: getTerminalIcon(dir.terminalId || 'wsl-ubuntu'),
+      icon: getTerminalIcon(dir.terminalId || getDefaultTerminalId()),
       label: t('contextMenu.openDefault'),
       onClick: () => openTerminal(dirId),
     },

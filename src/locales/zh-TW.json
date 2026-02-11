@@ -307,6 +307,8 @@
   },
   "tray": {
     "showWindow": "顯示視窗",
+    "favorites": "最愛",
+    "recent": "最近使用",
     "quit": "結束"
   },
   "dialog": {
@@ -340,7 +342,9 @@
     "wsl-ubuntu": "WSL Ubuntu",
     "powershell": "PowerShell",
     "git-bash": "Git Bash",
-    "file-manager": "檔案總管"
+    "file-manager": "檔案總管",
+    "terminal-app": "終端機",
+    "default-terminal": "終端機"
   },
   "error": {
     "action": {

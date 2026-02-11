@@ -10,6 +10,16 @@ import { t } from '../i18n.js';
 import { switchTab } from '../ui/tabs.js';
 
 /**
+ * 取得預設終端 ID（從配置中取得第一個非檔案管理器的終端）
+ * @returns {string} 預設終端 ID
+ */
+export function getDefaultTerminalId() {
+  const config = getConfig();
+  const nonFileManager = config?.terminals?.find(t => t.id !== 'file-manager' && !t.hidden);
+  return nonFileManager?.id || config?.terminals?.[0]?.id || 'file-manager';
+}
+
+/**
  * 取得終端顯示名稱（支援 i18n）
  * 內建終端嘗試翻譯，自訂終端直接使用 name
  * @param {Object} terminal - 終端配置物件

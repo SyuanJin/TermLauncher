@@ -2,7 +2,7 @@
  * MCP 工具：專案目錄管理
  * list_projects, add_project, update_project, remove_project
  */
-const { loadConfig, saveConfig } = require('../../config');
+const { loadConfig, saveConfig, getDefaultTerminalId } = require('../../config');
 const { getMainWindow } = require('../../window');
 
 /**
@@ -98,7 +98,7 @@ function registerProjectTools(server, z) {
         name,
         icon: icon || '📁',
         path,
-        terminalId: terminalId || config.terminals?.[0]?.id || 'wsl-ubuntu',
+        terminalId: terminalId || config.terminals?.[0]?.id || getDefaultTerminalId(),
         group: group || 'default',
         lastUsed: null,
         order: config.directories.length,

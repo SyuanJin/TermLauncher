@@ -6,6 +6,7 @@ const { app } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { createLogger } = require('./logger');
+const { migrateConfig: migrateConfigUtil } = require('./utils/config-migration');
 
 const logger = createLogger('Config');
 
@@ -35,46 +36,120 @@ function getFileManagerTerminal() {
   }
 }
 
-// 預設終端列表
-const defaultTerminals = [
-  { ...getFileManagerTerminal(), order: 0 },
-  {
-    id: 'wsl-ubuntu',
-    name: 'WSL Ubuntu',
-    icon: '🐧',
-    command: 'wt.exe -w 0 new-tab wsl.exe -d Ubuntu --cd {path}',
-    pathFormat: 'unix',
-    isBuiltin: true,
-    hidden: false,
-    order: 1,
-  },
-  {
-    id: 'git-bash',
-    name: 'Git Bash',
-    icon: '🐱',
-    command: '"C:\\Program Files\\Git\\git-bash.exe" "--cd={path}"',
-    pathFormat: 'windows',
-    isBuiltin: true,
-    hidden: false,
-    order: 2,
-  },
-  {
-    id: 'powershell',
-    name: 'PowerShell',
-    icon: '⚡',
-    command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
-    pathFormat: 'windows',
-    isBuiltin: true,
-    hidden: false,
-    order: 3,
-  },
-];
+/**
+ * 根據平台回傳預設終端列表
+ * @returns {Array} 預設終端配置陣列
+ */
+function getDefaultTerminals() {
+  const fileManager = { ...getFileManagerTerminal(), order: 0 };
 
-// 預設群組列表
+  switch (process.platform) {
+    case 'darwin':
+      return [
+        fileManager,
+        {
+          id: 'terminal-app',
+          name: 'Terminal',
+          icon: '🖥️',
+          command: 'open -a Terminal {path}',
+          pathFormat: 'unix',
+          isBuiltin: true,
+          hidden: false,
+          order: 1,
+        },
+      ];
+
+    case 'linux':
+      return [
+        fileManager,
+        {
+          id: 'default-terminal',
+          name: 'Terminal',
+          icon: '🖥️',
+          command: 'x-terminal-emulator --working-directory={path}',
+          pathFormat: 'unix',
+          isBuiltin: true,
+          hidden: false,
+          order: 1,
+        },
+      ];
+
+    default:
+      // Windows
+      return [
+        fileManager,
+        {
+          id: 'wsl-ubuntu',
+          name: 'WSL Ubuntu',
+          icon: '🐧',
+          command: 'wt.exe -w 0 new-tab wsl.exe -d Ubuntu --cd {path}',
+          pathFormat: 'unix',
+          isBuiltin: true,
+          hidden: false,
+          order: 1,
+        },
+        {
+          id: 'git-bash',
+          name: 'Git Bash',
+          icon: '🐱',
+          command: '"C:\\Program Files\\Git\\git-bash.exe" "--cd={path}"',
+          pathFormat: 'windows',
+          isBuiltin: true,
+          hidden: false,
+          order: 2,
+        },
+        {
+          id: 'powershell',
+          name: 'PowerShell',
+          icon: '⚡',
+          command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
+          pathFormat: 'windows',
+          isBuiltin: true,
+          hidden: false,
+          order: 3,
+        },
+      ];
+  }
+}
+
+// 預設終端列表（根據當前平台生成）
+const defaultTerminals = getDefaultTerminals();
+
+/**
+ * 取得平台預設的終端 ID
+ * @returns {string} 預設終端 ID
+ */
+function getDefaultTerminalId() {
+  switch (process.platform) {
+    case 'darwin':
+      return 'terminal-app';
+    case 'linux':
+      return 'default-terminal';
+    default:
+      return 'wsl-ubuntu';
+  }
+}
+
+/**
+ * 取得平台預設的使用者目錄路徑
+ * @returns {string} 預設路徑
+ */
+function getDefaultUserPath() {
+  switch (process.platform) {
+    case 'darwin':
+      return '/Users';
+    case 'linux':
+      return '/home';
+    default:
+      return 'C:\\Users';
+  }
+}
+
+// 預設群組列表（name 使用英文，實際顯示由 renderer 透過 i18n 處理）
 const defaultGroups = [
   {
     id: 'default',
-    name: '預設',
+    name: 'Default',
     icon: '📁',
     isDefault: true,
     order: 0,
@@ -88,8 +163,8 @@ const defaultConfig = {
       id: 1,
       name: '範例專案',
       icon: '📁',
-      path: 'C:\\Users',
-      terminalId: 'wsl-ubuntu',
+      path: getDefaultUserPath(),
+      terminalId: getDefaultTerminalId(),
       group: 'default',
       lastUsed: null,
       order: 0,
@@ -115,189 +190,20 @@ const defaultConfig = {
 };
 
 /**
- * 遷移舊版配置
- * 支援 v1.x 到 v2.0.0 的配置遷移
+ * 遷移舊版配置（委派至 config-migration 工具模組）
  * @param {Object} config - 配置物件
- * @returns {Object} 遷移後的配置
+ * @returns {{ config: Object, needsSave: boolean }} 遷移結果
  */
 function migrateConfig(config) {
-  let needsSave = false;
-
-  // === 終端遷移 ===
-  // 確保 terminals 陣列存在
-  if (!config.terminals) {
-    config.terminals = [...defaultTerminals];
-    needsSave = true;
-  } else {
-    // 確保內建終端存在且為最新版本
-    defaultTerminals.forEach(defaultTerm => {
-      const existingIndex = config.terminals.findIndex(t => t.id === defaultTerm.id);
-      if (existingIndex === -1) {
-        config.terminals.push(defaultTerm);
-        needsSave = true;
-      } else if (config.terminals[existingIndex].isBuiltin) {
-        // 保留使用者的 hidden 和 order 設定
-        const userHidden = config.terminals[existingIndex].hidden;
-        const userOrder = config.terminals[existingIndex].order;
-        config.terminals[existingIndex] = {
-          ...defaultTerm,
-          hidden: userHidden ?? false,
-          order: userOrder ?? defaultTerm.order,
-        };
-      }
-    });
-
-    // 為所有終端新增 hidden 欄位（如果不存在）
-    config.terminals.forEach((terminal, index) => {
-      if (terminal.hidden === undefined) {
-        terminal.hidden = false;
-        needsSave = true;
-      }
-      if (terminal.order === undefined) {
-        terminal.order = index;
-        needsSave = true;
-      }
-    });
-
-    // 按 order 物理排序陣列
-    config.terminals.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const result = migrateConfigUtil(config, {
+    defaultTerminals,
+    defaultGroups,
+    defaultSettings: defaultConfig.settings,
+  });
+  if (result.needsSave) {
+    logger.info('Config migration applied');
   }
-
-  // === 群組遷移 ===
-  // 偵測群組是否為舊版字串陣列格式
-  if (Array.isArray(config.groups) && config.groups.length > 0) {
-    if (typeof config.groups[0] === 'string') {
-      // 舊版格式：字串陣列 -> 新版格式：物件陣列
-      logger.info('Migrating groups from string array to object array');
-      config.groups = config.groups.map((name, index) => ({
-        id: name === '預設' ? 'default' : `group-${Date.now()}-${index}`,
-        name,
-        icon: '📁',
-        isDefault: name === '預設',
-        order: index,
-      }));
-      needsSave = true;
-    } else {
-      // 已是物件陣列，確保有必要欄位
-      config.groups.forEach((group, index) => {
-        if (group.id === undefined) {
-          group.id = group.name === '預設' ? 'default' : `group-${Date.now()}-${index}`;
-          needsSave = true;
-        }
-        if (group.icon === undefined) {
-          group.icon = '📁';
-          needsSave = true;
-        }
-        if (group.isDefault === undefined) {
-          group.isDefault = group.name === '預設' || group.id === 'default';
-          needsSave = true;
-        }
-        if (group.order === undefined) {
-          group.order = index;
-          needsSave = true;
-        }
-      });
-    }
-  } else {
-    // 沒有群組，使用預設
-    config.groups = [...defaultGroups];
-    needsSave = true;
-  }
-
-  // 確保預設群組存在
-  const hasDefaultGroup = config.groups.some(g => g.isDefault || g.id === 'default');
-  if (!hasDefaultGroup) {
-    config.groups.unshift({
-      id: 'default',
-      name: '預設',
-      icon: '📁',
-      isDefault: true,
-      order: 0,
-    });
-    // 更新其他群組的 order
-    config.groups.forEach((g, i) => {
-      g.order = i;
-    });
-    needsSave = true;
-  }
-
-  // === 目錄遷移 ===
-  if (config.directories) {
-    config.directories.forEach((dir, index) => {
-      // 遷移 type 為 terminalId（舊版相容）
-      if (dir.type && !dir.terminalId) {
-        if (dir.type === 'wsl') {
-          dir.terminalId = 'wsl-ubuntu';
-        } else if (dir.type === 'powershell') {
-          dir.terminalId = 'powershell';
-        }
-        delete dir.type;
-        needsSave = true;
-      }
-
-      // 新增 icon 欄位
-      if (dir.icon === undefined) {
-        dir.icon = '📁';
-        needsSave = true;
-      }
-
-      // 新增 order 欄位
-      if (dir.order === undefined) {
-        dir.order = index;
-        needsSave = true;
-      }
-
-      // 遷移群組名稱為群組 ID
-      if (dir.group && typeof dir.group === 'string') {
-        // 檢查是否為群組名稱（舊版）或群組 ID（新版）
-        const groupById = config.groups.find(g => g.id === dir.group);
-        if (!groupById) {
-          // 是群組名稱，轉換為群組 ID
-          const groupByName = config.groups.find(g => g.name === dir.group);
-          if (groupByName) {
-            dir.group = groupByName.id;
-            needsSave = true;
-          } else {
-            // 找不到對應群組，歸類到預設
-            dir.group = 'default';
-            needsSave = true;
-          }
-        }
-      }
-    });
-  }
-
-  // === 新增 favorites 陣列 ===
-  if (!config.favorites) {
-    config.favorites = [];
-    needsSave = true;
-  }
-
-  // === 設定遷移 ===
-  if (!config.settings) {
-    config.settings = { ...defaultConfig.settings };
-    needsSave = true;
-  } else {
-    // 新增 showTabText 設定
-    if (config.settings.showTabText === undefined) {
-      config.settings.showTabText = true;
-      needsSave = true;
-    }
-
-    // 新增 recentLimit 設定
-    if (config.settings.recentLimit === undefined) {
-      config.settings.recentLimit = 10;
-      needsSave = true;
-    }
-
-    // 新增 MCP 設定
-    if (config.settings.mcp === undefined) {
-      config.settings.mcp = { enabled: true, port: 23549 };
-      needsSave = true;
-    }
-  }
-
-  return { config, needsSave };
+  return result;
 }
 
 /**
@@ -586,7 +492,7 @@ function importConfigAdvanced(importData, options = {}) {
           errors.push(
             `Terminal "${importedDir.terminalId}" not found for directory "${importedDir.name}", using default`
           );
-          importedDir.terminalId = 'wsl-ubuntu';
+          importedDir.terminalId = getDefaultTerminalId();
         }
 
         // 檢查群組 ID 是否存在
@@ -672,4 +578,6 @@ module.exports = {
   exportConfigAdvanced,
   importConfigAdvanced,
   getExportPreview,
+  getDefaultTerminalId,
+  migrateConfig,
 };

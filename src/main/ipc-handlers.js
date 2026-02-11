@@ -13,6 +13,7 @@ const {
   exportConfigAdvanced,
   importConfigAdvanced,
   getExportPreview,
+  getDefaultTerminalId,
 } = require('./config');
 const { openTerminal, previewCommand, detectInstalledTerminals } = require('./terminal');
 const { registerShortcut, getLastRegistrationResult } = require('./shortcuts');
@@ -56,6 +57,7 @@ function setupIpcHandlers() {
     const result = saveConfig(config);
     if (result) {
       registerShortcut(); // 重新註冊快捷鍵
+      updateTrayMenu(); // 更新托盤選單（最愛/最近可能變更）
     }
     return result;
   });
@@ -79,7 +81,7 @@ function setupIpcHandlers() {
     }
 
     // 取得終端配置
-    const terminalId = dir.terminalId || 'wsl-ubuntu';
+    const terminalId = dir.terminalId || getDefaultTerminalId();
     const terminal = config.terminals?.find(t => t.id === terminalId);
 
     if (!terminal) {
@@ -111,7 +113,7 @@ function setupIpcHandlers() {
 
     // 取得終端配置
     const terminal = config.terminals?.find(
-      t => t.id === (terminalId || dir.terminalId || 'wsl-ubuntu')
+      t => t.id === (terminalId || dir.terminalId || getDefaultTerminalId())
     );
 
     if (!terminal) {
