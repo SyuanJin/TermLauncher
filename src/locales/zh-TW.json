@@ -227,7 +227,8 @@
       "about": {
         "title": "ℹ️ 關於",
         "description": "快速開啟專案的桌面工具",
-        "github": "GitHub"
+        "github": "GitHub",
+        "checkUpdate": "檢查更新"
       }
     },
     "shortcuts": {
@@ -297,7 +298,12 @@
     "mcpPortInUse": "埠號 {port} 已被佔用",
     "mcpConfigCopied": "MCP 配置已複製到剪貼簿",
     "previewFailed": "無法預覽命令",
-    "commandCopied": "命令已複製到剪貼簿"
+    "commandCopied": "命令已複製到剪貼簿",
+    "updateAvailable": "有新版本 v{version} 可用",
+    "updateDownload": "前往下載",
+    "updateLatest": "已是最新版本",
+    "updateCheckFailed": "無法檢查更新，請稍後再試",
+    "updateChecking": "檢查中..."
   },
   "tray": {
     "showWindow": "顯示視窗",

@@ -25,7 +25,7 @@ import {
 } from './ui/settings.js';
 import { renderLaunchersTab, setupLaunchersEvents } from './ui/launchers.js';
 import { recordShortcut, saveShortcutFromInput } from './utils/shortcuts.js';
-import { initToast, showWarning } from './ui/toast.js';
+import { initToast, showWarning, showInfo } from './ui/toast.js';
 import { initErrorHandler } from './error-handler.js';
 import { initKeyboardShortcuts } from './utils/keyboard.js';
 
@@ -134,6 +134,31 @@ async function checkStartupErrors() {
 }
 
 /**
+ * 背景檢查版本更新
+ * 不阻塞啟動流程，靜默檢查
+ */
+async function checkForUpdates() {
+  try {
+    const result = await api.checkForUpdates();
+    if (result.hasUpdate) {
+      showInfo(t('toast.updateAvailable', { version: result.latestVersion }), {
+        persistent: true,
+        actions: [
+          {
+            label: t('toast.updateDownload'),
+            onClick: () => {
+              api.openExternal(result.releaseUrl);
+            },
+          },
+        ],
+      });
+    }
+  } catch {
+    // 靜默失敗，不影響使用者體驗
+  }
+}
+
+/**
  * 初始化應用程式
  */
 async function init() {
@@ -167,6 +192,9 @@ async function init() {
 
   // 檢查啟動時的錯誤狀態
   await checkStartupErrors();
+
+  // 背景檢查版本更新（不阻塞 UI）
+  checkForUpdates();
 }
 
 // 啟動應用程式

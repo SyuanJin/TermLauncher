@@ -20,6 +20,7 @@ const { getMainWindow } = require('./window');
 const { getAvailableLocales, loadLocale, t } = require('./i18n');
 const { updateTrayMenu } = require('./tray');
 const { startMcpServer, stopMcpServer, getMcpStatus } = require('./mcp');
+const { checkForUpdates } = require('./updater');
 const { createLogger } = require('./logger');
 const {
   validateConfig,
@@ -424,6 +425,11 @@ function setupIpcHandlers() {
 
   ipcMain.handle('get-mcp-status', () => {
     return getMcpStatus();
+  });
+
+  // 版本更新檢查
+  ipcMain.handle('check-for-updates', async () => {
+    return await checkForUpdates();
   });
 
   // 視窗控制
