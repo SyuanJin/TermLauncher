@@ -78,7 +78,19 @@ jobs:
             $notes >> $env:GITHUB_OUTPUT
             $delimiter >> $env:GITHUB_OUTPUT
           } else {
+            Write-Warning "No CHANGELOG entry found for version $version"
             "RELEASE_NOTES=Release $tag" >> $env:GITHUB_OUTPUT
+          }
+        shell: pwsh
+
+      - name: Validate version consistency
+        run: |
+          $tag = if ("${{ inputs.tag }}") { "${{ inputs.tag }}" } else { "${{ github.ref_name }}" }
+          $version = $tag -replace '^v', ''
+          $pkgVersion = (Get-Content package.json | ConvertFrom-Json).version
+          if ($pkgVersion -ne $version) {
+            Write-Error "Version mismatch: package.json ($pkgVersion) != tag ($version)"
+            exit 1
           }
         shell: pwsh
 
