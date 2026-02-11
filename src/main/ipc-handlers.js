@@ -177,6 +177,11 @@ function setupIpcHandlers() {
       try {
         const data = fs.readFileSync(result.filePaths[0], 'utf-8');
         const config = JSON.parse(data);
+        const validation = validateConfig(config);
+        if (!validation.valid) {
+          logger.warn(`Invalid imported config: ${validation.error}`);
+          return { success: false, error: validation.error };
+        }
         saveConfig(config);
         return { success: true, config };
       } catch (err) {
