@@ -55,7 +55,12 @@ src/
 │       ├── error-handler.js # 錯誤處理
 │       ├── ui/          # UI 模組 (tabs, recent, favorites, groups, directories, launchers, settings, modal, contextMenu, dragDrop, toast)
 │       └── utils/       # 工具函式
-│           └── debounce.js  # 防抖函式
+│           ├── debounce.js   # 防抖函式
+│           ├── dom-cache.js  # DOM 快取
+│           ├── escape.js     # HTML/屬性轉義
+│           ├── keyboard.js   # 應用內鍵盤快捷鍵
+│           ├── shortcuts.js  # 快捷鍵顯示工具
+│           └── terminal.js   # 啟動器輔助函式
 │
 └── locales/             # 語系檔 (zh-TW, en-US)
 ```
