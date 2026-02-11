@@ -248,7 +248,7 @@
 
 .path-input-wrapper input {
   flex: 1;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 }
 
 .browse-btn {
@@ -324,7 +324,7 @@
 }
 
 .dir-path {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -591,7 +591,7 @@ input:checked + .slider:before {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 13px;
   width: 150px;
   text-align: center;
@@ -792,7 +792,7 @@ input:checked + .slider:before {
 }
 
 .terminal-command {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 11px;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -910,7 +910,7 @@ input:checked + .slider:before {
 }
 
 .mono-input {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 12px;
 }
 
@@ -1242,13 +1242,13 @@ input:checked + .slider:before {
 }
 
 .preview-value.path {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 12px;
   color: var(--text-secondary);
 }
 
 .preview-value.command {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 12px;
   background: var(--bg-tertiary);
   border-color: var(--accent-blue);
@@ -1495,7 +1495,7 @@ body.hide-tab-text .tab {
 .about-version {
   font-size: 14px;
   color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 }
 
 .about-desc {
@@ -1571,7 +1571,7 @@ body.hide-tab-text .tab {
 }
 
 .shortcut-item kbd {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 12px;
   padding: 4px 8px;
   background: var(--bg-tertiary);
@@ -1895,7 +1895,7 @@ body.hide-tab-text .tab {
 }
 
 .guide-item-command {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 11px;
   padding: 3px 8px;
   background: var(--bg-tertiary);
@@ -1963,7 +1963,7 @@ body.hide-tab-text .tab {
 }
 
 .mcp-tool-badge {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 11px;
   padding: 2px 8px;
   background: rgba(88, 166, 255, 0.1);

@@ -10,7 +10,7 @@
 }
 
 body {
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   height: 100vh;
