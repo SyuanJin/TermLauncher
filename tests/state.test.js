@@ -23,7 +23,6 @@ const {
   setConfig,
   loadConfig,
   saveConfig,
-  getConfigSnapshot,
   isConfigLoaded,
   resetConfig,
   validateAllPaths,
@@ -64,43 +63,6 @@ describe('state.js', () => {
 
     it('配置未設定時應返回 null', () => {
       expect(getConfig()).toBeNull();
-    });
-  });
-
-  describe('getConfigSnapshot', () => {
-    it('配置未載入時應返回 null', () => {
-      expect(getConfigSnapshot()).toBeNull();
-    });
-
-    it('應返回配置的深拷貝', () => {
-      const testConfig = {
-        directories: [{ id: 1, name: 'test' }],
-        terminals: [{ id: 'wsl', name: 'WSL' }],
-      };
-      setConfig(testConfig);
-
-      const snapshot = getConfigSnapshot();
-
-      // 應該是不同的物件
-      expect(snapshot).not.toBe(testConfig);
-      // 內容應該相同
-      expect(snapshot).toEqual(testConfig);
-      // 深層物件也應該是不同的引用
-      expect(snapshot.directories).not.toBe(testConfig.directories);
-      expect(snapshot.directories[0]).not.toBe(testConfig.directories[0]);
-    });
-
-    it('修改快照不應影響原始配置', () => {
-      const testConfig = {
-        directories: [{ id: 1, name: 'original' }],
-      };
-      setConfig(testConfig);
-
-      const snapshot = getConfigSnapshot();
-      snapshot.directories[0].name = 'modified';
-
-      // 原始配置應該不受影響
-      expect(getConfig().directories[0].name).toBe('original');
     });
   });
 

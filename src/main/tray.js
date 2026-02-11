@@ -123,16 +123,7 @@ function updateTrayMenu() {
   }
 }
 
-/**
- * 取得托盤實例
- * @returns {Tray|null} 托盤實例
- */
-function getTray() {
-  return tray;
-}
-
 module.exports = {
   createTray,
-  getTray,
   updateTrayMenu,
 };

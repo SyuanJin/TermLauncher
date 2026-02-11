@@ -24,15 +24,6 @@ const ShortcutError = {
 let lastRegistrationResult = null;
 
 /**
- * 檢測快捷鍵是否已被註冊
- * @param {string} shortcut - 快捷鍵組合
- * @returns {boolean}
- */
-function isShortcutRegistered(shortcut) {
-  return globalShortcut.isRegistered(shortcut);
-}
-
-/**
  * 註冊全域快捷鍵
  * @param {string} [customShortcut] - 可選的自訂快捷鍵，若未提供則從配置讀取
  * @returns {Object} { success: boolean, shortcut: string, errorType?: string }
@@ -104,42 +95,9 @@ function unregisterAllShortcuts() {
   globalShortcut.unregisterAll();
 }
 
-/**
- * 驗證快捷鍵格式
- * @param {string} shortcut - 快捷鍵組合
- * @returns {Object} { valid: boolean, errorType?: string }
- */
-function validateShortcut(shortcut) {
-  if (!shortcut || typeof shortcut !== 'string') {
-    return {
-      valid: false,
-      errorType: ShortcutError.INVALID_SHORTCUT,
-    };
-  }
-
-  // 檢測是否包含修飾鍵
-  const hasModifier =
-    shortcut.includes('Ctrl') ||
-    shortcut.includes('Alt') ||
-    shortcut.includes('Shift') ||
-    shortcut.includes('Meta') ||
-    shortcut.includes('Command');
-
-  if (!hasModifier) {
-    return {
-      valid: false,
-      errorType: ShortcutError.INVALID_SHORTCUT,
-    };
-  }
-
-  return { valid: true };
-}
-
 module.exports = {
   registerShortcut,
   unregisterAllShortcuts,
-  isShortcutRegistered,
-  validateShortcut,
   getLastRegistrationResult,
   ShortcutError,
 };

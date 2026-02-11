@@ -23,16 +23,6 @@ export function getConfig() {
 }
 
 /**
- * 取得配置的深拷貝（只讀用途）
- * 用於需要讀取配置但不想意外修改的場景
- * @returns {Object|null} 配置物件的深拷貝
- */
-export function getConfigSnapshot() {
-  if (!config) return null;
-  return JSON.parse(JSON.stringify(config));
-}
-
-/**
  * 設定配置
  * @param {Object} newConfig - 新的配置物件
  */
