@@ -57,11 +57,16 @@ TermLauncher is a cross-platform desktop application that lets you quickly open 
 
 ## Installation
 
-### Option 1: Download exe (Recommended)
+### Option 1: Download pre-built binaries (Recommended)
 
-1. Go to the [Releases](../../releases) page
-2. Download `TermLauncher-Portable.exe`
-3. Double-click to run
+Go to the [Releases](../../releases) page and download for your platform:
+
+| Platform | File | Notes |
+| --- | --- | --- |
+| Windows | `TermLauncher-Portable.exe` | Portable, double-click to run |
+| Windows | `TermLauncher Setup *.exe` | Installer edition |
+| macOS | `TermLauncher-*.dmg` | Unsigned, see note below |
+| Linux | `TermLauncher-*.AppImage` | Run `chmod +x` first |
 
 ### Option 2: Run from source
 
@@ -129,13 +134,13 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 
 - macOS 10.15 (Catalina) or later
 - Supported terminals: Terminal.app, iTerm2, Hyper, Warp, Alacritty, Kitty
-- Must build from source (`npm run build:mac`)
+
+> **macOS unsigned app notice:** The DMG is not signed with an Apple Developer certificate, so macOS Gatekeeper will block it. To open: right-click the app → select "Open" → confirm. After the first launch it will open normally.
 
 ### Linux (Experimental)
 
 - Ubuntu 20.04+ / Fedora 35+ / Arch Linux and other major distributions
 - Supported terminals: GNOME Terminal, Konsole, Tilix, Alacritty, Kitty, xterm, Terminator, Xfce Terminal
-- Must build from source (`npm run build:linux`)
 
 > **Note:** macOS and Linux support is currently experimental. Some features may not work as expected. Bug reports are welcome!
 

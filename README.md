@@ -57,11 +57,16 @@ TermLauncher 是一個跨平台桌面應用，讓你能夠快速以任意應用�
 
 ## 安裝方式
 
-### 方法一：下載 exe（推薦）
+### 方法一：下載預建版本（推薦）
 
-1. 前往 [Releases](../../releases) 頁面
-2. 下載 `TermLauncher-Portable.exe`
-3. 雙擊執行即可
+前往 [Releases](../../releases) 頁面，依作業系統下載對應版本：
+
+| 平台 | 檔案 | 說明 |
+| --- | --- | --- |
+| Windows | `TermLauncher-Portable.exe` | 便攜版，雙擊即用 |
+| Windows | `TermLauncher Setup *.exe` | 安裝版 |
+| macOS | `TermLauncher-*.dmg` | 未簽名，需右鍵開啟（見下方說明） |
+| Linux | `TermLauncher-*.AppImage` | 需先 `chmod +x` 再執行 |
 
 ### 方法二：從原始碼運行
 
@@ -129,13 +134,13 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 
 - macOS 10.15 (Catalina) 或更新版本
 - 支援的終端：Terminal.app、iTerm2、Hyper、Warp、Alacritty、Kitty
-- 需從原始碼建置（`npm run build:mac`）
+
+> **macOS 未簽名應用說明**：由於 DMG 未經 Apple 簽名，macOS Gatekeeper 會阻擋開啟。首次執行請：右鍵點擊應用程式 → 選擇「打開」→ 確認開啟。之後即可正常使用。
 
 ### Linux（實驗性支援）
 
 - Ubuntu 20.04+ / Fedora 35+ / Arch Linux 等主流發行版
 - 支援的終端：GNOME Terminal、Konsole、Tilix、Alacritty、Kitty、xterm、Terminator、Xfce Terminal
-- 需從原始碼建置（`npm run build:linux`）
 
 > **注意**：macOS 和 Linux 支援目前為實驗性，部分功能可能無法正常運作。歡迎回報問題！
 
