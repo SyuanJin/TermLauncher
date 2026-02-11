@@ -11,6 +11,7 @@ import { renderTerminalSelect, renderDirectories } from './directories.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { initTerminalsDragDrop } from './dragDrop.js';
 import { getTerminalDisplayName } from '../utils/terminal.js';
+import { debounce } from '../utils/debounce.js';
 
 /**
  * 探測結果快取
@@ -731,6 +732,6 @@ export function setupLaunchersEvents() {
   // 搜尋輸入事件
   const searchInput = document.getElementById('launchersSearchInput');
   if (searchInput) {
-    searchInput.addEventListener('input', renderTerminalsList);
+    searchInput.addEventListener('input', debounce(renderTerminalsList, 150));
   }
 }

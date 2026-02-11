@@ -9,6 +9,7 @@ import { t } from '../i18n.js';
 import { renderRecentList } from './recent.js';
 import { initFavoritesDragDrop } from './dragDrop.js';
 import { showContextMenu } from './contextMenu.js';
+import { debounce } from '../utils/debounce.js';
 import {
   openTerminal as openTerminalUtil,
   openTerminalWithType as openTerminalWithTypeUtil,
@@ -398,6 +399,6 @@ export function isFavorite(id) {
 export function setupFavoritesEvents() {
   const searchInput = getElement('favoritesSearchInput');
   if (searchInput) {
-    searchInput.addEventListener('input', renderFavoritesList);
+    searchInput.addEventListener('input', debounce(renderFavoritesList, 150));
   }
 }

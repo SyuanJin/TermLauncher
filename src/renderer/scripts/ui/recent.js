@@ -8,6 +8,7 @@ import { showToast } from './toast.js';
 import { t } from '../i18n.js';
 import { showContextMenu } from './contextMenu.js';
 import { isFavorite, toggleFavorite } from './favorites.js';
+import { debounce } from '../utils/debounce.js';
 import {
   openTerminal as openTerminalUtil,
   openTerminalWithType as openTerminalWithTypeUtil,
@@ -310,6 +311,6 @@ export async function clearAllRecent() {
 export function setupRecentEvents() {
   const searchInput = getElement('recentSearchInput');
   if (searchInput) {
-    searchInput.addEventListener('input', renderRecentList);
+    searchInput.addEventListener('input', debounce(renderRecentList, 150));
   }
 }
