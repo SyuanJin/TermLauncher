@@ -392,14 +392,17 @@ function setupIpcHandlers() {
     }
   });
 
-  // 驗證多個路徑是否存在
+  // 驗證多個路徑是否存在（限制最多 500 筆以避免阻塞主進程）
   ipcMain.handle('validate-paths', (event, paths) => {
     if (!Array.isArray(paths)) {
       return {};
     }
 
+    const MAX_PATHS = 500;
+    const limitedPaths = paths.length > MAX_PATHS ? paths.slice(0, MAX_PATHS) : paths;
+
     const results = {};
-    for (const p of paths) {
+    for (const p of limitedPaths) {
       if (typeof p !== 'string') continue;
       try {
         results[p] = fs.existsSync(p) && fs.statSync(p).isDirectory();
