@@ -447,7 +447,9 @@ function importConfigAdvanced(importData, options = {}) {
     if (mergeGroups) {
       // 合併模式：用 name 語意去重
       importData.groups.forEach(importedGroup => {
-        const existingByName = newConfig.groups.find(g => g.name === importedGroup.name);
+        const existingByName = newConfig.groups.find(
+          g => g.name.toLowerCase() === importedGroup.name.toLowerCase()
+        );
         if (existingByName) {
           // 同名群組已存在，跳過並建立 ID 映射
           groupIdMap.set(importedGroup.id, existingByName.id);
@@ -557,6 +559,10 @@ function importConfigAdvanced(importData, options = {}) {
       newConfig.favorites = importData.favorites;
     }
   }
+
+  // 過濾 favorites 中指向不存在目錄的 ID
+  const validDirIds = new Set(newConfig.directories.map(d => d.id));
+  newConfig.favorites = newConfig.favorites.filter(fId => validDirIds.has(fId));
 
   // 儲存配置
   const saveResult = saveConfig(newConfig);
