@@ -227,7 +227,8 @@
       "about": {
         "title": "ℹ️ About",
         "description": "A desktop tool for quickly launching projects",
-        "github": "GitHub"
+        "github": "GitHub",
+        "checkUpdate": "Check for Updates"
       }
     },
     "shortcuts": {
@@ -297,7 +298,12 @@
     "mcpPortInUse": "Port {port} is already in use",
     "mcpConfigCopied": "MCP config copied to clipboard",
     "previewFailed": "Failed to preview command",
-    "commandCopied": "Command copied to clipboard"
+    "commandCopied": "Command copied to clipboard",
+    "updateAvailable": "New version v{version} is available",
+    "updateDownload": "Download",
+    "updateLatest": "You are on the latest version",
+    "updateCheckFailed": "Unable to check for updates, please try again later",
+    "updateChecking": "Checking..."
   },
   "tray": {
     "showWindow": "Show Window",

@@ -182,6 +182,12 @@ export const api = {
   validatePaths: paths => window.electronAPI.validatePaths(paths),
 
   /**
+   * 檢查版本更新
+   * @returns {Promise<Object>} { hasUpdate, currentVersion, latestVersion, releaseUrl }
+   */
+  checkForUpdates: () => window.electronAPI.checkForUpdates(),
+
+  /**
    * 啟動 MCP Server
    * @param {number} port - 埠號
    * @returns {Promise<Object>} { success, port?, error? }

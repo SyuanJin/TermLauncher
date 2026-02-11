@@ -408,6 +408,45 @@ export async function resetAllSettings() {
 }
 
 /**
+ * 手動檢查版本更新
+ */
+export async function checkForUpdatesManual() {
+  const btn = document.getElementById('btnCheckUpdate');
+  if (btn) {
+    btn.disabled = true;
+    btn.querySelector('span:last-child').textContent = t('toast.updateChecking');
+  }
+
+  try {
+    const result = await api.checkForUpdates();
+    if (result.hasUpdate) {
+      showToast(t('toast.updateAvailable', { version: result.latestVersion }), 'info', {
+        persistent: true,
+        actions: [
+          {
+            label: t('toast.updateDownload'),
+            onClick: () => {
+              api.openExternal(result.releaseUrl);
+            },
+          },
+        ],
+      });
+    } else if (result.error) {
+      showToast(t('toast.updateCheckFailed'), 'warning');
+    } else {
+      showToast(t('toast.updateLatest'), 'success');
+    }
+  } catch {
+    showToast(t('toast.updateCheckFailed'), 'warning');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.querySelector('span:last-child').textContent = t('ui.settings.about.checkUpdate');
+    }
+  }
+}
+
+/**
  * 開啟 GitHub
  */
 export function openGithub() {
@@ -607,6 +646,7 @@ export function setupSettingsEvents() {
   document.getElementById('btnClearLogs')?.addEventListener('click', clearLogs);
   document.getElementById('btnResetSettings')?.addEventListener('click', resetAllSettings);
   document.getElementById('btnOpenGithub')?.addEventListener('click', openGithub);
+  document.getElementById('btnCheckUpdate')?.addEventListener('click', checkForUpdatesManual);
 
   // MCP 設定
   document.getElementById('mcpEnabled')?.addEventListener('change', changeMcpEnabled);
