@@ -97,6 +97,7 @@
   padding: 48px 24px;
   text-align: center;
   color: var(--text-secondary);
+  min-height: 200px;
 }
 
 .empty-state .empty-icon {
@@ -105,8 +106,17 @@
   opacity: 0.5;
 }
 
+.empty-state svg {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
 .empty-state p {
   font-size: 14px;
+  line-height: 1.5;
+  max-width: 280px;
   margin: 0;
 }
 
@@ -1585,11 +1595,6 @@ body.hide-tab-text .tab {
 .shortcut-item span {
   font-size: 13px;
   color: var(--text-secondary);
-}
-
-.input-row {
-  display: flex;
-  gap: 12px;
 }
 
 /* ===== 按鈕變體 ===== */
