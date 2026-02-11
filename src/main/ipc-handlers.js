@@ -320,16 +320,21 @@ function setupIpcHandlers() {
   });
 
   // 開啟外部連結
-  ipcMain.handle('open-external', (event, url) => {
-    // 驗證 URL 是否安全（只允許 http/https）
+  ipcMain.handle('open-external', async (event, url) => {
+    // 驗證 URL 是否安全（只允許 http/https 及 ms-windows-store）
     const validation = validateSafeUrl(url);
     if (!validation.valid) {
       logger.warn(`Blocked unsafe URL: ${validation.error}`);
       return { success: false, error: validation.error };
     }
 
-    shell.openExternal(url);
-    return { success: true };
+    try {
+      await shell.openExternal(url);
+      return { success: true };
+    } catch (err) {
+      logger.error('Failed to open external URL', err);
+      return { success: false, error: err.message };
+    }
   });
 
   // 開啟設定目錄
