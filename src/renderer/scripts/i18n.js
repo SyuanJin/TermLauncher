@@ -19,6 +19,9 @@ export async function initI18n(localeCode) {
   // 載入語系
   currentLocale = await api.loadLocale(localeCode);
 
+  // 更新 HTML lang 屬性
+  document.documentElement.lang = localeCode;
+
   // 應用翻譯到 HTML
   applyTranslations();
 
@@ -31,6 +34,7 @@ export async function initI18n(localeCode) {
  */
 export async function changeLocale(localeCode) {
   currentLocale = await api.loadLocale(localeCode);
+  document.documentElement.lang = localeCode;
   applyTranslations();
   return currentLocale;
 }
