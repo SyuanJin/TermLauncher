@@ -12,10 +12,32 @@ on:
         type: string
 
 jobs:
-  release:
-    runs-on: windows-latest
+  # 各平台平行打包
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            build_cmd: npx electron-builder --win portable nsis --publish never
+            artifact_pattern: |
+              dist/TermLauncher-Portable.exe
+              dist/TermLauncher Setup *.exe
+            artifact_name: windows
+          - os: macos-latest
+            build_cmd: npx electron-builder --mac --publish never
+            artifact_pattern: |
+              dist/*.dmg
+            artifact_name: macos
+          - os: ubuntu-latest
+            build_cmd: npx electron-builder --linux --publish never
+            artifact_pattern: |
+              dist/*.AppImage
+            artifact_name: linux
+
+    runs-on: ${{ matrix.os }}
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout
@@ -29,12 +51,35 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Cache electron-builder
+      - name: Cache electron-builder (Windows)
+        if: runner.os == 'Windows'
         uses: actions/cache@v4
         with:
           path: |
             ~\AppData\Local\electron\Cache
             ~\AppData\Local\electron-builder\Cache
+          key: electron-builder-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            electron-builder-${{ runner.os }}-
+
+      - name: Cache electron-builder (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/electron
+            ~/Library/Caches/electron-builder
+          key: electron-builder-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            electron-builder-${{ runner.os }}-
+
+      - name: Cache electron-builder (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
           key: electron-builder-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             electron-builder-${{ runner.os }}-
@@ -46,53 +91,73 @@ jobs:
         run: npm test
 
       - name: Build
-        run: npx electron-builder --win portable nsis --publish never
+        run: ${{ matrix.build_cmd }}
+        env:
+          # macOS: 跳過 code signing（無 Apple Developer 憑證時需要）
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_pattern }}
+          if-no-files-found: error
+
+  # 合併所有平台產物，建立 Release
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: find artifacts -type f | sort
 
       - name: Extract version info
         id: version
         run: |
-          $tag = if ("${{ inputs.tag }}") { "${{ inputs.tag }}" } else { "${{ github.ref_name }}" }
-          $version = $tag -replace '^v', ''
-          "VERSION=$version" >> $env:GITHUB_OUTPUT
+          TAG="${{ inputs.tag || github.ref_name }}"
+          VERSION="${TAG#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
           # 從 CHANGELOG.md 提取對應版本的內容
-          $content = Get-Content docs/CHANGELOG.md -Raw -Encoding UTF8
+          if grep -qP "## 🚀 v$VERSION" docs/CHANGELOG.md; then
+            TITLE=$(grep -oP "## 🚀 v$VERSION\s*-\s*\K[^(]+" docs/CHANGELOG.md | head -1 | xargs)
+            echo "RELEASE_TITLE=🚀 v$VERSION - $TITLE" >> "$GITHUB_OUTPUT"
 
-          # 提取標題（格式：## 🚀 vX.X.X - 標題 (日期)）
-          $titlePattern = "## 🚀 v$version\s*-\s*([^(\r\n]+)"
-          if ($content -match $titlePattern) {
-            $title = $Matches[1].Trim()
-            "RELEASE_TITLE=🚀 v$version - $title" >> $env:GITHUB_OUTPUT
-          } else {
-            "RELEASE_TITLE=v$version" >> $env:GITHUB_OUTPUT
-          }
-
-          # 匹配版本區塊（從 ## 🚀 vX.X.X 到下一個 ## 🚀 v 或檔案結尾）
-          $pattern = "(?s)## 🚀 v$version[^\r\n]*\r?\n(.*?)(?=\r?\n## 🚀 v|\z)"
-          if ($content -match $pattern) {
-            $notes = $Matches[1].Trim()
-
-            # 處理多行輸出
-            $delimiter = "EOF_$([guid]::NewGuid().ToString('N'))"
-            "RELEASE_NOTES<<$delimiter" >> $env:GITHUB_OUTPUT
-            $notes >> $env:GITHUB_OUTPUT
-            $delimiter >> $env:GITHUB_OUTPUT
-          } else {
-            Write-Warning "No CHANGELOG entry found for version $version"
-            "RELEASE_NOTES=Release $tag" >> $env:GITHUB_OUTPUT
-          }
-        shell: pwsh
+            # 提取版本區塊內容（從標題行之後到下一個 ## 🚀 v 或檔案結尾）
+            DELIMITER="EOF_$(uuidgen | tr -d '-')"
+            echo "RELEASE_NOTES<<$DELIMITER" >> "$GITHUB_OUTPUT"
+            sed -n "/## 🚀 v$VERSION/,/^## 🚀 v/{/^## 🚀 v/!p}" docs/CHANGELOG.md | sed '/^$/N;/^\n$/d' >> "$GITHUB_OUTPUT"
+            echo "$DELIMITER" >> "$GITHUB_OUTPUT"
+          else
+            echo "RELEASE_TITLE=v$VERSION" >> "$GITHUB_OUTPUT"
+            echo "RELEASE_NOTES=Release v$VERSION" >> "$GITHUB_OUTPUT"
+          fi
+        shell: bash
 
       - name: Validate version consistency
         run: |
-          $tag = if ("${{ inputs.tag }}") { "${{ inputs.tag }}" } else { "${{ github.ref_name }}" }
-          $version = $tag -replace '^v', ''
-          $pkgVersion = (Get-Content package.json | ConvertFrom-Json).version
-          if ($pkgVersion -ne $version) {
-            Write-Error "Version mismatch: package.json ($pkgVersion) != tag ($version)"
+          TAG="${{ inputs.tag || github.ref_name }}"
+          VERSION="${TAG#v}"
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "$PKG_VERSION" != "$VERSION" ]; then
+            echo "::error::Version mismatch: package.json ($PKG_VERSION) != tag ($VERSION)"
             exit 1
-          }
-        shell: pwsh
+          fi
+        shell: bash
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -102,8 +167,6 @@ jobs:
           tag_name: ${{ inputs.tag || github.ref_name }}
           name: ${{ steps.version.outputs.RELEASE_TITLE }}
           body: ${{ steps.version.outputs.RELEASE_NOTES }}
-          files: |
-            dist/TermLauncher-Portable.exe
-            dist/TermLauncher Setup *.exe
+          files: artifacts/*
           draft: false
           prerelease: false
