@@ -17,6 +17,8 @@ const {
   validateExportOptions,
   validateImportOptions,
   validateLocaleCode,
+  validateRendererError,
+  validatePathsArray,
 } = require('../src/main/utils/ipc-validators.js');
 
 describe('validateString', () => {
@@ -227,5 +229,67 @@ describe('validateLocaleCode', () => {
   it('應該拒絕非字串', () => {
     expect(validateLocaleCode(123).valid).toBe(false);
     expect(validateLocaleCode(null).valid).toBe(false);
+  });
+});
+
+describe('validateRendererError', () => {
+  it('應該接受有效的錯誤物件', () => {
+    expect(validateRendererError({ message: 'test error', stack: 'at line 1' }, 'App').valid).toBe(
+      true
+    );
+  });
+
+  it('應該接受無 context 的錯誤物件', () => {
+    expect(validateRendererError({ message: 'test' }, undefined).valid).toBe(true);
+  });
+
+  it('應該拒絕非物件', () => {
+    expect(validateRendererError(null, 'App').valid).toBe(false);
+    expect(validateRendererError('string', 'App').valid).toBe(false);
+    expect(validateRendererError(123, 'App').valid).toBe(false);
+  });
+
+  it('應該拒絕超長 message', () => {
+    const longMsg = 'x'.repeat(10001);
+    expect(validateRendererError({ message: longMsg }, 'App').valid).toBe(false);
+  });
+
+  it('應該拒絕超長 stack', () => {
+    const longStack = 'x'.repeat(10001);
+    expect(validateRendererError({ message: 'err', stack: longStack }, 'App').valid).toBe(false);
+  });
+
+  it('應該拒絕非字串 context', () => {
+    expect(validateRendererError({ message: 'err' }, 123).valid).toBe(false);
+    expect(validateRendererError({ message: 'err' }, {}).valid).toBe(false);
+  });
+
+  it('應該拒絕超長 context', () => {
+    const longCtx = 'x'.repeat(501);
+    expect(validateRendererError({ message: 'err' }, longCtx).valid).toBe(false);
+  });
+});
+
+describe('validatePathsArray', () => {
+  it('應該接受有效的路徑陣列', () => {
+    expect(validatePathsArray(['/path/a', '/path/b']).valid).toBe(true);
+    expect(validatePathsArray([]).valid).toBe(true);
+  });
+
+  it('應該拒絕非陣列', () => {
+    expect(validatePathsArray('string').valid).toBe(false);
+    expect(validatePathsArray(null).valid).toBe(false);
+    expect(validatePathsArray(undefined).valid).toBe(false);
+    expect(validatePathsArray(123).valid).toBe(false);
+  });
+
+  it('應該拒絕超過 500 筆的陣列', () => {
+    const largePaths = Array.from({ length: 501 }, (_, i) => `/path/${i}`);
+    expect(validatePathsArray(largePaths).valid).toBe(false);
+  });
+
+  it('應該接受剛好 500 筆的陣列', () => {
+    const paths = Array.from({ length: 500 }, (_, i) => `/path/${i}`);
+    expect(validatePathsArray(paths).valid).toBe(true);
   });
 });
