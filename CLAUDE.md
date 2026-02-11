@@ -71,7 +71,7 @@ Main Process (後端/系統整合)
 
 - **核心**：`app.js`（入口）、`api.js`（IPC 封裝）、`state.js`（狀態管理）
 - **UI 模組**（`ui/`）：tabs、recent、favorites、groups、directories、launchers、settings、modal、toast、contextMenu、dragDrop
-- **工具模組**（`utils/`）：keyboard、shortcuts、terminal
+- **工具模組**（`utils/`）：debounce、dom-cache、escape、keyboard、shortcuts、terminal
 
 ### 配置與日誌位置
 
