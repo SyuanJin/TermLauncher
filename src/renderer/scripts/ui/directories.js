@@ -16,6 +16,7 @@ import {
   getErrorMessage,
   showCommandPreview,
   getTerminalDisplayName,
+  getDefaultTerminalId,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
@@ -77,7 +78,8 @@ function getGroupDisplayName(group) {
  * @param {string} selectedId - 選中的終端 ID
  * @returns {string} 選項 HTML
  */
-function getTerminalOptionsHtml(selectedId = 'wsl-ubuntu') {
+function getTerminalOptionsHtml(selectedId) {
+  if (!selectedId) selectedId = getDefaultTerminalId();
   const config = getConfig();
 
   return config.terminals
@@ -365,7 +367,7 @@ export function renderDirectories() {
         '</span></div><div class="directory-list">' +
         items
           .map(dir => {
-            const terminalId = dir.terminalId || 'wsl-ubuntu';
+            const terminalId = dir.terminalId || getDefaultTerminalId();
             const terminalIcon = getTerminalIcon(terminalId);
             const terminalName = getTerminalName(terminalId);
             const dirIsFavorite = isFavorite(dir.id);
@@ -456,7 +458,7 @@ function showDirectoryContextMenu(event, dirId) {
 
   const menuItems = [
     {
-      icon: getTerminalIcon(dir.terminalId || 'wsl-ubuntu'),
+      icon: getTerminalIcon(dir.terminalId || getDefaultTerminalId()),
       label: t('contextMenu.openDefault'),
       onClick: () => openTerminal(dirId),
     },

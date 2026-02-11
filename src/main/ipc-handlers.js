@@ -13,6 +13,7 @@ const {
   exportConfigAdvanced,
   importConfigAdvanced,
   getExportPreview,
+  getDefaultTerminalId,
 } = require('./config');
 const { openTerminal, previewCommand, detectInstalledTerminals } = require('./terminal');
 const { registerShortcut, getLastRegistrationResult } = require('./shortcuts');
@@ -79,7 +80,7 @@ function setupIpcHandlers() {
     }
 
     // 取得終端配置
-    const terminalId = dir.terminalId || 'wsl-ubuntu';
+    const terminalId = dir.terminalId || getDefaultTerminalId();
     const terminal = config.terminals?.find(t => t.id === terminalId);
 
     if (!terminal) {
@@ -111,7 +112,7 @@ function setupIpcHandlers() {
 
     // 取得終端配置
     const terminal = config.terminals?.find(
-      t => t.id === (terminalId || dir.terminalId || 'wsl-ubuntu')
+      t => t.id === (terminalId || dir.terminalId || getDefaultTerminalId())
     );
 
     if (!terminal) {

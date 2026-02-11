@@ -340,7 +340,9 @@
     "wsl-ubuntu": "WSL Ubuntu",
     "powershell": "PowerShell",
     "git-bash": "Git Bash",
-    "file-manager": "檔案總管"
+    "file-manager": "檔案總管",
+    "terminal-app": "終端機",
+    "default-terminal": "終端機"
   },
   "error": {
     "action": {

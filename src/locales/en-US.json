@@ -340,7 +340,9 @@
     "wsl-ubuntu": "WSL Ubuntu",
     "powershell": "PowerShell",
     "git-bash": "Git Bash",
-    "file-manager": "File Explorer"
+    "file-manager": "File Explorer",
+    "terminal-app": "Terminal",
+    "default-terminal": "Terminal"
   },
   "error": {
     "action": {

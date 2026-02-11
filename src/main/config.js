@@ -35,40 +35,114 @@ function getFileManagerTerminal() {
   }
 }
 
-// 預設終端列表
-const defaultTerminals = [
-  { ...getFileManagerTerminal(), order: 0 },
-  {
-    id: 'wsl-ubuntu',
-    name: 'WSL Ubuntu',
-    icon: '🐧',
-    command: 'wt.exe -w 0 new-tab wsl.exe -d Ubuntu --cd {path}',
-    pathFormat: 'unix',
-    isBuiltin: true,
-    hidden: false,
-    order: 1,
-  },
-  {
-    id: 'git-bash',
-    name: 'Git Bash',
-    icon: '🐱',
-    command: '"C:\\Program Files\\Git\\git-bash.exe" "--cd={path}"',
-    pathFormat: 'windows',
-    isBuiltin: true,
-    hidden: false,
-    order: 2,
-  },
-  {
-    id: 'powershell',
-    name: 'PowerShell',
-    icon: '⚡',
-    command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
-    pathFormat: 'windows',
-    isBuiltin: true,
-    hidden: false,
-    order: 3,
-  },
-];
+/**
+ * 根據平台回傳預設終端列表
+ * @returns {Array} 預設終端配置陣列
+ */
+function getDefaultTerminals() {
+  const fileManager = { ...getFileManagerTerminal(), order: 0 };
+
+  switch (process.platform) {
+    case 'darwin':
+      return [
+        fileManager,
+        {
+          id: 'terminal-app',
+          name: 'Terminal',
+          icon: '🖥️',
+          command: 'open -a Terminal {path}',
+          pathFormat: 'unix',
+          isBuiltin: true,
+          hidden: false,
+          order: 1,
+        },
+      ];
+
+    case 'linux':
+      return [
+        fileManager,
+        {
+          id: 'default-terminal',
+          name: 'Terminal',
+          icon: '🖥️',
+          command: 'x-terminal-emulator --working-directory={path}',
+          pathFormat: 'unix',
+          isBuiltin: true,
+          hidden: false,
+          order: 1,
+        },
+      ];
+
+    default:
+      // Windows
+      return [
+        fileManager,
+        {
+          id: 'wsl-ubuntu',
+          name: 'WSL Ubuntu',
+          icon: '🐧',
+          command: 'wt.exe -w 0 new-tab wsl.exe -d Ubuntu --cd {path}',
+          pathFormat: 'unix',
+          isBuiltin: true,
+          hidden: false,
+          order: 1,
+        },
+        {
+          id: 'git-bash',
+          name: 'Git Bash',
+          icon: '🐱',
+          command: '"C:\\Program Files\\Git\\git-bash.exe" "--cd={path}"',
+          pathFormat: 'windows',
+          isBuiltin: true,
+          hidden: false,
+          order: 2,
+        },
+        {
+          id: 'powershell',
+          name: 'PowerShell',
+          icon: '⚡',
+          command: 'wt.exe -w 0 new-tab -p "Windows PowerShell" -d {path}',
+          pathFormat: 'windows',
+          isBuiltin: true,
+          hidden: false,
+          order: 3,
+        },
+      ];
+  }
+}
+
+// 預設終端列表（根據當前平台生成）
+const defaultTerminals = getDefaultTerminals();
+
+/**
+ * 取得平台預設的終端 ID
+ * @returns {string} 預設終端 ID
+ */
+function getDefaultTerminalId() {
+  switch (process.platform) {
+    case 'darwin':
+      return 'terminal-app';
+    case 'linux':
+      return 'default-terminal';
+    default:
+      return 'wsl-ubuntu';
+  }
+}
+
+/**
+ * 取得平台預設的使用者目錄路徑
+ * @returns {string} 預設路徑
+ */
+function getDefaultUserPath() {
+  switch (process.platform) {
+    case 'darwin':
+      return '/Users';
+    case 'linux':
+      return '/home';
+    default:
+      return 'C:\\Users';
+  }
+}
 
 // 預設群組列表
 const defaultGroups = [
@@ -88,8 +162,8 @@ const defaultConfig = {
       id: 1,
       name: '範例專案',
       icon: '📁',
-      path: 'C:\\Users',
-      terminalId: 'wsl-ubuntu',
+      path: getDefaultUserPath(),
+      terminalId: getDefaultTerminalId(),
       group: 'default',
       lastUsed: null,
       order: 0,
@@ -586,7 +660,7 @@ function importConfigAdvanced(importData, options = {}) {
           errors.push(
             `Terminal "${importedDir.terminalId}" not found for directory "${importedDir.name}", using default`
           );
-          importedDir.terminalId = 'wsl-ubuntu';
+          importedDir.terminalId = getDefaultTerminalId();
         }
 
         // 檢查群組 ID 是否存在
@@ -672,4 +746,5 @@ module.exports = {
   exportConfigAdvanced,
   importConfigAdvanced,
   getExportPreview,
+  getDefaultTerminalId,
 };
