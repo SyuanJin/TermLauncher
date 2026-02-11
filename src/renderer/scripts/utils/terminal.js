@@ -58,6 +58,15 @@ export function getTerminalName(terminalId) {
 }
 
 /**
+ * 取得群組顯示名稱（支援 i18n）
+ * @param {Object} group - 群組物件
+ * @returns {string} 群組顯示名稱
+ */
+export function getGroupDisplayName(group) {
+  return group.isDefault ? t('common.default') : group.name;
+}
+
+/**
  * 錯誤類型對應訊息鍵
  */
 const ErrorTypeToMessageKey = {
