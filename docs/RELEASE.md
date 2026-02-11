@@ -4,9 +4,9 @@
 
 推送版本 tag 後，GitHub Actions 會自動：
 
-1. 打包 Portable 版和安裝版
+1. 跨平台平行打包（Windows Portable + NSIS、macOS DMG、Linux AppImage）
 2. 從 CHANGELOG.md 提取版本說明
-3. 建立 GitHub Release 並上傳檔案
+3. 建立 GitHub Release 並上傳所有平台檔案
 
 ### 步驟
 
@@ -52,8 +52,9 @@ npm run build:all          # 同時打包兩種版本
 
 輸出位置：
 
-- `dist/TermLauncher-Portable.exe`
-- `dist/TermLauncher-Setup-x.x.x.exe`
+- Windows：`dist/TermLauncher-Portable.exe`、`dist/TermLauncher Setup x.x.x.exe`
+- macOS：`dist/*.dmg`
+- Linux：`dist/*.AppImage`
 
 ### 3. 測試
 
