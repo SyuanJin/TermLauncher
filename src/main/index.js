@@ -38,7 +38,10 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     // 載入配置並初始化語系
     const config = loadConfig();
-    loadLocale(config.settings?.language || 'zh-TW');
+    const systemLocale = app.getLocale(); // e.g. 'zh-TW', 'en-US'
+    const supportedLocales = ['zh-TW', 'en-US'];
+    const defaultLocale = supportedLocales.includes(systemLocale) ? systemLocale : 'zh-TW';
+    loadLocale(config.settings?.language || defaultLocale);
 
     createWindow();
     createTray();
