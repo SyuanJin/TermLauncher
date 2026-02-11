@@ -33,48 +33,6 @@ function formatPath(dirPath, pathFormat) {
 }
 
 /**
- * 解析指令字串
- * 處理引號內的空格，將指令分割為陣列
- * @param {string} command - 指令字串
- * @returns {string[]} 指令參數陣列
- */
-function parseCommand(command) {
-  const args = [];
-  let current = '';
-  let inQuotes = false;
-  let quoteChar = '';
-
-  for (let i = 0; i < command.length; i++) {
-    const char = command[i];
-
-    if ((char === '"' || char === "'") && !inQuotes) {
-      // 開始引號
-      inQuotes = true;
-      quoteChar = char;
-    } else if (char === quoteChar && inQuotes) {
-      // 結束引號
-      inQuotes = false;
-      quoteChar = '';
-    } else if (char === ' ' && !inQuotes) {
-      // 空格分隔（非引號內）
-      if (current.length > 0) {
-        args.push(current);
-        current = '';
-      }
-    } else {
-      current += char;
-    }
-  }
-
-  // 處理最後一個參數
-  if (current.length > 0) {
-    args.push(current);
-  }
-
-  return args;
-}
-
-/**
  * 檢查路徑是否包含危險的 shell 元字符
  * 注意：此函數僅用於基本安全檢查，不能完全防止所有注入攻擊
  * @param {string} path - 要檢查的路徑
@@ -130,7 +88,6 @@ function escapePathForShell(path, format) {
 module.exports = {
   toWslPath,
   formatPath,
-  parseCommand,
   validatePathSafety,
   escapePathForShell,
 };
