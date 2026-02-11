@@ -13,6 +13,9 @@ const logger = createLogger('Config');
 // 配置檔路徑
 const configPath = path.join(app.getPath('userData'), 'config.json');
 
+// 記憶體配置快取，避免每次都從磁碟讀取
+let cachedConfig = null;
+
 /**
  * 根據平台回傳對應的檔案管理器配置
  * @returns {Object} 檔案管理器終端配置
@@ -241,6 +244,10 @@ function backupCorruptedConfig() {
  * @returns {Object} 配置物件
  */
 function loadConfig() {
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
   try {
     if (fs.existsSync(configPath)) {
       const data = fs.readFileSync(configPath, 'utf-8');
@@ -255,6 +262,7 @@ function loadConfig() {
         saveConfig(config);
       }
 
+      cachedConfig = config;
       return config;
     }
   } catch (err) {
@@ -280,6 +288,7 @@ function saveConfig(config) {
   try {
     fs.writeFileSync(tmpPath, JSON.stringify(config, null, 2), 'utf-8');
     fs.renameSync(tmpPath, configPath);
+    cachedConfig = config;
     return true;
   } catch (err) {
     logger.error('Failed to save config', err);
@@ -577,9 +586,17 @@ function getExportPreview() {
   };
 }
 
+/**
+ * 清除記憶體配置快取，強制下次 loadConfig 從磁碟讀取
+ */
+function invalidateConfigCache() {
+  cachedConfig = null;
+}
+
 module.exports = {
   loadConfig,
   saveConfig,
+  invalidateConfigCache,
   wasConfigCorrupted,
   defaultConfig,
   defaultTerminals,
