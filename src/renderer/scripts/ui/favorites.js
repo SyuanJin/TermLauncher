@@ -27,6 +27,9 @@ let showEditDirectoryModal = null;
 let deleteDirectoryFn = null;
 let renderDirectoriesFn = null;
 
+// 事件委派初始化標記
+let favoritesDelegationInitialized = false;
+
 /**
  * 動態導入 directories 模組
  */
@@ -215,80 +218,99 @@ export function renderFavoritesList() {
       .join('') +
     '</div>';
 
-  bindFavoritesEvents();
   initFavoritesDragDrop();
 }
 
 /**
- * 綁定最愛項目的事件
+ * 初始化最愛項目的事件委派
+ * 只執行一次，在容器上綁定事件監聽器
  */
-function bindFavoritesEvents() {
-  document.querySelectorAll('#favoritesListContainer .directory-item').forEach(item => {
-    const handleOpen = e => {
-      if (e.target.closest('.btn-icon')) return;
+function initFavoritesEventDelegation() {
+  if (favoritesDelegationInitialized) return;
+  favoritesDelegationInitialized = true;
+
+  const container = getElement('favoritesListContainer');
+  if (!container) return;
+
+  // 點擊事件委派
+  container.addEventListener('click', async e => {
+    // 處理最愛按鈕
+    const toggleBtn = e.target.closest('[data-toggle-favorite]');
+    if (toggleBtn) {
+      e.stopPropagation();
+      const id = parseInt(toggleBtn.dataset.toggleFavorite, 10);
+      toggleFavorite(id);
+      return;
+    }
+
+    // 處理編輯按鈕
+    const editBtn = e.target.closest('[data-edit-dir]');
+    if (editBtn) {
+      e.stopPropagation();
+      await importDirectoriesModule();
+      const id = parseInt(editBtn.dataset.editDir, 10);
+      showEditDirectoryModal(id);
+      return;
+    }
+
+    // 處理刪除按鈕
+    const deleteBtn = e.target.closest('[data-delete-dir]');
+    if (deleteBtn) {
+      e.stopPropagation();
+      await importDirectoriesModule();
+      const id = parseInt(deleteBtn.dataset.deleteDir, 10);
+      await deleteDirectoryFn(id);
+      return;
+    }
+
+    // 處理目錄項目點擊（開啟終端）
+    const item = e.target.closest('.directory-item');
+    if (item && !e.target.closest('.btn-icon')) {
       const id = parseInt(item.dataset.id, 10);
       openTerminalUtil(id, refreshFavoritesViews);
-    };
+    }
+  });
 
-    item.addEventListener('click', handleOpen);
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleOpen(e);
-      }
-    });
+  // 鍵盤事件委派
+  container.addEventListener('keydown', async e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
 
-    // 右鍵選單
-    item.addEventListener('contextmenu', e => {
+    // 處理最愛按鈕
+    const toggleBtn = e.target.closest('[data-toggle-favorite]');
+    if (toggleBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = parseInt(toggleBtn.dataset.toggleFavorite, 10);
+      toggleFavorite(id);
+      return;
+    }
+
+    // 處理目錄項目（開啟終端）
+    const item = e.target.closest('.directory-item');
+    if (item && !e.target.closest('.btn-icon')) {
+      e.preventDefault();
+      const id = parseInt(item.dataset.id, 10);
+      openTerminalUtil(id, refreshFavoritesViews);
+    }
+  });
+
+  // 右鍵選單事件委派
+  container.addEventListener('contextmenu', e => {
+    const item = e.target.closest('.directory-item');
+    if (item) {
       const id = parseInt(item.dataset.id, 10);
       showFavoritesContextMenu(e, id);
-    });
+    }
   });
 
-  document.querySelectorAll('#favoritesListContainer [data-toggle-favorite]').forEach(btn => {
-    const handleToggle = e => {
-      e.stopPropagation();
-      const id = parseInt(btn.dataset.toggleFavorite, 10);
-      toggleFavorite(id);
-    };
-
-    btn.addEventListener('click', handleToggle);
-    btn.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleToggle(e);
-      }
-    });
-  });
-
-  // 編輯按鈕
-  document.querySelectorAll('#favoritesListContainer [data-edit-dir]').forEach(btn => {
-    btn.addEventListener('click', async e => {
-      e.stopPropagation();
-      await importDirectoriesModule();
-      const id = parseInt(btn.dataset.editDir, 10);
-      showEditDirectoryModal(id);
-    });
-  });
-
-  // 刪除按鈕
-  document.querySelectorAll('#favoritesListContainer [data-delete-dir]').forEach(btn => {
-    btn.addEventListener('click', async e => {
-      e.stopPropagation();
-      await importDirectoriesModule();
-      const id = parseInt(btn.dataset.deleteDir, 10);
-      await deleteDirectoryFn(id);
-    });
-  });
-
-  // 雙擊編輯
-  document.querySelectorAll('#favoritesListContainer .directory-item').forEach(item => {
-    item.addEventListener('dblclick', async e => {
-      if (e.target.closest('.btn-icon')) return;
+  // 雙擊編輯事件委派
+  container.addEventListener('dblclick', async e => {
+    const item = e.target.closest('.directory-item');
+    if (item && !e.target.closest('.btn-icon')) {
       await importDirectoriesModule();
       const id = parseInt(item.dataset.id, 10);
       showEditDirectoryModal(id);
-    });
+    }
   });
 }
 
@@ -401,4 +423,7 @@ export function setupFavoritesEvents() {
   if (searchInput) {
     searchInput.addEventListener('input', debounce(renderFavoritesList, 150));
   }
+
+  // 初始化事件委派（只執行一次）
+  initFavoritesEventDelegation();
 }

@@ -27,6 +27,7 @@ import { debounce } from '../utils/debounce.js';
 
 let allGroupsCollapsed = false;
 let selectedGroupFilters = []; // 多選群組篩選
+let directoryDelegationInitialized = false;
 
 /**
  * 產生終端選項 HTML
@@ -386,7 +387,6 @@ export function renderDirectories() {
     })
     .join('');
 
-  bindDirectoryEvents();
   initDirectoriesDragDrop();
 }
 
@@ -460,70 +460,90 @@ function refreshDirectoryViews() {
 }
 
 /**
- * 綁定目錄項目的事件
+ * 初始化目錄事件委派
  */
-function bindDirectoryEvents() {
-  document.querySelectorAll('#directoryGroups .directory-item').forEach(item => {
-    const handleOpen = e => {
-      if (e.target.closest('.btn-icon')) return;
-      const id = parseInt(item.dataset.id, 10);
-      openTerminalUtil(id, refreshDirectoryViews);
-    };
+function initDirectoryEventDelegation() {
+  if (directoryDelegationInitialized) return;
+  directoryDelegationInitialized = true;
 
-    item.addEventListener('click', handleOpen);
-    item.addEventListener('dblclick', e => {
-      if (e.target.closest('.btn-icon')) return;
-      const id = parseInt(item.dataset.id, 10);
-      showEditDirectoryModal(id);
-    });
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleOpen(e);
-      }
-    });
+  const container = document.getElementById('directoryGroups');
+  if (!container) return;
 
-    // 右鍵選單
-    item.addEventListener('contextmenu', e => {
-      const id = parseInt(item.dataset.id, 10);
-      showDirectoryContextMenu(e, id);
-    });
-  });
-
-  document.querySelectorAll('#directoryGroups [data-toggle-favorite]').forEach(btn => {
-    const handleToggle = e => {
+  // 單擊事件委派
+  container.addEventListener('click', e => {
+    // 群組折疊按鈕
+    const toggleGroupBtn = e.target.closest('[data-toggle-group]');
+    if (toggleGroupBtn) {
       e.stopPropagation();
-      const id = parseInt(btn.dataset.toggleFavorite, 10);
-      toggleFavorite(id);
-    };
-
-    btn.addEventListener('click', handleToggle);
-  });
-
-  document.querySelectorAll('#directoryGroups [data-edit-dir]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const id = parseInt(btn.dataset.editDir, 10);
-      showEditDirectoryModal(id);
-    });
-  });
-
-  document.querySelectorAll('#directoryGroups [data-delete-id]').forEach(btn => {
-    const handleDelete = e => {
-      e.stopPropagation();
-      const id = parseInt(btn.dataset.deleteId, 10);
-      deleteDirectory(id);
-    };
-
-    btn.addEventListener('click', handleDelete);
-  });
-
-  document.querySelectorAll('[data-toggle-group]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const groupId = btn.dataset.toggleGroup;
+      const groupId = toggleGroupBtn.dataset.toggleGroup;
       toggleGroupCollapse(groupId);
-    });
+      return;
+    }
+
+    // 最愛按鈕
+    const toggleFavoriteBtn = e.target.closest('[data-toggle-favorite]');
+    if (toggleFavoriteBtn) {
+      e.stopPropagation();
+      const id = parseInt(toggleFavoriteBtn.dataset.toggleFavorite, 10);
+      toggleFavorite(id);
+      return;
+    }
+
+    // 編輯按鈕
+    const editBtn = e.target.closest('[data-edit-dir]');
+    if (editBtn) {
+      e.stopPropagation();
+      const id = parseInt(editBtn.dataset.editDir, 10);
+      showEditDirectoryModal(id);
+      return;
+    }
+
+    // 刪除按鈕
+    const deleteBtn = e.target.closest('[data-delete-id]');
+    if (deleteBtn) {
+      e.stopPropagation();
+      const id = parseInt(deleteBtn.dataset.deleteId, 10);
+      deleteDirectory(id);
+      return;
+    }
+
+    // 目錄項目點擊（開啟終端）
+    const directoryItem = e.target.closest('.directory-item');
+    if (directoryItem && !e.target.closest('.btn-icon')) {
+      const id = parseInt(directoryItem.dataset.id, 10);
+      openTerminalUtil(id, refreshDirectoryViews);
+      return;
+    }
+  });
+
+  // 雙擊事件委派（編輯目錄）
+  container.addEventListener('dblclick', e => {
+    const directoryItem = e.target.closest('.directory-item');
+    if (directoryItem && !e.target.closest('.btn-icon')) {
+      const id = parseInt(directoryItem.dataset.id, 10);
+      showEditDirectoryModal(id);
+    }
+  });
+
+  // 鍵盤事件委派
+  container.addEventListener('keydown', e => {
+    const directoryItem = e.target.closest('.directory-item');
+    if (directoryItem && (e.key === 'Enter' || e.key === ' ')) {
+      if (!e.target.closest('.btn-icon')) {
+        e.preventDefault();
+        const id = parseInt(directoryItem.dataset.id, 10);
+        openTerminalUtil(id, refreshDirectoryViews);
+      }
+    }
+  });
+
+  // 右鍵選單事件委派
+  container.addEventListener('contextmenu', e => {
+    const directoryItem = e.target.closest('.directory-item');
+    if (directoryItem) {
+      const id = parseInt(directoryItem.dataset.id, 10);
+      showDirectoryContextMenu(e, id);
+    }
   });
 }
 
@@ -815,10 +835,13 @@ async function toggleFavorite(id) {
  * 設定目錄相關的事件監聽
  */
 export function setupDirectoryEvents() {
-  document.getElementById('searchInput')?.addEventListener('input', debounce(renderDirectories, 150));
+  document
+    .getElementById('searchInput')
+    ?.addEventListener('input', debounce(renderDirectories, 150));
   document.getElementById('btnGroupFilter')?.addEventListener('click', showGroupFilterModal);
   document.getElementById('btnToggleAllGroups')?.addEventListener('click', toggleAllGroups);
   document.getElementById('btnAddDirectoryModal')?.addEventListener('click', () => {
     showAddDirectoryModal();
   });
+  initDirectoryEventDelegation();
 }

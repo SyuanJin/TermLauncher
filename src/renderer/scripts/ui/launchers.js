@@ -19,6 +19,11 @@ import { debounce } from '../utils/debounce.js';
 let detectedTerminalsCache = null;
 
 /**
+ * 事件委派初始化標記
+ */
+let launchersDelegationInitialized = false;
+
+/**
  * 平台快取
  */
 let platformCache = null;
@@ -300,30 +305,43 @@ export function renderTerminalsList() {
     )
     .join('');
 
-  bindTerminalEvents();
+  initLaunchersEventDelegation();
   initTerminalsDragDrop();
 }
 
 /**
- * 綁定啟動器列表的事件
+ * 初始化啟動器列表的事件委派（僅執行一次）
  */
-function bindTerminalEvents() {
-  document.querySelectorAll('[data-edit-terminal]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      showEditTerminalModal(btn.dataset.editTerminal);
-    });
+function initLaunchersEventDelegation() {
+  if (launchersDelegationInitialized) return;
+  launchersDelegationInitialized = true;
+
+  const container = document.getElementById('terminalsList');
+  if (!container) return;
+
+  // 點擊事件委派
+  container.addEventListener('click', e => {
+    const editBtn = e.target.closest('[data-edit-terminal]');
+    if (editBtn) {
+      e.stopPropagation();
+      showEditTerminalModal(editBtn.dataset.editTerminal);
+      return;
+    }
+
+    const deleteBtn = e.target.closest('[data-delete-terminal]');
+    if (deleteBtn) {
+      e.stopPropagation();
+      showDeleteTerminalModal(deleteBtn.dataset.deleteTerminal);
+      return;
+    }
   });
 
-  document.querySelectorAll('[data-delete-terminal]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      showDeleteTerminalModal(btn.dataset.deleteTerminal);
-    });
-  });
-
-  document.querySelectorAll('[data-toggle-terminal]').forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      toggleTerminalHidden(checkbox.dataset.toggleTerminal);
-    });
+  // change 事件委派（toggle checkbox）
+  container.addEventListener('change', e => {
+    const toggleCheckbox = e.target.closest('[data-toggle-terminal]');
+    if (toggleCheckbox) {
+      toggleTerminalHidden(toggleCheckbox.dataset.toggleTerminal);
+    }
   });
 }
 

@@ -13,6 +13,9 @@ import { getElement } from '../utils/dom-cache.js';
 import { debounce } from '../utils/debounce.js';
 import { getGroupDisplayName } from '../utils/terminal.js';
 
+// 事件委派初始化標記
+let groupsDelegationInitialized = false;
+
 /**
  * 取得或重建空狀態元素
  * @returns {HTMLElement} 空狀態元素
@@ -137,47 +140,66 @@ export function renderGroupsTab() {
       .join('') +
     '</div>';
 
-  bindGroupsEvents();
   initGroupsDragDrop();
 }
 
 /**
- * 綁定群組卡片的事件
+ * 初始化群組事件委派（僅執行一次）
  */
-function bindGroupsEvents() {
-  document.querySelectorAll('#groupsListContainer .group-card').forEach(card => {
-    const handleClick = e => {
-      if (e.target.closest('.btn-icon')) return;
+function initGroupsEventDelegation() {
+  if (groupsDelegationInitialized) return;
+  groupsDelegationInitialized = true;
+
+  const container = getElement('groupsListContainer');
+  if (!container) return;
+
+  // 處理點擊事件
+  const handleClick = e => {
+    // 檢查是否點擊編輯按鈕
+    const editBtn = e.target.closest('[data-edit-group]');
+    if (editBtn) {
+      e.stopPropagation();
+      showEditGroupModal(editBtn.dataset.editGroup);
+      return;
+    }
+
+    // 檢查是否點擊刪除按鈕
+    const deleteBtn = e.target.closest('[data-delete-group]');
+    if (deleteBtn) {
+      e.stopPropagation();
+      showDeleteGroupModal(deleteBtn.dataset.deleteGroup);
+      return;
+    }
+
+    // 檢查是否點擊群組卡片（但不是按鈕）
+    const card = e.target.closest('.group-card');
+    if (card && !e.target.closest('.btn-icon')) {
       const groupId = card.dataset.groupId;
       const config = getConfig();
       const group = config.groups.find(g => g.id === groupId);
       if (group && !group.isDefault) {
         showEditGroupModal(groupId);
       }
-    };
+    }
+  };
 
-    card.addEventListener('click', handleClick);
-    card.addEventListener('dblclick', handleClick);
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
+  container.addEventListener('click', handleClick);
+  container.addEventListener('dblclick', handleClick);
+
+  // 處理鍵盤事件
+  container.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const card = e.target.closest('.group-card');
+      if (card && !e.target.closest('.btn-icon')) {
         e.preventDefault();
-        handleClick(e);
+        const groupId = card.dataset.groupId;
+        const config = getConfig();
+        const group = config.groups.find(g => g.id === groupId);
+        if (group && !group.isDefault) {
+          showEditGroupModal(groupId);
+        }
       }
-    });
-  });
-
-  document.querySelectorAll('[data-edit-group]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      showEditGroupModal(btn.dataset.editGroup);
-    });
-  });
-
-  document.querySelectorAll('[data-delete-group]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      showDeleteGroupModal(btn.dataset.deleteGroup);
-    });
+    }
   });
 }
 
@@ -392,4 +414,7 @@ export function setupGroupsEvents() {
   if (addBtn) {
     addBtn.addEventListener('click', showAddGroupModal);
   }
+
+  // 初始化事件委派
+  initGroupsEventDelegation();
 }
