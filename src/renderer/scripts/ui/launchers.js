@@ -458,7 +458,7 @@ function showEditTerminalModal(terminalId) {
     t('ui.launchers.icon') +
     '</label>' +
     '<input type="text" id="modalTerminalIcon" value="' +
-    (terminal.icon || '') +
+    escapeAttr(terminal.icon || '') +
     '" maxlength="2" class="icon-input" title="' +
     t('ui.addDirectory.iconHint') +
     '" />' +

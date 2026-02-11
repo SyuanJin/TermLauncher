@@ -678,7 +678,7 @@ export function showEditDirectoryModal(dirId) {
     '<div class="input-group" style="max-width: 80px"><label>' +
     t('ui.addDirectory.icon') +
     '</label><input type="text" id="modalDirIcon" value="' +
-    (dir.icon || '') +
+    escapeAttr(dir.icon || '') +
     '" maxlength="2" class="icon-input" title="' +
     t('ui.addDirectory.iconHint') +
     '" /></div>' +
