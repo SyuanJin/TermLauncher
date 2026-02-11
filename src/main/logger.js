@@ -61,9 +61,10 @@ function filterSensitiveInfo(text) {
 /**
  * 遞迴過濾物件中的敏感資訊
  * @param {*} data - 原始資料
+ * @param {WeakSet} [seen] - 已訪問物件追蹤（防止循環引用）
  * @returns {*} 過濾後的資料
  */
-function filterSensitiveData(data) {
+function filterSensitiveData(data, seen = new WeakSet()) {
   if (data === null || data === undefined) return data;
 
   if (typeof data === 'string') {
@@ -76,8 +77,14 @@ function filterSensitiveData(data) {
     return filtered;
   }
 
+  // 防止循環引用導致無限遞迴
+  if (typeof data === 'object') {
+    if (seen.has(data)) return '[Circular]';
+    seen.add(data);
+  }
+
   if (Array.isArray(data)) {
-    return data.map(filterSensitiveData);
+    return data.map(item => filterSensitiveData(item, seen));
   }
 
   if (typeof data === 'object') {
@@ -87,7 +94,7 @@ function filterSensitiveData(data) {
       if (/password|secret|token|key|credential/i.test(key)) {
         filtered[key] = '[REDACTED]';
       } else {
-        filtered[key] = filterSensitiveData(value);
+        filtered[key] = filterSensitiveData(value, seen);
       }
     }
     return filtered;
