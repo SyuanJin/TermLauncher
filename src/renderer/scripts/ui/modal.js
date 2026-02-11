@@ -132,11 +132,36 @@ export function openModal(options) {
     }
   });
 
-  // Escape 關閉
+  // Escape 關閉 + Tab 焦點陷阱
   const handleKeydown = e => {
     if (e.key === 'Escape') {
       options.onClose?.();
       closeModal();
+      return;
+    }
+
+    // 焦點陷阱：Tab 鍵只在彈窗內循環
+    if (e.key === 'Tab') {
+      const modal = modalElement.querySelector('.modal');
+      const focusable = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
   };
   document.addEventListener('keydown', handleKeydown);
