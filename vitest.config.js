@@ -8,6 +8,8 @@ export default defineConfig({
     globals: true,
     // 測試環境
     environment: 'node',
+    // Electron mock setup
+    setupFiles: ['tests/setup-electron-mock.js'],
     // 覆蓋率設定
     coverage: {
       provider: 'v8',
