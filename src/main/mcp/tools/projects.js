@@ -67,7 +67,9 @@ function registerProjectTools(server, z) {
       const pathSafety = validatePathSafety(path);
       if (!pathSafety.safe) {
         return {
-          content: [{ type: 'text', text: JSON.stringify({ error: `Unsafe path: ${pathSafety.reason}` }) }],
+          content: [
+            { type: 'text', text: JSON.stringify({ error: `Unsafe path: ${pathSafety.reason}` }) },
+          ],
           isError: true,
         };
       }
@@ -151,7 +153,12 @@ function registerProjectTools(server, z) {
         const pathSafety = validatePathSafety(path);
         if (!pathSafety.safe) {
           return {
-            content: [{ type: 'text', text: JSON.stringify({ error: `Unsafe path: ${pathSafety.reason}` }) }],
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({ error: `Unsafe path: ${pathSafety.reason}` }),
+              },
+            ],
             isError: true,
           };
         }

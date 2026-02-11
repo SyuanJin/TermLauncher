@@ -168,11 +168,11 @@ src/
 
 ### MCP 伺服器
 
-| Channel           | 方式   | 說明              |
-| ----------------- | ------ | ----------------- |
-| start-mcp-server  | handle | 啟動 MCP 伺服器   |
-| stop-mcp-server   | handle | 停止 MCP 伺服器   |
-| get-mcp-status    | handle | 取得 MCP 伺服器狀態 |
+| Channel          | 方式   | 說明                |
+| ---------------- | ------ | ------------------- |
+| start-mcp-server | handle | 啟動 MCP 伺服器     |
+| stop-mcp-server  | handle | 停止 MCP 伺服器     |
+| get-mcp-status   | handle | 取得 MCP 伺服器狀態 |
 
 ## MCP 子系統
 
