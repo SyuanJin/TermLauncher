@@ -1,5 +1,60 @@
 # Changelog
 
+## 🚀 v2.4.0 - MCP 整合與品質強化 (2026-02-11)
+
+### ✨ 新功能
+
+- MCP Server - 新增 Model Context Protocol 伺服器，允許 AI 助手透過標準化協議查詢與管理目錄、群組、啟動器
+- 版本更新提示 - 新增非強制版本更新檢查功能
+- macOS/Linux 預設啟動器 - 各平台新增對應的預設啟動器配置
+- 托盤快速啟動 - 系統托盤選單新增最愛與最近使用快速啟動子選單
+- 無障礙支援 - ARIA 屬性、Modal 焦點陷阱與還原、Toast aria-live、prefers-reduced-motion、語系切換同步 HTML lang
+
+### 🔒 安全性
+
+- XSS 防護強化 - Modal、啟動器、目錄頁面補齊 HTML/屬性轉義
+- MCP 輸入驗證 - 路徑驗證、isDirectory 檢查、非空名稱驗證、1MB 請求大小限制
+- IPC 驗證強化 - log-renderer-error/validate-paths 參數驗證，validate-paths 陣列上限 500
+- 匯入配置驗證 - 基本匯入加入結構驗證
+- 路徑驗證改進 - 允許獨立 `$`，阻擋 `${` 展開語法
+- 依賴安全 - electron-builder 24.x → 26.x（修復 tar 高危漏洞）
+
+### ⚡ 效能優化
+
+- 搜尋防抖 - 所有搜尋輸入加入 150ms 防抖
+- 配置讀取快取 - 記憶體快取消除重複磁碟讀取
+- 事件委託 - UI 列表改用事件委託取代逐項綁定
+- 配置原子寫入 - 改用 write-to-tmp + rename 防止寫入中損壞
+
+### 🐛 問題修復
+
+- 修正預設群組名稱硬編碼「預設」，改用國際化鍵值
+- 修正窄寬度下搜尋列按鈕跑版
+- 修正系統語系未作為 i18n 預設語言
+- 修正匯入後孤兒最愛 ID 未清理
+- 修正 index.html 硬編碼版本號
+- 修正視窗背景色未依已儲存主題設定
+- 修正 `ms-windows-store:` 協議未通過 URL 驗證
+- 修正 `shell.openExternal` 未 await 且未處理錯誤
+- 修正 CSS 缺失變數與重複定義
+- 修正 logger 循環引用導致序列化失敗
+- 移除外部 Google Fonts 依賴，改用系統字體堆疊
+
+### 🔧 重構改進
+
+- IPC handlers 改用 async file I/O
+- 提取共用工具函式（openTerminal、getGroupDisplayName、getTerminalIcon/Name、escapeHtml）
+- 清理未使用程式碼（parseCommand、未用 exports、CSS classes、stale comments、ESLint warnings）
+- CI 加入 format check、ESLint、測試覆蓋率；Release workflow 擴展跨平台打包與版本一致性檢查
+- 新增 IPC validators、i18n、terminal.js、配置遷移測試
+
+### 📚 文檔
+
+- README 新增 macOS/Linux 下載資訊與未簽署應用提示
+- ARCHITECTURE.md / CLAUDE.md 補齊前端 utils 模組、跨平台配置路徑
+- RELEASE.md 更新跨平台打包描述
+- UI_DESIGN.md 修正字體優先順序
+
 ## 🚀 v2.3.0 - 啟動器系統重構 (2026-02-11)
 
 ### ✨ 新功能
