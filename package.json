@@ -1,6 +1,6 @@
 {
   "name": "termlauncher",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "TermLauncher - 快速開啟專案的桌面工具",
   "main": "src/main/index.js",
   "scripts": {
