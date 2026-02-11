@@ -30,11 +30,6 @@ const ToastIcons = {
 let currentToastTimer = null;
 
 /**
- * 當前是否為持久顯示
- */
-let isPersistent = false;
-
-/**
  * 行動按鈕回調函數儲存
  */
 let actionCallbacks = {};
@@ -98,7 +93,6 @@ export function showToast(msg, type = ToastType.INFO, options = {}) {
 
   // 處理持久顯示
   const shouldPersist = persistent || actions.length > 0;
-  isPersistent = shouldPersist;
   if (closeBtn) {
     closeBtn.style.display = shouldPersist ? 'flex' : 'none';
   }
@@ -120,7 +114,6 @@ export function showToast(msg, type = ToastType.INFO, options = {}) {
 export function hideToast() {
   const toast = getElement('toast');
   toast.classList.remove('show');
-  isPersistent = false;
 
   if (currentToastTimer) {
     clearTimeout(currentToastTimer);

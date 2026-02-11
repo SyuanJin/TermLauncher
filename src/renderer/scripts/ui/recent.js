@@ -2,8 +2,7 @@
  * 最近使用 Tab 模組
  * 處理最近使用目錄的顯示與管理
  */
-import { getConfig, saveConfig, loadConfig, isPathValid } from '../state.js';
-import { api } from '../api.js';
+import { getConfig, saveConfig, isPathValid } from '../state.js';
 import { showToast } from './toast.js';
 import { t } from '../i18n.js';
 import { showContextMenu } from './contextMenu.js';
@@ -12,7 +11,6 @@ import { debounce } from '../utils/debounce.js';
 import {
   openTerminal as openTerminalUtil,
   openTerminalWithType as openTerminalWithTypeUtil,
-  getErrorMessage,
   getTerminalDisplayName,
   getDefaultTerminalId,
   getTerminalIcon,

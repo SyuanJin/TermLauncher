@@ -4,7 +4,6 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { app } = require('electron');
 
 // 語系檔案目錄
 const localesDir = path.join(__dirname, '../locales');

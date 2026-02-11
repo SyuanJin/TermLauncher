@@ -3,7 +3,7 @@
  * 處理分頁標籤的切換邏輯
  */
 
-import { getConfig, saveConfig } from '../state.js';
+import { getConfig } from '../state.js';
 import { getElement } from '../utils/dom-cache.js';
 
 // 當前 Tab
