@@ -23,6 +23,7 @@ import {
   getGroupDisplayName,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
+import { debounce } from '../utils/debounce.js';
 
 let allGroupsCollapsed = false;
 let selectedGroupFilters = []; // 多選群組篩選
@@ -814,7 +815,7 @@ async function toggleFavorite(id) {
  * 設定目錄相關的事件監聽
  */
 export function setupDirectoryEvents() {
-  document.getElementById('searchInput')?.addEventListener('input', renderDirectories);
+  document.getElementById('searchInput')?.addEventListener('input', debounce(renderDirectories, 150));
   document.getElementById('btnGroupFilter')?.addEventListener('click', showGroupFilterModal);
   document.getElementById('btnToggleAllGroups')?.addEventListener('click', toggleAllGroups);
   document.getElementById('btnAddDirectoryModal')?.addEventListener('click', () => {

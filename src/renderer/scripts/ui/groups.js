@@ -10,6 +10,7 @@ import { renderGroupFilter, renderGroupSelect, renderDirectories } from './direc
 import { initGroupsDragDrop } from './dragDrop.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { getElement } from '../utils/dom-cache.js';
+import { debounce } from '../utils/debounce.js';
 import { getGroupDisplayName } from '../utils/terminal.js';
 
 /**
@@ -384,7 +385,7 @@ function showDeleteGroupModal(groupId) {
 export function setupGroupsEvents() {
   const searchInput = getElement('groupsSearchInput');
   if (searchInput) {
-    searchInput.addEventListener('input', renderGroupsTab);
+    searchInput.addEventListener('input', debounce(renderGroupsTab, 150));
   }
 
   const addBtn = getElement('btnAddGroupTab');
