@@ -2,8 +2,10 @@
  * MCP 工具：專案目錄管理
  * list_projects, add_project, update_project, remove_project
  */
+const fs = require('fs');
 const { loadConfig, saveConfig, getDefaultTerminalId } = require('../../config');
 const { getMainWindow } = require('../../window');
+const { validatePathSafety } = require('../../utils/path-utils');
 
 /**
  * 通知前端配置已變更
@@ -71,6 +73,23 @@ function registerProjectTools(server, z) {
       group: z.string().optional().describe('Group ID (default: "default")'),
     },
     async ({ name, path, icon, terminalId, group }) => {
+      // 驗證路徑安全性
+      const pathSafety = validatePathSafety(path);
+      if (!pathSafety.safe) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: `Unsafe path: ${pathSafety.reason}` }) }],
+          isError: true,
+        };
+      }
+
+      // 驗證路徑是否存在
+      if (!fs.existsSync(path)) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: 'Path does not exist' }) }],
+          isError: true,
+        };
+      }
+
       const config = loadConfig();
 
       // 檢查路徑是否已存在
@@ -135,6 +154,23 @@ function registerProjectTools(server, z) {
           content: [{ type: 'text', text: JSON.stringify({ error: 'Directory not found' }) }],
           isError: true,
         };
+      }
+
+      // 若提供了新路徑，驗證安全性與存在性
+      if (path !== undefined) {
+        const pathSafety = validatePathSafety(path);
+        if (!pathSafety.safe) {
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ error: `Unsafe path: ${pathSafety.reason}` }) }],
+            isError: true,
+          };
+        }
+        if (!fs.existsSync(path)) {
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ error: 'Path does not exist' }) }],
+            isError: true,
+          };
+        }
       }
 
       const dir = config.directories[dirIndex];
