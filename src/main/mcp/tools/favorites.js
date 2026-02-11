@@ -3,17 +3,7 @@
  * list_favorites, toggle_favorite
  */
 const { loadConfig, saveConfig } = require('../../config');
-const { getMainWindow } = require('../../window');
-
-/**
- * 通知前端配置已變更
- */
-function notifyConfigChanged() {
-  const mainWindow = getMainWindow();
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('config-changed');
-  }
-}
+const { notifyConfigChanged } = require('../utils');
 
 /**
  * 註冊最愛相關 MCP 工具

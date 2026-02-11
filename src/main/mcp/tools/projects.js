@@ -4,18 +4,8 @@
  */
 const fs = require('fs');
 const { loadConfig, saveConfig, getDefaultTerminalId } = require('../../config');
-const { getMainWindow } = require('../../window');
 const { validatePathSafety } = require('../../utils/path-utils');
-
-/**
- * 通知前端配置已變更
- */
-function notifyConfigChanged() {
-  const mainWindow = getMainWindow();
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('config-changed');
-  }
-}
+const { notifyConfigChanged } = require('../utils');
 
 /**
  * 註冊專案相關 MCP 工具
