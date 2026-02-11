@@ -13,6 +13,9 @@ let mainWindow = null;
  * @returns {BrowserWindow} 主視窗實例
  */
 function createWindow() {
+  const config = loadConfig();
+  const bgColor = config.settings?.theme === 'light' ? '#ffffff' : '#0d1117';
+
   mainWindow = new BrowserWindow({
     width: 700,
     height: 800,
@@ -23,7 +26,7 @@ function createWindow() {
     resizable: true,
     frame: false,
     transparent: false,
-    backgroundColor: '#0d1117',
+    backgroundColor: bgColor,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
