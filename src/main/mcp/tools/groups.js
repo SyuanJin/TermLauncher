@@ -3,17 +3,7 @@
  * list_groups, add_group, remove_group
  */
 const { loadConfig, saveConfig } = require('../../config');
-const { getMainWindow } = require('../../window');
-
-/**
- * 通知前端配置已變更
- */
-function notifyConfigChanged() {
-  const mainWindow = getMainWindow();
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('config-changed');
-  }
-}
+const { notifyConfigChanged } = require('../utils');
 
 /**
  * 註冊群組相關 MCP 工具

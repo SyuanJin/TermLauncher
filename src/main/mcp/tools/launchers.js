@@ -4,17 +4,7 @@
  */
 const { loadConfig, saveConfig } = require('../../config');
 const { openTerminal, detectInstalledTerminals } = require('../../terminal');
-const { getMainWindow } = require('../../window');
-
-/**
- * 通知前端配置已變更
- */
-function notifyConfigChanged() {
-  const mainWindow = getMainWindow();
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('config-changed');
-  }
-}
+const { notifyConfigChanged } = require('../utils');
 
 /**
  * 註冊啟動器相關 MCP 工具
