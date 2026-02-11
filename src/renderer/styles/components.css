@@ -311,14 +311,6 @@
   font-size: 18px;
 }
 
-.dir-icon.powershell {
-  background: linear-gradient(135deg, #012456 0%, #0078d4 100%);
-}
-
-.dir-icon.wsl {
-  background: linear-gradient(135deg, #e95420 0%, #772953 100%);
-}
-
 .dir-info {
   flex: 1;
   min-width: 0;
@@ -375,16 +367,6 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 500;
-}
-
-.tag.ps {
-  background: rgba(0, 120, 212, 0.2);
-  color: #58a6ff;
-}
-
-.tag.wsl {
-  background: rgba(233, 84, 32, 0.2);
-  color: #f78166;
 }
 
 /* 最近使用項目 */
