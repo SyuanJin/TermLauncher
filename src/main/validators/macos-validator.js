@@ -104,68 +104,6 @@ class MacOSValidator extends BaseValidator {
     return this.appExists('/Applications/Warp.app');
   }
 
-  // ===== Windows 相容方法（始終回傳 false/空值）=====
-
-  /**
-   * 檢測 Windows Terminal 是否已安裝（macOS 不適用）
-   * @returns {boolean}
-   */
-  isWindowsTerminalInstalled() {
-    return false;
-  }
-
-  /**
-   * 檢測 WSL 是否已安裝（macOS 不適用）
-   * @returns {boolean}
-   */
-  isWslInstalled() {
-    return false;
-  }
-
-  /**
-   * 取得已安裝的 WSL 發行版列表（macOS 不適用）
-   * @returns {string[]}
-   */
-  getWslDistros() {
-    return [];
-  }
-
-  /**
-   * 檢測特定 WSL 發行版是否存在（macOS 不適用）
-   * @param {string} distro - 發行版名稱
-   * @returns {boolean}
-   */
-  isWslDistroInstalled(distro) {
-    return false;
-  }
-
-  /**
-   * 從指令中提取 WSL 發行版名稱（macOS 不適用）
-   * @param {string} command - 終端指令
-   * @returns {string|null}
-   */
-  extractWslDistro(command) {
-    return null;
-  }
-
-  /**
-   * 檢測指令是否使用 Windows Terminal（macOS 不適用）
-   * @param {string} command - 終端指令
-   * @returns {boolean}
-   */
-  usesWindowsTerminal(command) {
-    return false;
-  }
-
-  /**
-   * 檢測指令是否使用 WSL（macOS 不適用）
-   * @param {string} command - 終端指令
-   * @returns {boolean}
-   */
-  usesWsl(command) {
-    return false;
-  }
-
   // ===== macOS 專屬方法 =====
 
   /**

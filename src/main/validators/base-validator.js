@@ -213,6 +213,36 @@ class BaseValidator {
 
     return { valid: true };
   }
+
+  // ===== Windows 相容方法預設實作（非 Windows 平台回傳 false/空值）=====
+
+  isWindowsTerminalInstalled() {
+    return false;
+  }
+
+  isWslInstalled() {
+    return false;
+  }
+
+  getWslDistros() {
+    return [];
+  }
+
+  isWslDistroInstalled(distro) {
+    return false;
+  }
+
+  extractWslDistro(command) {
+    return null;
+  }
+
+  usesWindowsTerminal(command) {
+    return false;
+  }
+
+  usesWsl(command) {
+    return false;
+  }
 }
 
 module.exports = { BaseValidator };
