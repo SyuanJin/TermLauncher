@@ -49,7 +49,7 @@ TermLauncher is a cross-platform desktop application that lets you quickly open 
 
 | Shortcut | Action                     |
 | -------- | -------------------------- |
-| Ctrl+1~5 | Switch tabs                |
+| Ctrl+1~6 | Switch tabs                |
 | Ctrl+N   | Add new directory          |
 | Ctrl+F   | Focus search               |
 | Escape   | Close modal / clear search |
@@ -134,7 +134,7 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 ### Linux (Experimental)
 
 - Ubuntu 20.04+ / Fedora 35+ / Arch Linux and other major distributions
-- Supported terminals: GNOME Terminal, Konsole, Tilix, Alacritty, Kitty, xterm, Terminator
+- Supported terminals: GNOME Terminal, Konsole, Tilix, Alacritty, Kitty, xterm, Terminator, Xfce Terminal
 - Must build from source (`npm run build:linux`)
 
 > **Note:** macOS and Linux support is currently experimental. Some features may not work as expected. Bug reports are welcome!

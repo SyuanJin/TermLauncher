@@ -7,6 +7,8 @@
     "start": "electron .",
     "build": "electron-builder --win portable",
     "build:installer": "electron-builder --win nsis",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
     "build:all": "npm run build && npm run build:installer",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -54,6 +56,20 @@
     },
     "portable": {
       "artifactName": "TermLauncher-Portable.exe"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "assets/icon.png",
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Development"
     }
   }
 }

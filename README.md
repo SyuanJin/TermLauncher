@@ -49,7 +49,7 @@ TermLauncher 是一個跨平台桌面應用，讓你能夠快速以任意應用�
 
 | 快捷鍵   | 動作              |
 | -------- | ----------------- |
-| Ctrl+1~5 | 切換分頁          |
+| Ctrl+1~6 | 切換分頁          |
 | Ctrl+N   | 新增目錄          |
 | Ctrl+F   | 搜尋              |
 | Escape   | 關閉彈窗/清空搜尋 |
@@ -134,7 +134,7 @@ D:\Projects\my-app  →  /mnt/d/Projects/my-app
 ### Linux（實驗性支援）
 
 - Ubuntu 20.04+ / Fedora 35+ / Arch Linux 等主流發行版
-- 支援的終端：GNOME Terminal、Konsole、Tilix、Alacritty、Kitty、xterm、Terminator
+- 支援的終端：GNOME Terminal、Konsole、Tilix、Alacritty、Kitty、xterm、Terminator、Xfce Terminal
 - 需從原始碼建置（`npm run build:linux`）
 
 > **注意**：macOS 和 Linux 支援目前為實驗性，部分功能可能無法正常運作。歡迎回報問題！
