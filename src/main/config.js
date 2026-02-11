@@ -276,11 +276,19 @@ function loadConfig() {
  * @returns {boolean} 儲存是否成功
  */
 function saveConfig(config) {
+  const tmpPath = configPath + '.tmp';
   try {
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
+    fs.writeFileSync(tmpPath, JSON.stringify(config, null, 2), 'utf-8');
+    fs.renameSync(tmpPath, configPath);
     return true;
   } catch (err) {
     logger.error('Failed to save config', err);
+    // 清理臨時檔案
+    try {
+      if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+    } catch {
+      // 忽略清理失敗
+    }
     return false;
   }
 }
