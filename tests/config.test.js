@@ -32,9 +32,7 @@ const defaultTerminals = [
   },
 ];
 
-const defaultGroups = [
-  { id: 'default', name: '預設', icon: '📁', isDefault: true, order: 0 },
-];
+const defaultGroups = [{ id: 'default', name: '預設', icon: '📁', isDefault: true, order: 0 }];
 
 const defaultSettings = {
   autoLaunch: false,
