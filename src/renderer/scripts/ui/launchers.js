@@ -567,7 +567,13 @@ function showDeleteTerminalModal(terminalId) {
       otherTerminals
         .map(
           t =>
-            '<option value="' + t.id + '">' + t.icon + ' ' + getTerminalDisplayName(t) + '</option>'
+            '<option value="' +
+            escapeAttr(t.id) +
+            '">' +
+            escapeHtml(t.icon) +
+            ' ' +
+            escapeHtml(getTerminalDisplayName(t)) +
+            '</option>'
         )
         .join('') +
       '</select>' +

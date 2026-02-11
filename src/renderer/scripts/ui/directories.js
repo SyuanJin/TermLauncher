@@ -685,13 +685,13 @@ export function showEditDirectoryModal(dirId) {
     '<div class="input-group flex-1"><label>' +
     t('ui.addDirectory.name') +
     '<span class="required-mark">*</span></label><input type="text" id="modalDirName" value="' +
-    escapeHtml(dir.name) +
+    escapeAttr(dir.name) +
     '" /></div>' +
     '</div>' +
     '<div class="input-group"><label>' +
     t('ui.addDirectory.path') +
     '<span class="required-mark">*</span></label><div class="path-input-wrapper"><input type="text" id="modalDirPath" value="' +
-    escapeHtml(dir.path) +
+    escapeAttr(dir.path) +
     '" /><button class="browse-btn" id="modalBrowsePath">' +
     t('ui.addDirectory.browse') +
     '</button></div></div>' +
