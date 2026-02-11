@@ -767,8 +767,6 @@ export function showEditDirectoryModal(dirId) {
   });
 }
 
-// escapeHtml 已移至 utils/escape.js 統一管理
-
 /**
  * 刪除目錄
  * @param {number} id - 目錄 ID
