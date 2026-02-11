@@ -145,11 +145,11 @@ function getDefaultUserPath() {
   }
 }
 
-// 預設群組列表
+// 預設群組列表（name 使用英文，實際顯示由 renderer 透過 i18n 處理）
 const defaultGroups = [
   {
     id: 'default',
-    name: '預設',
+    name: 'Default',
     icon: '📁',
     isDefault: true,
     order: 0,

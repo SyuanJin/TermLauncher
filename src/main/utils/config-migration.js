@@ -59,10 +59,10 @@ function migrateConfig(config, { defaultTerminals, defaultGroups, defaultSetting
     if (typeof config.groups[0] === 'string') {
       // 舊版格式：字串陣列 -> 新版格式：物件陣列
       config.groups = config.groups.map((name, index) => ({
-        id: name === '預設' ? 'default' : `group-${Date.now()}-${index}`,
+        id: name === '預設' || name === 'Default' ? 'default' : `group-${Date.now()}-${index}`,
         name,
         icon: '📁',
-        isDefault: name === '預設',
+        isDefault: name === '預設' || name === 'Default',
         order: index,
       }));
       needsSave = true;
@@ -70,7 +70,10 @@ function migrateConfig(config, { defaultTerminals, defaultGroups, defaultSetting
       // 已是物件陣列，確保有必要欄位
       config.groups.forEach((group, index) => {
         if (group.id === undefined) {
-          group.id = group.name === '預設' ? 'default' : `group-${Date.now()}-${index}`;
+          group.id =
+            group.name === '預設' || group.name === 'Default'
+              ? 'default'
+              : `group-${Date.now()}-${index}`;
           needsSave = true;
         }
         if (group.icon === undefined) {
@@ -78,7 +81,8 @@ function migrateConfig(config, { defaultTerminals, defaultGroups, defaultSetting
           needsSave = true;
         }
         if (group.isDefault === undefined) {
-          group.isDefault = group.name === '預設' || group.id === 'default';
+          group.isDefault =
+            group.name === '預設' || group.name === 'Default' || group.id === 'default';
           needsSave = true;
         }
         if (group.order === undefined) {
@@ -97,7 +101,7 @@ function migrateConfig(config, { defaultTerminals, defaultGroups, defaultSetting
   if (!hasDefaultGroup) {
     config.groups.unshift({
       id: 'default',
-      name: '預設',
+      name: 'Default',
       icon: '📁',
       isDefault: true,
       order: 0,
