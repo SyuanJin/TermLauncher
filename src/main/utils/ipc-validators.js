@@ -212,6 +212,52 @@ function validateLocaleCode(localeCode) {
 }
 
 /**
+ * 驗證前端錯誤日誌參數
+ * @param {*} error - 錯誤物件
+ * @param {*} context - 錯誤上下文
+ * @returns {ValidationResult}
+ */
+function validateRendererError(error, context) {
+  if (!error || typeof error !== 'object') {
+    return { valid: false, error: 'error must be an object' };
+  }
+
+  const MAX_LENGTH = 10000;
+  if (typeof error.message === 'string' && error.message.length > MAX_LENGTH) {
+    return { valid: false, error: 'error.message exceeds maximum length' };
+  }
+  if (typeof error.stack === 'string' && error.stack.length > MAX_LENGTH) {
+    return { valid: false, error: 'error.stack exceeds maximum length' };
+  }
+  if (context !== undefined && typeof context !== 'string') {
+    return { valid: false, error: 'context must be a string' };
+  }
+  if (typeof context === 'string' && context.length > 500) {
+    return { valid: false, error: 'context exceeds maximum length' };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * 驗證路徑陣列
+ * @param {*} paths - 路徑陣列
+ * @returns {ValidationResult}
+ */
+function validatePathsArray(paths) {
+  if (!Array.isArray(paths)) {
+    return { valid: false, error: 'paths must be an array' };
+  }
+
+  const MAX_PATHS = 500;
+  if (paths.length > MAX_PATHS) {
+    return { valid: false, error: `paths array exceeds maximum of ${MAX_PATHS} entries` };
+  }
+
+  return { valid: true };
+}
+
+/**
  * 創建驗證包裝器
  * @param {Function} validator - 驗證函數
  * @param {string} handlerName - IPC handler 名稱（用於錯誤訊息）
@@ -238,5 +284,7 @@ module.exports = {
   validateExportOptions,
   validateImportOptions,
   validateLocaleCode,
+  validateRendererError,
+  validatePathsArray,
   createValidator,
 };

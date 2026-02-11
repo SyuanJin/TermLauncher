@@ -33,6 +33,8 @@ const {
   validateBoolean,
   validateSafeUrl,
   validateString,
+  validateRendererError,
+  validatePathsArray,
 } = require('./utils/ipc-validators');
 
 const logger = createLogger('IPC');
@@ -368,6 +370,11 @@ function setupIpcHandlers() {
   // 記錄前端錯誤
   const rendererLogger = createLogger('Renderer');
   ipcMain.handle('log-renderer-error', (event, error, context) => {
+    const validation = validateRendererError(error, context);
+    if (!validation.valid) {
+      logger.warn(`Invalid renderer error log: ${validation.error}`);
+      return { success: false, error: validation.error };
+    }
     rendererLogger.error(`[${context || 'Unknown'}] ${error.message}`, {
       stack: error.stack,
       context,
@@ -392,17 +399,15 @@ function setupIpcHandlers() {
     }
   });
 
-  // 驗證多個路徑是否存在（限制最多 500 筆以避免阻塞主進程）
+  // 驗證多個路徑是否存在
   ipcMain.handle('validate-paths', async (event, paths) => {
-    if (!Array.isArray(paths)) {
+    const validation = validatePathsArray(paths);
+    if (!validation.valid) {
       return {};
     }
 
-    const MAX_PATHS = 500;
-    const limitedPaths = paths.length > MAX_PATHS ? paths.slice(0, MAX_PATHS) : paths;
-
     const entries = await Promise.all(
-      limitedPaths
+      paths
         .filter(p => typeof p === 'string')
         .map(async p => {
           try {
