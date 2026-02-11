@@ -119,10 +119,10 @@ function getOrCreateEmptyState() {
  * 渲染最愛列表
  */
 export function renderFavoritesList() {
-  // 清理贓數據
+  // 清理無效的最愛引用
   const cleaned = cleanFavorites();
   if (cleaned) {
-    saveConfig();
+    saveConfig().catch(() => {});
   }
 
   const container = getElement('favoritesListContainer');
