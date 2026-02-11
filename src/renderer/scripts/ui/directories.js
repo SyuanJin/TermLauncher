@@ -7,7 +7,7 @@ import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { openModal } from './modal.js';
 import { t } from '../i18n.js';
-import { renderFavoritesList } from './favorites.js';
+import { renderFavoritesList, isFavorite } from './favorites.js';
 import { renderRecentList } from './recent.js';
 import { initDirectoriesDragDrop } from './dragDrop.js';
 import { showContextMenu } from './contextMenu.js';
@@ -25,16 +25,6 @@ import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
 let allGroupsCollapsed = false;
 let selectedGroupFilters = []; // 多選群組篩選
-
-/**
- * 檢查是否為最愛
- * @param {number} id - 目錄 ID
- * @returns {boolean} 是否為最愛
- */
-function isFavorite(id) {
-  const config = getConfig();
-  return config.favorites?.includes(id) || false;
-}
 
 /**
  * 產生終端選項 HTML
