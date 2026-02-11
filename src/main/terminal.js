@@ -8,7 +8,6 @@ const { getValidator } = require('./validators');
 const {
   toWslPath,
   formatPath,
-  parseCommand,
   validatePathSafety,
   escapePathForShell,
 } = require('./utils/path-utils');
@@ -489,7 +488,6 @@ function openTerminal(dir, terminal) {
 module.exports = {
   toWslPath,
   formatPath,
-  parseCommand,
   openTerminal,
   previewCommand,
   validatePrerequisites,

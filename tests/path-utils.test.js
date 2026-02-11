@@ -1,6 +1,6 @@
 /**
  * path-utils.js 單元測試
- * 測試路徑轉換和命令解析功能
+ * 測試路徑轉換和安全性驗證功能
  */
 import { describe, it, expect } from 'vitest';
 
@@ -8,7 +8,6 @@ import { describe, it, expect } from 'vitest';
 const {
   toWslPath,
   formatPath,
-  parseCommand,
   validatePathSafety,
   escapePathForShell,
 } = require('../src/main/utils/path-utils.js');
@@ -136,46 +135,3 @@ describe('escapePathForShell', () => {
   });
 });
 
-describe('parseCommand', () => {
-  it('應該分割簡單命令', () => {
-    expect(parseCommand('wt -d /path')).toEqual(['wt', '-d', '/path']);
-  });
-
-  it('應該處理雙引號', () => {
-    expect(parseCommand('cmd /c "echo hello"')).toEqual(['cmd', '/c', 'echo hello']);
-  });
-
-  it('應該處理單引號', () => {
-    expect(parseCommand("bash -c 'ls -la'")).toEqual(['bash', '-c', 'ls -la']);
-  });
-
-  it('應該處理路徑中的空格（使用引號）', () => {
-    expect(parseCommand('cd "/path/with spaces"')).toEqual(['cd', '/path/with spaces']);
-  });
-
-  it('應該處理多個參數', () => {
-    expect(parseCommand('wt -p Ubuntu -d /mnt/c')).toEqual(['wt', '-p', 'Ubuntu', '-d', '/mnt/c']);
-  });
-
-  it('應該處理空命令', () => {
-    expect(parseCommand('')).toEqual([]);
-  });
-
-  it('應該處理只有空格的命令', () => {
-    expect(parseCommand('   ')).toEqual([]);
-  });
-
-  it('應該處理連續空格', () => {
-    expect(parseCommand('cmd  -c   test')).toEqual(['cmd', '-c', 'test']);
-  });
-
-  it('應該處理複雜的 Windows Terminal 命令', () => {
-    expect(parseCommand('wt -p "Ubuntu" -d "/mnt/d/Projects"')).toEqual([
-      'wt',
-      '-p',
-      'Ubuntu',
-      '-d',
-      '/mnt/d/Projects',
-    ]);
-  });
-});
