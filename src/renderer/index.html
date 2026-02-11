@@ -613,11 +613,38 @@
                   </div>
                 </div>
               </div>
-              <div class="setting-buttons-row">
-                <button class="btn btn-secondary" id="btnCopyMcpConfig">
-                  <span class="btn-emoji">📋</span>
-                  <span data-i18n="ui.settings.mcp.copyConfig">複製 Claude Code 配置</span>
-                </button>
+              <!-- MCP 配置程式碼區塊 -->
+              <div class="mcp-config-block">
+                <div class="mcp-config-header">
+                  <div class="mcp-config-tabs">
+                    <button class="mcp-config-tab active" data-tab="json">
+                      <span data-i18n="ui.settings.mcp.tabJson">JSON 配置</span>
+                    </button>
+                    <button class="mcp-config-tab" data-tab="cli">
+                      <span data-i18n="ui.settings.mcp.tabCli">CLI 指令</span>
+                    </button>
+                  </div>
+                  <button class="mcp-copy-btn" id="btnCopyMcpConfig" title="Copy">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span data-i18n="ui.settings.mcp.copy">複製</span>
+                  </button>
+                </div>
+                <div class="mcp-config-body">
+                  <pre class="mcp-config-code" id="mcpConfigJson"></pre>
+                  <pre class="mcp-config-code" id="mcpConfigCli" style="display: none"></pre>
+                </div>
               </div>
             </div>
 
