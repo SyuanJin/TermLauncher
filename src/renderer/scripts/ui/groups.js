@@ -10,15 +10,7 @@ import { renderGroupFilter, renderGroupSelect, renderDirectories } from './direc
 import { initGroupsDragDrop } from './dragDrop.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { getElement } from '../utils/dom-cache.js';
-
-/**
- * 取得群組顯示名稱
- * @param {Object} group - 群組物件
- * @returns {string} 群組顯示名稱
- */
-function getGroupDisplayName(group) {
-  return group.isDefault ? t('common.default') : group.name;
-}
+import { getGroupDisplayName } from '../utils/terminal.js';
 
 /**
  * 取得或重建空狀態元素

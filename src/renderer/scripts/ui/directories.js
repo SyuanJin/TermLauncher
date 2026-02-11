@@ -19,6 +19,7 @@ import {
   getDefaultTerminalId,
   getTerminalIcon,
   getTerminalName,
+  getGroupDisplayName,
 } from '../utils/terminal.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 
@@ -33,16 +34,6 @@ let selectedGroupFilters = []; // 多選群組篩選
 function isFavorite(id) {
   const config = getConfig();
   return config.favorites?.includes(id) || false;
-}
-
-/**
- * 取得群組顯示名稱
- * @param {Object} group - 群組物件
- * @returns {string} 群組顯示名稱
- */
-function getGroupDisplayName(group) {
-  const defaultGroupName = t('common.default');
-  return group.isDefault ? defaultGroupName : group.name;
 }
 
 /**
