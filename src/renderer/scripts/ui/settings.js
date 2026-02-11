@@ -187,6 +187,7 @@ async function changeMcpPort() {
   const oldPort = config.settings.mcp.port;
   config.settings.mcp.port = port;
   await saveConfig();
+  updateMcpConfigDisplay();
 
   // 如果 MCP 正在運行且埠號變更，重啟
   if (config.settings.mcp.enabled && port !== oldPort) {
@@ -204,11 +205,17 @@ async function changeMcpPort() {
 }
 
 /**
- * 複製 MCP Claude Code 配置到剪貼簿
+ * 取得目前 MCP port
  */
-async function copyMcpConfig() {
+function getMcpPort() {
   const config = getConfig();
-  const port = config.settings?.mcp?.port || 23549;
+  return config.settings?.mcp?.port || 23549;
+}
+
+/**
+ * 產生 MCP JSON 配置字串
+ */
+function getMcpJsonConfig(port) {
   const mcpConfig = {
     mcpServers: {
       termlauncher: {
@@ -217,20 +224,92 @@ async function copyMcpConfig() {
       },
     },
   };
+  return JSON.stringify(mcpConfig, null, 2);
+}
+
+/**
+ * 產生 MCP CLI 指令字串
+ */
+function getMcpCliConfig(port) {
+  return `claude mcp add termlauncher --transport http http://127.0.0.1:${port}/mcp`;
+}
+
+/**
+ * 更新 MCP 配置程式碼區塊內容
+ */
+function updateMcpConfigDisplay() {
+  const port = getMcpPort();
+  const jsonEl = document.getElementById('mcpConfigJson');
+  const cliEl = document.getElementById('mcpConfigCli');
+  if (jsonEl) jsonEl.textContent = getMcpJsonConfig(port);
+  if (cliEl) cliEl.textContent = getMcpCliConfig(port);
+}
+
+/**
+ * 取得目前 active tab 的配置文字
+ */
+function getActiveMcpConfigText() {
+  const port = getMcpPort();
+  const activeTab = document.querySelector('.mcp-config-tab.active');
+  const tabType = activeTab?.dataset.tab || 'json';
+  return tabType === 'cli' ? getMcpCliConfig(port) : getMcpJsonConfig(port);
+}
+
+/**
+ * 複製目前 active tab 的 MCP 配置到剪貼簿
+ */
+async function copyMcpConfig() {
+  const text = getActiveMcpConfigText();
+  const btn = document.getElementById('btnCopyMcpConfig');
 
   try {
-    await navigator.clipboard.writeText(JSON.stringify(mcpConfig, null, 2));
-    showToast(t('toast.mcpConfigCopied'), 'success');
+    await navigator.clipboard.writeText(text);
   } catch {
-    // fallback
     const textarea = document.createElement('textarea');
-    textarea.value = JSON.stringify(mcpConfig, null, 2);
+    textarea.value = text;
     document.body.appendChild(textarea);
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    showToast(t('toast.mcpConfigCopied'), 'success');
   }
+
+  // 視覺回饋：短暫顯示「已複製」
+  if (btn) {
+    btn.classList.add('copied');
+    const label = btn.querySelector('span');
+    const original = label?.textContent;
+    if (label) label.textContent = t('ui.settings.mcp.copied');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      if (label) label.textContent = original;
+    }, 1500);
+  }
+}
+
+/**
+ * 初始化 MCP 配置 tab 切換
+ */
+function initMcpConfigTabs() {
+  const tabs = document.querySelectorAll('.mcp-config-tab');
+  const jsonEl = document.getElementById('mcpConfigJson');
+  const cliEl = document.getElementById('mcpConfigCli');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      if (tab.dataset.tab === 'cli') {
+        if (jsonEl) jsonEl.style.display = 'none';
+        if (cliEl) cliEl.style.display = '';
+      } else {
+        if (jsonEl) jsonEl.style.display = '';
+        if (cliEl) cliEl.style.display = 'none';
+      }
+    });
+  });
+
+  updateMcpConfigDisplay();
 }
 
 /**
@@ -277,6 +356,7 @@ export async function renderSettings() {
   document.getElementById('mcpEnabled').checked = mcpSettings.enabled !== false;
   document.getElementById('mcpPort').value = mcpSettings.port || 23549;
   await updateMcpStatus();
+  updateMcpConfigDisplay();
 }
 
 /**
@@ -657,4 +737,5 @@ export function setupSettingsEvents() {
   document.getElementById('mcpEnabled')?.addEventListener('change', changeMcpEnabled);
   document.getElementById('mcpPort')?.addEventListener('change', changeMcpPort);
   document.getElementById('btnCopyMcpConfig')?.addEventListener('click', copyMcpConfig);
+  initMcpConfigTabs();
 }

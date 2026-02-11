@@ -1974,6 +1974,96 @@ body.hide-tab-text .tab {
   color: var(--text-secondary);
 }
 
+/* MCP 配置程式碼區塊 */
+.mcp-config-block {
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.mcp-config-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0 4px 0 0;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.mcp-config-tabs {
+  display: flex;
+  gap: 0;
+}
+
+.mcp-config-tab {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+  white-space: nowrap;
+}
+
+.mcp-config-tab:hover {
+  color: var(--text-primary);
+}
+
+.mcp-config-tab.active {
+  color: var(--accent-color, #58a6ff);
+  border-bottom-color: var(--accent-color, #58a6ff);
+}
+
+.mcp-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
+  white-space: nowrap;
+}
+
+.mcp-copy-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.mcp-copy-btn.copied {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.mcp-config-body {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+
+.mcp-config-code {
+  margin: 0;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre;
+  tab-size: 2;
+}
+
 /* 無障礙：尊重使用者的動態偏好設定 */
 @media (prefers-reduced-motion: reduce) {
   *,

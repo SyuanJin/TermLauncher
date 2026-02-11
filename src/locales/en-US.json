@@ -222,7 +222,11 @@
           "recent": "Recent"
         },
         "copyConfig": "Copy Claude Code Config",
-        "copyConfigDesc": "Copy MCP connection config to clipboard for Claude Code settings"
+        "copyConfigDesc": "Copy MCP connection config to clipboard for Claude Code settings",
+        "tabJson": "JSON Config",
+        "tabCli": "CLI Command",
+        "copy": "Copy",
+        "copied": "Copied"
       },
       "about": {
         "title": "ℹ️ About",

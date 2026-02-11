@@ -222,7 +222,11 @@
           "recent": "最近"
         },
         "copyConfig": "複製 Claude Code 配置",
-        "copyConfigDesc": "複製 MCP 連線配置到剪貼簿，貼入 Claude Code 設定檔使用"
+        "copyConfigDesc": "複製 MCP 連線配置到剪貼簿，貼入 Claude Code 設定檔使用",
+        "tabJson": "JSON 配置",
+        "tabCli": "CLI 指令",
+        "copy": "複製",
+        "copied": "已複製"
       },
       "about": {
         "title": "ℹ️ 關於",
