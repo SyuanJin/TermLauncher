@@ -291,7 +291,7 @@ export async function clearRecentHistory() {
     onConfirm: async () => {
       const config = getConfig();
       config.directories.forEach(d => {
-        delete d.lastUsed;
+        d.lastUsed = null;
       });
       await saveConfig();
       renderRecentList();
