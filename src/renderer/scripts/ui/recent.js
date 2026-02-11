@@ -179,7 +179,7 @@ function bindRecentEvents() {
   document.querySelectorAll('#recentListContainer .directory-item').forEach(item => {
     const handleOpen = e => {
       if (e.target.closest('.btn-icon')) return;
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       openTerminalUtil(id, renderRecentList);
     };
 
@@ -193,7 +193,7 @@ function bindRecentEvents() {
 
     // 右鍵選單
     item.addEventListener('contextmenu', e => {
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       showRecentContextMenu(e, id);
     });
   });
@@ -201,7 +201,7 @@ function bindRecentEvents() {
   document.querySelectorAll('[data-remove-recent]').forEach(btn => {
     const handleRemove = e => {
       e.stopPropagation();
-      const id = parseInt(btn.dataset.removeRecent);
+      const id = parseInt(btn.dataset.removeRecent, 10);
       removeFromRecent(id);
     };
 
