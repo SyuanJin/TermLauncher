@@ -67,7 +67,7 @@ function buildTrayMenu() {
   const recentLimit = config.settings?.recentLimit || 10;
   const recentDirs = [...(config.directories || [])]
     .filter(d => d.lastUsed)
-    .sort((a, b) => new Date(b.lastUsed) - new Date(a.lastUsed))
+    .sort((a, b) => b.lastUsed - a.lastUsed)
     .slice(0, recentLimit);
 
   if (recentDirs.length > 0) {
