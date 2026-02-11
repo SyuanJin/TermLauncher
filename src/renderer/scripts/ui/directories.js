@@ -465,14 +465,14 @@ function bindDirectoryEvents() {
   document.querySelectorAll('#directoryGroups .directory-item').forEach(item => {
     const handleOpen = e => {
       if (e.target.closest('.btn-icon')) return;
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       openTerminalUtil(id, refreshDirectoryViews);
     };
 
     item.addEventListener('click', handleOpen);
     item.addEventListener('dblclick', e => {
       if (e.target.closest('.btn-icon')) return;
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       showEditDirectoryModal(id);
     });
     item.addEventListener('keydown', e => {
@@ -484,7 +484,7 @@ function bindDirectoryEvents() {
 
     // 右鍵選單
     item.addEventListener('contextmenu', e => {
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       showDirectoryContextMenu(e, id);
     });
   });
@@ -492,7 +492,7 @@ function bindDirectoryEvents() {
   document.querySelectorAll('#directoryGroups [data-toggle-favorite]').forEach(btn => {
     const handleToggle = e => {
       e.stopPropagation();
-      const id = parseInt(btn.dataset.toggleFavorite);
+      const id = parseInt(btn.dataset.toggleFavorite, 10);
       toggleFavorite(id);
     };
 
@@ -502,7 +502,7 @@ function bindDirectoryEvents() {
   document.querySelectorAll('#directoryGroups [data-edit-dir]').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      const id = parseInt(btn.dataset.editDir);
+      const id = parseInt(btn.dataset.editDir, 10);
       showEditDirectoryModal(id);
     });
   });
@@ -510,7 +510,7 @@ function bindDirectoryEvents() {
   document.querySelectorAll('#directoryGroups [data-delete-id]').forEach(btn => {
     const handleDelete = e => {
       e.stopPropagation();
-      const id = parseInt(btn.dataset.deleteId);
+      const id = parseInt(btn.dataset.deleteId, 10);
       deleteDirectory(id);
     };
 

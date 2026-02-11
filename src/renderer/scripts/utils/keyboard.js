@@ -94,7 +94,7 @@ function handleKeydown(e) {
 
   // Ctrl + 數字鍵 - 切換 Tab
   if (e.ctrlKey && !e.shiftKey && !e.altKey) {
-    const num = parseInt(e.key);
+    const num = parseInt(e.key, 10);
     if (num >= 1 && num <= 6) {
       e.preventDefault();
       const tabId = TAB_MAP[num];

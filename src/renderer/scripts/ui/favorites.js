@@ -225,7 +225,7 @@ function bindFavoritesEvents() {
   document.querySelectorAll('#favoritesListContainer .directory-item').forEach(item => {
     const handleOpen = e => {
       if (e.target.closest('.btn-icon')) return;
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       openTerminalUtil(id, refreshFavoritesViews);
     };
 
@@ -239,7 +239,7 @@ function bindFavoritesEvents() {
 
     // 右鍵選單
     item.addEventListener('contextmenu', e => {
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       showFavoritesContextMenu(e, id);
     });
   });
@@ -247,7 +247,7 @@ function bindFavoritesEvents() {
   document.querySelectorAll('#favoritesListContainer [data-toggle-favorite]').forEach(btn => {
     const handleToggle = e => {
       e.stopPropagation();
-      const id = parseInt(btn.dataset.toggleFavorite);
+      const id = parseInt(btn.dataset.toggleFavorite, 10);
       toggleFavorite(id);
     };
 
@@ -265,7 +265,7 @@ function bindFavoritesEvents() {
     btn.addEventListener('click', async e => {
       e.stopPropagation();
       await importDirectoriesModule();
-      const id = parseInt(btn.dataset.editDir);
+      const id = parseInt(btn.dataset.editDir, 10);
       showEditDirectoryModal(id);
     });
   });
@@ -275,7 +275,7 @@ function bindFavoritesEvents() {
     btn.addEventListener('click', async e => {
       e.stopPropagation();
       await importDirectoriesModule();
-      const id = parseInt(btn.dataset.deleteDir);
+      const id = parseInt(btn.dataset.deleteDir, 10);
       await deleteDirectoryFn(id);
     });
   });
@@ -285,7 +285,7 @@ function bindFavoritesEvents() {
     item.addEventListener('dblclick', async e => {
       if (e.target.closest('.btn-icon')) return;
       await importDirectoriesModule();
-      const id = parseInt(item.dataset.id);
+      const id = parseInt(item.dataset.id, 10);
       showEditDirectoryModal(id);
     });
   });

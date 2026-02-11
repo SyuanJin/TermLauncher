@@ -121,7 +121,7 @@ export function initFavoritesDragDrop() {
 async function saveFavoritesOrder(container) {
   const config = getConfig();
   const items = container.querySelectorAll('.directory-item');
-  const newOrder = [...items].map(item => parseInt(item.dataset.id));
+  const newOrder = [...items].map(item => parseInt(item.dataset.id, 10));
 
   // 更新 favorites 陣列順序
   config.favorites = newOrder;
@@ -296,7 +296,7 @@ async function saveDirectoriesOrder() {
     const items = section.querySelectorAll('.directory-item');
 
     items.forEach((item, index) => {
-      const dirId = parseInt(item.dataset.id);
+      const dirId = parseInt(item.dataset.id, 10);
       const dir = config.directories.find(d => d.id === dirId);
       if (dir) {
         dir.order = index;
