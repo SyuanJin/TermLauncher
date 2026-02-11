@@ -25,14 +25,22 @@ src/
 │   ├── ipc-handlers.js  # IPC 處理
 │   ├── i18n.js          # 國際化
 │   ├── logger.js        # 日誌記錄
+│   ├── updater.js       # 版本更新檢查
+│   ├── mcp/             # MCP 協議伺服器
+│   │   ├── index.js     # MCP 伺服器核心
+│   │   ├── tools/       # MCP 工具模組
+│   │   └── utils.js     # MCP 工具函式
 │   ├── validators/      # 跨平台終端驗證器
+│   │   ├── index.js              # 驗證器匯出入口
 │   │   ├── base-validator.js     # 驗證器基類（快取機制）
 │   │   ├── windows-validator.js  # Windows 終端驗證
 │   │   ├── macos-validator.js    # macOS 終端驗證
 │   │   └── linux-validator.js    # Linux 終端驗證
 │   └── utils/           # 工具函式
-│       ├── path-utils.js      # 路徑轉換與安全驗證
-│       └── ipc-validators.js  # IPC 參數驗證
+│       ├── path-utils.js         # 路徑轉換與安全驗證
+│       ├── ipc-validators.js     # IPC 參數驗證
+│       ├── version-utils.js      # 版本比較工具
+│       └── config-migration.js   # 配置版本遷移
 │
 ├── preload/preload.js   # Context Bridge API
 │
@@ -40,12 +48,14 @@ src/
 │   ├── index.html
 │   ├── styles/          # CSS (variables, base, components, layout)
 │   └── scripts/
-│       ├── app.js       # 應用入口
-│       ├── api.js       # IPC 封裝
-│       ├── state.js     # 狀態管理
-│       ├── i18n.js      # 前端翻譯
+│       ├── app.js          # 應用入口
+│       ├── api.js          # IPC 封裝
+│       ├── state.js        # 狀態管理
+│       ├── i18n.js         # 前端翻譯
+│       ├── error-handler.js # 錯誤處理
 │       ├── ui/          # UI 模組 (tabs, recent, favorites, groups, directories, launchers, settings, modal, contextMenu, dragDrop, toast)
 │       └── utils/       # 工具函式
+│           └── debounce.js  # 防抖函式
 │
 └── locales/             # 語系檔 (zh-TW, en-US)
 ```
@@ -74,7 +84,7 @@ src/
 
 ## IPC 通訊
 
-共 28 個 Channel，依功能分組：
+共 32 個 Channel，依功能分組：
 
 ### 配置管理
 
@@ -84,6 +94,7 @@ src/
 | save-config            | handle | 儲存配置（含重新註冊快捷鍵） |
 | check-config-corrupted | handle | 檢查配置是否曾損壞           |
 | reset-config           | handle | 重設所有設定為預設值         |
+| config-changed         | send   | 配置變更事件（通知前端）     |
 
 ### 啟動器操作
 
@@ -131,6 +142,7 @@ src/
 | get-app-version     | handle | 取得應用程式版本     |
 | get-platform        | handle | 取得當前作業系統平台 |
 | get-shortcut-status | handle | 取得快捷鍵註冊狀態   |
+| check-for-updates   | handle | 檢查版本更新         |
 
 ### 外部操作
 
@@ -153,6 +165,38 @@ src/
 | minimize-window | on   | 最小化視窗      |
 | maximize-window | on   | 最大化/還原視窗 |
 | close-window    | on   | 關閉視窗        |
+
+### MCP 伺服器
+
+| Channel           | 方式   | 說明              |
+| ----------------- | ------ | ----------------- |
+| start-mcp-server  | handle | 啟動 MCP 伺服器   |
+| stop-mcp-server   | handle | 停止 MCP 伺服器   |
+| get-mcp-status    | handle | 取得 MCP 伺服器狀態 |
+
+## MCP 子系統
+
+**Model Context Protocol (MCP)** 允許 AI 應用程式透過標準化協議存取 TermLauncher 功能。
+
+### 架構
+
+- **伺服器實作**：`src/main/mcp/index.js`
+- **通訊協議**：Stdio (標準輸入/輸出)
+- **工具模組**：`src/main/mcp/tools/` (目錄、群組、啟動器操作)
+
+### 功能
+
+- 查詢與管理目錄、群組、啟動器
+- 開啟終端並切換到指定目錄
+- 探測系統已安裝的啟動器
+- 匯出/匯入配置
+
+### 使用方式
+
+```bash
+# 透過 Claude Desktop 或其他 MCP 客戶端連接
+termlauncher.exe --mcp
+```
 
 ## 安全機制
 

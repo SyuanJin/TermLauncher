@@ -26,6 +26,15 @@ npm run format:check
 
 # 代碼格式化
 npm run format
+
+# 執行測試
+npm test
+
+# 執行測試並產生覆蓋率報告
+npm run test:coverage
+
+# 執行 ESLint 檢查
+npm run lint
 ```
 
 ## 架構設計
@@ -55,6 +64,8 @@ Main Process (後端/系統整合)
 | `ipc-handlers.js` | IPC 事件處理                     |
 | `i18n.js`         | 國際化                           |
 | `logger.js`       | 日誌系統                         |
+| `updater.js`      | 版本更新檢查                     |
+| `mcp/`            | MCP 協議伺服器                   |
 
 ### 前端模組 (`src/renderer/scripts/`)
 
@@ -79,6 +90,8 @@ Main Process (後端/系統整合)
 - 原生 HTML/CSS/ES Modules（無前端框架）
 - electron-builder 打包
 - Prettier 代碼格式化
+- ESLint 代碼檢查
+- Vitest 測試框架
 
 ## 開發注意事項
 
