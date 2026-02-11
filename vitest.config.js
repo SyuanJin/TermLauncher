@@ -15,6 +15,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       include: ['src/main/**/*.js'],
+      // 排除強依賴 Electron runtime 的模組（無法在純 Node 環境中測試）
       exclude: ['src/main/index.js', 'src/main/window.js', 'src/main/tray.js'],
     },
   },
