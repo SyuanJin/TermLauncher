@@ -68,7 +68,7 @@ function readRequestBody(req) {
     req.on('end', () => {
       try {
         resolve(data ? JSON.parse(data) : undefined);
-      } catch (e) {
+      } catch {
         reject(new Error('Invalid JSON'));
       }
     });

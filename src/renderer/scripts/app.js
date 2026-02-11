@@ -5,18 +5,12 @@
 import { loadConfig, getConfig, isConfigLoaded, validateAllPaths } from './state.js';
 import { api } from './api.js';
 import { initI18n, t } from './i18n.js';
-import { preCacheElements, COMMON_ELEMENT_IDS, getElement } from './utils/dom-cache.js';
+import { preCacheElements, COMMON_ELEMENT_IDS } from './utils/dom-cache.js';
 import { setupTabs, onTabChange } from './ui/tabs.js';
 import { renderRecentList, setupRecentEvents } from './ui/recent.js';
 import { renderFavoritesList, setupFavoritesEvents } from './ui/favorites.js';
 import { renderGroupsTab, setupGroupsEvents } from './ui/groups.js';
-import {
-  renderGroupFilter,
-  renderGroupSelect,
-  renderTerminalSelect,
-  renderDirectories,
-  setupDirectoryEvents,
-} from './ui/directories.js';
+import { renderGroupFilter, renderDirectories, setupDirectoryEvents } from './ui/directories.js';
 import {
   renderSettings,
   setupSettingsEvents,
@@ -44,8 +38,6 @@ async function renderAll() {
   renderFavoritesList();
   renderGroupsTab();
   renderGroupFilter();
-  renderGroupSelect();
-  renderTerminalSelect();
   renderDirectories();
   await renderSettings();
   await renderLaunchersTab();

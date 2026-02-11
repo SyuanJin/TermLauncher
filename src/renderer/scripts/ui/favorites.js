@@ -2,8 +2,7 @@
  * 最愛 Tab 模組
  * 處理最愛目錄的顯示與管理
  */
-import { getConfig, saveConfig, loadConfig, isPathValid } from '../state.js';
-import { api } from '../api.js';
+import { getConfig, saveConfig, isPathValid } from '../state.js';
 import { showToast } from './toast.js';
 import { t } from '../i18n.js';
 import { renderRecentList } from './recent.js';
@@ -13,7 +12,6 @@ import { debounce } from '../utils/debounce.js';
 import {
   openTerminal as openTerminalUtil,
   openTerminalWithType as openTerminalWithTypeUtil,
-  getErrorMessage,
   getTerminalDisplayName,
   getDefaultTerminalId,
   getTerminalIcon,
@@ -25,7 +23,6 @@ import { getElement } from '../utils/dom-cache.js';
 // 延遲導入以避免循環依賴
 let showEditDirectoryModal = null;
 let deleteDirectoryFn = null;
-let renderDirectoriesFn = null;
 
 // 事件委派初始化標記
 let favoritesDelegationInitialized = false;
@@ -38,20 +35,7 @@ async function importDirectoriesModule() {
     const dirModule = await import('./directories.js');
     showEditDirectoryModal = dirModule.showEditDirectoryModal;
     deleteDirectoryFn = dirModule.deleteDirectory;
-    renderDirectoriesFn = dirModule.renderDirectories;
   }
-}
-
-/**
- * 取得群組名稱
- * @param {string} groupId - 群組 ID
- * @returns {string} 群組名稱
- */
-function getGroupName(groupId) {
-  const config = getConfig();
-  const group = config.groups?.find(g => g.id === groupId);
-  if (!group) return groupId;
-  return group.isDefault ? t('common.default') : group.name;
 }
 
 /**

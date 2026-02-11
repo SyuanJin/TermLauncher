@@ -13,14 +13,14 @@ const logger = createLogger('BaseValidator');
 class BaseValidator {
   /**
    * @param {Object} options - 配置選項
-   * @param {number} [options.cacheTTL=300000] - 快取 TTL（毫秒），預設 5 分鐘
+   * @param {number} [options.cacheTTL=60000] - 快取 TTL（毫秒），預設 60 秒
    * @param {number} [options.maxCacheSize=100] - 最大快取項目數，預設 100
    */
   constructor(options = {}) {
     // 快取儲存
     this.cache = new Map();
-    // 快取 TTL（預設 5 分鐘）
-    this.cacheTTL = options.cacheTTL || 5 * 60 * 1000;
+    // 快取 TTL（預設 60 秒）
+    this.cacheTTL = options.cacheTTL || 60 * 1000;
     // 最大快取大小
     this.maxCacheSize = options.maxCacheSize || 100;
     // 快取統計
@@ -128,7 +128,7 @@ class BaseValidator {
    * @param {Object} terminal - 終端配置
    * @returns {Promise<Object>} 驗證結果
    */
-  async validateTerminal(terminal) {
+  async validateTerminal(_terminal) {
     throw new Error('validateTerminal() must be implemented by subclass');
   }
 
@@ -159,7 +159,7 @@ class BaseValidator {
           errorDetail: dirPath,
         };
       }
-    } catch (err) {
+    } catch {
       return {
         valid: false,
         errorType: 'PATH_NOT_FOUND',
@@ -228,19 +228,19 @@ class BaseValidator {
     return [];
   }
 
-  isWslDistroInstalled(distro) {
+  isWslDistroInstalled(_distro) {
     return false;
   }
 
-  extractWslDistro(command) {
+  extractWslDistro(_command) {
     return null;
   }
 
-  usesWindowsTerminal(command) {
+  usesWindowsTerminal(_command) {
     return false;
   }
 
-  usesWsl(command) {
+  usesWsl(_command) {
     return false;
   }
 }

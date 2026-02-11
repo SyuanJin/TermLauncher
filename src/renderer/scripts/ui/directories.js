@@ -2,7 +2,7 @@
  * 目錄列表模組
  * 處理目錄的顯示、新增、刪除等操作
  */
-import { getConfig, saveConfig, loadConfig, isPathValid } from '../state.js';
+import { getConfig, saveConfig, isPathValid } from '../state.js';
 import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { openModal } from './modal.js';
@@ -14,7 +14,6 @@ import { showContextMenu } from './contextMenu.js';
 import {
   openTerminal as openTerminalUtil,
   openTerminalWithType as openTerminalWithTypeUtil,
-  getErrorMessage,
   showCommandPreview,
   getTerminalDisplayName,
   getDefaultTerminalId,
@@ -232,20 +231,6 @@ export function showGroupFilterModal() {
       });
     },
   });
-}
-
-/**
- * 渲染群組下拉選單（保留向下相容）
- */
-export function renderGroupSelect() {
-  // 不再需要，但保留空函數避免錯誤
-}
-
-/**
- * 渲染終端下拉選單（保留向下相容）
- */
-export function renderTerminalSelect() {
-  // 不再需要，但保留空函數避免錯誤
 }
 
 /**
