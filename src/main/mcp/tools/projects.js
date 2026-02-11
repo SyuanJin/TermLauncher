@@ -56,13 +56,23 @@ function registerProjectTools(server, z) {
     'add_project',
     'Add a new project directory',
     {
-      name: z.string().describe('Directory display name'),
-      path: z.string().describe('Absolute path to the directory'),
+      name: z.string().min(1).describe('Directory display name'),
+      path: z.string().min(1).describe('Absolute path to the directory'),
       icon: z.string().optional().describe('Emoji icon (default: 📁)'),
       terminalId: z.string().optional().describe('Launcher ID to use (default: first available)'),
       group: z.string().optional().describe('Group ID (default: "default")'),
     },
-    async ({ name, path, icon, terminalId, group }) => {
+    async ({ name: rawName, path, icon, terminalId, group }) => {
+      const name = rawName.trim();
+      if (!name) {
+        return {
+          content: [
+            { type: 'text', text: JSON.stringify({ error: 'Name cannot be empty or whitespace' }) },
+          ],
+          isError: true,
+        };
+      }
+
       // 驗證路徑安全性
       const pathSafety = validatePathSafety(path);
       if (!pathSafety.safe) {
@@ -200,7 +210,21 @@ function registerProjectTools(server, z) {
       }
 
       const dir = config.directories[dirIndex];
-      if (name !== undefined) dir.name = name;
+      if (name !== undefined) {
+        const trimmedName = name.trim();
+        if (!trimmedName) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({ error: 'Name cannot be empty or whitespace' }),
+              },
+            ],
+            isError: true,
+          };
+        }
+        dir.name = trimmedName;
+      }
       if (path !== undefined) dir.path = path;
       if (icon !== undefined) dir.icon = icon;
       if (terminalId !== undefined) dir.terminalId = terminalId;

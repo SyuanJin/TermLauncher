@@ -36,10 +36,20 @@ function registerGroupTools(server, z) {
     'add_group',
     'Add a new project group',
     {
-      name: z.string().describe('Group display name'),
+      name: z.string().min(1).describe('Group display name'),
       icon: z.string().optional().describe('Emoji icon (default: 📁)'),
     },
-    async ({ name, icon }) => {
+    async ({ name: rawName, icon }) => {
+      const name = rawName.trim();
+      if (!name) {
+        return {
+          content: [
+            { type: 'text', text: JSON.stringify({ error: 'Name cannot be empty or whitespace' }) },
+          ],
+          isError: true,
+        };
+      }
+
       const config = loadConfig();
 
       // 檢查名稱是否重複
