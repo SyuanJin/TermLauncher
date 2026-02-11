@@ -8,6 +8,9 @@ import { escapeHtml, escapeAttr } from '../utils/escape.js';
 // 當前開啟的彈窗
 let currentModal = null;
 
+// 開啟彈窗前的聚焦元素（關閉後還原焦點）
+let previouslyFocusedElement = null;
+
 /**
  * 彈窗類型定義
  */
@@ -89,6 +92,9 @@ function createModalElement(options) {
  * @returns {HTMLElement} 彈窗元素
  */
 export function openModal(options) {
+  // 記錄當前聚焦元素（關閉後還原）
+  previouslyFocusedElement = document.activeElement;
+
   // 先關閉現有彈窗
   if (currentModal) {
     closeModal();
@@ -203,6 +209,12 @@ export function closeModal() {
   setTimeout(() => {
     currentModal?.remove();
     currentModal = null;
+
+    // 還原開啟前的聚焦元素
+    if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === 'function') {
+      previouslyFocusedElement.focus();
+      previouslyFocusedElement = null;
+    }
   }, 200);
 }
 
