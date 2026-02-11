@@ -4,6 +4,7 @@
  */
 const { ipcMain, dialog, app, shell } = require('electron');
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 const path = require('path');
 const {
   loadConfig,
@@ -134,7 +135,7 @@ function setupIpcHandlers() {
 
     if (!result.canceled && result.filePath) {
       const config = loadConfig();
-      fs.writeFileSync(result.filePath, JSON.stringify(config, null, 2), 'utf-8');
+      await fsPromises.writeFile(result.filePath, JSON.stringify(config, null, 2), 'utf-8');
       return { success: true, path: result.filePath };
     }
     return { success: false };
@@ -158,7 +159,7 @@ function setupIpcHandlers() {
 
     if (!result.canceled && result.filePath) {
       const exportData = exportConfigAdvanced(options);
-      fs.writeFileSync(result.filePath, JSON.stringify(exportData, null, 2), 'utf-8');
+      await fsPromises.writeFile(result.filePath, JSON.stringify(exportData, null, 2), 'utf-8');
       return { success: true, path: result.filePath, data: exportData };
     }
     return { success: false };
@@ -175,7 +176,7 @@ function setupIpcHandlers() {
 
     if (!result.canceled && result.filePaths.length > 0) {
       try {
-        const data = fs.readFileSync(result.filePaths[0], 'utf-8');
+        const data = await fsPromises.readFile(result.filePaths[0], 'utf-8');
         const config = JSON.parse(data);
         const validation = validateConfig(config);
         if (!validation.valid) {
@@ -209,7 +210,7 @@ function setupIpcHandlers() {
 
     if (!result.canceled && result.filePaths.length > 0) {
       try {
-        const data = fs.readFileSync(result.filePaths[0], 'utf-8');
+        const data = await fsPromises.readFile(result.filePaths[0], 'utf-8');
         const importData = JSON.parse(data);
 
         return importConfigAdvanced(importData, options);
@@ -375,15 +376,14 @@ function setupIpcHandlers() {
   });
 
   // 清除日誌
-  ipcMain.handle('clear-logs', () => {
+  ipcMain.handle('clear-logs', async () => {
     try {
       const logsPath = path.join(app.getPath('userData'), 'logs');
-      if (fs.existsSync(logsPath)) {
-        const files = fs.readdirSync(logsPath);
-        files.forEach(file => {
-          const filePath = path.join(logsPath, file);
-          fs.unlinkSync(filePath);
-        });
+      try {
+        const files = await fsPromises.readdir(logsPath);
+        await Promise.all(files.map(file => fsPromises.unlink(path.join(logsPath, file))));
+      } catch (e) {
+        if (e.code !== 'ENOENT') throw e;
       }
       return { success: true };
     } catch (err) {
@@ -393,7 +393,7 @@ function setupIpcHandlers() {
   });
 
   // 驗證多個路徑是否存在（限制最多 500 筆以避免阻塞主進程）
-  ipcMain.handle('validate-paths', (event, paths) => {
+  ipcMain.handle('validate-paths', async (event, paths) => {
     if (!Array.isArray(paths)) {
       return {};
     }
@@ -401,16 +401,19 @@ function setupIpcHandlers() {
     const MAX_PATHS = 500;
     const limitedPaths = paths.length > MAX_PATHS ? paths.slice(0, MAX_PATHS) : paths;
 
-    const results = {};
-    for (const p of limitedPaths) {
-      if (typeof p !== 'string') continue;
-      try {
-        results[p] = fs.existsSync(p) && fs.statSync(p).isDirectory();
-      } catch {
-        results[p] = false;
-      }
-    }
-    return results;
+    const entries = await Promise.all(
+      limitedPaths
+        .filter(p => typeof p === 'string')
+        .map(async p => {
+          try {
+            const stat = await fsPromises.stat(p);
+            return [p, stat.isDirectory()];
+          } catch {
+            return [p, false];
+          }
+        })
+    );
+    return Object.fromEntries(entries);
   });
 
   // 重設所有設定
