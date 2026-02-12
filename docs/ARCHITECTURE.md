@@ -79,11 +79,11 @@ src/
 
 **位置**（由 `app.getPath('userData')` 決定）：
 
-| 平台    | 路徑                                                  |
-| ------- | ----------------------------------------------------- |
-| Windows | `%APPDATA%\termlauncher\config.json`                  |
+| 平台    | 路徑                                                     |
+| ------- | -------------------------------------------------------- |
+| Windows | `%APPDATA%\termlauncher\config.json`                     |
 | macOS   | `~/Library/Application Support/termlauncher/config.json` |
-| Linux   | `~/.config/termlauncher/config.json`                  |
+| Linux   | `~/.config/termlauncher/config.json`                     |
 
 **結構摘要**：
 
