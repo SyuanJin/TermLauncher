@@ -1296,6 +1296,23 @@ input:checked + .slider:before {
   line-height: 1.4;
 }
 
+/* Portable 模式提示 */
+.portable-notice {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.portable-notice ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.portable-notice li {
+  margin-bottom: 4px;
+}
+
 /* Radio 按鈕群組 */
 .radio-group {
   display: flex;
