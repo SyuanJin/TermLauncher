@@ -55,7 +55,7 @@
 
 .titlebar-btn.close:hover {
   background: var(--accent-red);
-  color: white;
+  color: var(--text-on-accent);
 }
 
 /* 主容器 */
