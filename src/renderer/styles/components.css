@@ -35,7 +35,7 @@
 
 .tab.active {
   background: var(--accent-blue);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .tab-icon {
@@ -143,11 +143,11 @@
 
 .btn-primary {
   background: var(--accent-blue);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .btn-primary:hover {
-  background: #79b8ff;
+  background: var(--accent-blue-hover);
 }
 
 .btn-secondary {
@@ -503,7 +503,7 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(20px);
-  background: white;
+  background: var(--text-on-accent);
 }
 
 /* 小型開關 */
@@ -713,7 +713,7 @@ input:checked + .slider:before {
 .toast-action-btn:hover {
   background: var(--accent-blue);
   border-color: var(--accent-blue);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 /* 終端管理 */
@@ -777,7 +777,7 @@ input:checked + .slider:before {
 .builtin-badge {
   font-size: 10px;
   padding: 2px 6px;
-  background: rgba(88, 166, 255, 0.15);
+  background: var(--accent-blue-subtle);
   color: var(--accent-blue);
   border-radius: 4px;
   font-weight: 500;
@@ -1055,7 +1055,7 @@ input:checked + .slider:before {
 /* 危險按鈕樣式 */
 .btn-danger {
   background: var(--accent-red);
-  color: #fff;
+  color: var(--text-on-accent);
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
@@ -1686,7 +1686,7 @@ body.hide-tab-text .tab {
 
 .group-filter-item.selected {
   border-color: var(--accent-blue);
-  background: rgba(88, 166, 255, 0.1);
+  background: var(--accent-blue-subtle);
 }
 
 .group-filter-item input[type='checkbox'] {
@@ -1804,7 +1804,7 @@ body.hide-tab-text .tab {
 
 .context-menu-item.danger:hover {
   background: var(--accent-red);
-  color: #fff;
+  color: var(--text-on-accent);
 }
 
 .context-menu-icon {
@@ -1953,7 +1953,7 @@ body.hide-tab-text .tab {
   font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 11px;
   padding: 2px 8px;
-  background: rgba(88, 166, 255, 0.1);
+  background: var(--accent-blue-subtle);
   border-radius: 4px;
   color: var(--text-secondary);
 }
@@ -1967,7 +1967,7 @@ body.hide-tab-text .tab {
 }
 
 .mcp-running {
-  color: #4ade80;
+  color: var(--accent-green);
 }
 
 .mcp-stopped {
@@ -2044,8 +2044,8 @@ body.hide-tab-text .tab {
 }
 
 .mcp-copy-btn.copied {
-  color: #4ade80;
-  border-color: rgba(74, 222, 128, 0.3);
+  color: var(--accent-green);
+  border-color: var(--accent-green-transparent);
 }
 
 .mcp-config-body {
