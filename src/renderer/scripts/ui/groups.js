@@ -210,7 +210,7 @@ export function showAddGroupModal() {
   const content =
     '<div class="modal-form">' +
     '<div class="input-row">' +
-    '<div class="input-group" style="max-width: 80px">' +
+    '<div class="input-group input-group-icon">' +
     '<label>' +
     escapeHtml(t('ui.groups.icon')) +
     '</label>' +
@@ -285,7 +285,7 @@ function showEditGroupModal(groupId) {
   const content =
     '<div class="modal-form">' +
     '<div class="input-row">' +
-    '<div class="input-group" style="max-width: 80px">' +
+    '<div class="input-group input-group-icon">' +
     '<label>' +
     escapeHtml(t('ui.groups.icon')) +
     '</label>' +

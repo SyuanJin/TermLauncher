@@ -1026,7 +1026,11 @@ input:checked + .slider:before {
   min-width: 0;
 }
 
-.modal-body .input-row .input-group[style*='max-width'] {
+.input-group-icon {
+  max-width: 80px;
+}
+
+.modal-body .input-row .input-group-icon {
   flex: 0 0 70px;
 }
 
