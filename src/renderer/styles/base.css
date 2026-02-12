@@ -76,7 +76,7 @@ select {
 input:focus,
 select:focus {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+  box-shadow: 0 0 0 3px var(--accent-blue-transparent);
 }
 
 /* 全域 focus 樣式 - 提升鍵盤導航辨識度 */
@@ -103,7 +103,7 @@ button:focus-visible,
 }
 
 .switch input:focus-visible + .slider {
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+  box-shadow: 0 0 0 3px var(--accent-blue-transparent);
 }
 
 /* ===== 工具類 ===== */
