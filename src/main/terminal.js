@@ -15,6 +15,72 @@ const {
 const logger = createLogger('Terminal');
 
 /**
+ * 嘗試將命令模板解析為可執行檔和引數陣列（用於 shell-free 執行）
+ * 僅用於 macOS/Linux，Windows 因 .cmd/.bat 相容性需保持 shell 模式
+ * @param {string} commandTemplate - 包含 {path} 的命令模板
+ * @returns {Object|null} { executable, argTemplates } 或 null（需要 shell）
+ */
+function parseSimpleCommand(commandTemplate) {
+  if (!commandTemplate || typeof commandTemplate !== 'string') {
+    return null;
+  }
+
+  // 移除 {path} 後檢查是否包含 shell 操作符
+  const withoutPath = commandTemplate.replace(/\{path\}/g, '');
+  if (/[;|&`$><\n\r]/.test(withoutPath)) {
+    return null;
+  }
+
+  // 檢查 {path} 是否出現在引號內（表示需要 shell 解讀）
+  let inQuote = false;
+  let quoteChar = '';
+  for (let i = 0; i < commandTemplate.length; i++) {
+    const ch = commandTemplate[i];
+    if (!inQuote && (ch === '"' || ch === "'")) {
+      inQuote = true;
+      quoteChar = ch;
+    } else if (inQuote && ch === quoteChar) {
+      inQuote = false;
+    }
+    if (inQuote && commandTemplate.startsWith('{path}', i)) {
+      return null;
+    }
+  }
+
+  // 解析為 token（尊重引號）
+  const tokens = [];
+  let current = '';
+  inQuote = false;
+  quoteChar = '';
+
+  for (let i = 0; i < commandTemplate.length; i++) {
+    const ch = commandTemplate[i];
+    if (!inQuote && (ch === '"' || ch === "'")) {
+      inQuote = true;
+      quoteChar = ch;
+    } else if (inQuote && ch === quoteChar) {
+      inQuote = false;
+    } else if (!inQuote && (ch === ' ' || ch === '\t')) {
+      if (current) {
+        tokens.push(current);
+        current = '';
+      }
+    } else {
+      current += ch;
+    }
+  }
+  if (current) tokens.push(current);
+
+  // 引號未關閉或無 token → 無法解析
+  if (inQuote || tokens.length === 0) return null;
+
+  return {
+    executable: tokens[0],
+    argTemplates: tokens.slice(1),
+  };
+}
+
+/**
  * 錯誤類型常數
  */
 const ErrorType = {
@@ -455,25 +521,25 @@ function openTerminal(dir, terminal) {
   // 根據路徑格式轉換路徑
   const formattedPath = formatPath(dir.path, terminal.pathFormat);
 
-  // 對路徑進行轉義以防止 shell 注入
-  const safePath = escapePathForShell(formattedPath, terminal.pathFormat);
-
-  // 替換 {path} 佔位符
-  const commandWithPath = terminal.command.replace(/\{path\}/g, safePath);
-
-  logger.debug('Execute terminal command', commandWithPath);
-
   try {
-    // 使用 shell 執行指令
-    // 安全說明：
-    // 1. 路徑已通過 validatePathSafety 檢查危險字符
-    // 2. 路徑已通過 escapePathForShell 進行轉義
-    // 3. 命令來源是用戶自己配置的終端設定
-    spawn(commandWithPath, [], {
-      detached: true,
-      stdio: 'ignore',
-      shell: true,
-    }).unref();
+    // 在 macOS/Linux 上，優先使用 shell-free 模式執行簡單命令
+    // Windows 因 .cmd/.bat 相容性必須保持 shell 模式
+    if (process.platform !== 'win32') {
+      const parsed = parseSimpleCommand(terminal.command);
+      if (parsed) {
+        const exe = parsed.executable.replace(/\{path\}/g, formattedPath);
+        const args = parsed.argTemplates.map(t => t.replace(/\{path\}/g, formattedPath));
+        logger.debug('Execute command (shell-free)', { executable: exe, args });
+        spawn(exe, args, { detached: true, stdio: 'ignore' }).unref();
+        return { success: true };
+      }
+    }
+
+    // Shell 模式：對路徑進行轉義以防止注入
+    const safePath = escapePathForShell(formattedPath, terminal.pathFormat);
+    const commandWithPath = terminal.command.replace(/\{path\}/g, safePath);
+    logger.debug('Execute command (shell)', commandWithPath);
+    spawn(commandWithPath, [], { detached: true, stdio: 'ignore', shell: true }).unref();
     return { success: true };
   } catch (err) {
     logger.error('Failed to spawn terminal', err);
@@ -491,6 +557,7 @@ module.exports = {
   openTerminal,
   previewCommand,
   validatePrerequisites,
+  parseSimpleCommand,
   isWindowsTerminalInstalled,
   isWslInstalled,
   isWslDistroInstalled,
