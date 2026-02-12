@@ -196,7 +196,7 @@
 
 .btn-icon.delete:hover {
   color: var(--accent-red);
-  background: rgba(248, 81, 73, 0.15);
+  background: var(--accent-red-subtle);
 }
 
 .toggle-btn {
@@ -348,7 +348,7 @@
 /* 路徑無效警告 */
 .directory-item.path-invalid {
   border-color: var(--accent-yellow);
-  background: rgba(255, 193, 7, 0.05);
+  background: var(--accent-yellow-subtle);
 }
 
 .directory-item.path-invalid:hover {
@@ -843,7 +843,7 @@ input:checked + .slider:before {
 
 .detection-item.installed {
   border-color: var(--accent-green);
-  background: rgba(63, 185, 80, 0.05);
+  background: var(--accent-green-subtle);
 }
 
 .detection-item.not-installed {
