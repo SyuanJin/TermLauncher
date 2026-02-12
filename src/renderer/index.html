@@ -224,7 +224,7 @@
             </button>
           </div>
           <div class="groups-list-container" id="groupsListContainer" role="list">
-            <div class="empty-state" id="groupsEmptyState" style="display: none">
+            <div class="empty-state hidden" id="groupsEmptyState">
               <span class="empty-icon">🏷️</span>
               <p data-i18n="ui.groups.empty">尚無群組</p>
               <small data-i18n="ui.groups.emptyHint">點擊上方按鈕新增群組</small>
@@ -285,7 +285,7 @@
           </div>
 
           <!-- 篩選標籤區域 -->
-          <div class="filter-tags" id="filterTags" style="display: none">
+          <div class="filter-tags hidden" id="filterTags">
             <span class="filter-tags-label" data-i18n="ui.search.selectedGroups">已選擇:</span>
             <div class="filter-tags-list" id="filterTagsList"></div>
           </div>
@@ -548,7 +548,7 @@
                   value="23549"
                   min="1024"
                   max="65535"
-                  style="width: 90px"
+                  class="input-narrow"
                 />
               </div>
               <div class="setting-item">
@@ -643,7 +643,7 @@
                 </div>
                 <div class="mcp-config-body">
                   <pre class="mcp-config-code" id="mcpConfigJson"></pre>
-                  <pre class="mcp-config-code" id="mcpConfigCli" style="display: none"></pre>
+                  <pre class="mcp-config-code hidden" id="mcpConfigCli"></pre>
                 </div>
               </div>
             </div>

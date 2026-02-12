@@ -100,11 +100,11 @@ function renderFilterTags() {
   if (!container || !list) return;
 
   if (selectedGroupFilters.length === 0) {
-    container.style.display = 'none';
+    container.classList.add('hidden');
     return;
   }
 
-  container.style.display = 'flex';
+  container.classList.remove('hidden');
   list.innerHTML = selectedGroupFilters
     .map(groupId => {
       const group = config.groups.find(g => g.id === groupId);

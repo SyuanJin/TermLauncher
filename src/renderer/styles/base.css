@@ -105,3 +105,12 @@ button:focus-visible,
 .switch input:focus-visible + .slider {
   box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
 }
+
+/* ===== 工具類 ===== */
+.hidden {
+  display: none !important;
+}
+
+.input-narrow {
+  width: 90px;
+}

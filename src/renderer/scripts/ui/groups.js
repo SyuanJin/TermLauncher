@@ -81,7 +81,7 @@ export function renderGroupsTab() {
   if (groups.length === 0) {
     container.innerHTML = '';
     container.appendChild(emptyState);
-    emptyState.style.display = 'flex';
+    emptyState.classList.remove('hidden');
 
     if (search) {
       emptyState.querySelector('p').textContent = t('ui.groups.emptyFiltered');
@@ -93,7 +93,7 @@ export function renderGroupsTab() {
     return;
   }
 
-  emptyState.style.display = 'none';
+  emptyState.classList.add('hidden');
 
   container.innerHTML =
     '<div class="groups-grid">' +
