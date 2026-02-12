@@ -4,6 +4,8 @@ export default defineConfig({
   test: {
     // 測試檔案位置
     include: ['tests/**/*.test.js'],
+    // 停用檔案平行執行（config-module 與 mcp-tools 共用 configPath）
+    fileParallelism: false,
     // 全域變數（describe, it, expect）
     globals: true,
     // 測試環境
