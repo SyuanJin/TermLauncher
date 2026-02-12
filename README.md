@@ -61,12 +61,12 @@ TermLauncher 是一個跨平台桌面應用，讓你能夠快速以任意應用�
 
 前往 [Releases](../../releases) 頁面，依作業系統下載對應版本：
 
-| 平台 | 檔案 | 說明 |
-| --- | --- | --- |
-| Windows | `TermLauncher-Portable.exe` | 便攜版，雙擊即用 |
-| Windows | `TermLauncher Setup *.exe` | 安裝版 |
-| macOS | `TermLauncher-*.dmg` | 未簽名，需右鍵開啟（見下方說明） |
-| Linux | `TermLauncher-*.AppImage` | 需先 `chmod +x` 再執行 |
+| 平台    | 檔案                        | 說明                             |
+| ------- | --------------------------- | -------------------------------- |
+| Windows | `TermLauncher-Portable.exe` | 便攜版，雙擊即用                 |
+| Windows | `TermLauncher Setup *.exe`  | 安裝版                           |
+| macOS   | `TermLauncher-*.dmg`        | 未簽名，需右鍵開啟（見下方說明） |
+| Linux   | `TermLauncher-*.AppImage`   | 需先 `chmod +x` 再執行           |
 
 ### 方法二：從原始碼運行
 

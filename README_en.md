@@ -61,12 +61,12 @@ TermLauncher is a cross-platform desktop application that lets you quickly open 
 
 Go to the [Releases](../../releases) page and download for your platform:
 
-| Platform | File | Notes |
-| --- | --- | --- |
-| Windows | `TermLauncher-Portable.exe` | Portable, double-click to run |
-| Windows | `TermLauncher Setup *.exe` | Installer edition |
-| macOS | `TermLauncher-*.dmg` | Unsigned, see note below |
-| Linux | `TermLauncher-*.AppImage` | Run `chmod +x` first |
+| Platform | File                        | Notes                         |
+| -------- | --------------------------- | ----------------------------- |
+| Windows  | `TermLauncher-Portable.exe` | Portable, double-click to run |
+| Windows  | `TermLauncher Setup *.exe`  | Installer edition             |
+| macOS    | `TermLauncher-*.dmg`        | Unsigned, see note below      |
+| Linux    | `TermLauncher-*.AppImage`   | Run `chmod +x` first          |
 
 ### Option 2: Run from source
 
