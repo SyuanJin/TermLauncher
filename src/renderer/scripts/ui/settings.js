@@ -300,11 +300,11 @@ function initMcpConfigTabs() {
       tab.classList.add('active');
 
       if (tab.dataset.tab === 'cli') {
-        if (jsonEl) jsonEl.style.display = 'none';
-        if (cliEl) cliEl.style.display = '';
+        if (jsonEl) jsonEl.classList.add('hidden');
+        if (cliEl) cliEl.classList.remove('hidden');
       } else {
-        if (jsonEl) jsonEl.style.display = '';
-        if (cliEl) cliEl.style.display = 'none';
+        if (jsonEl) jsonEl.classList.remove('hidden');
+        if (cliEl) cliEl.classList.add('hidden');
       }
     });
   });
