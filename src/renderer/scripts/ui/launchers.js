@@ -374,7 +374,7 @@ export function showAddTerminalModal() {
     t('ui.launchers.namePlaceholder') +
     '" />' +
     '</div>' +
-    '<div class="input-group" style="max-width: 80px">' +
+    '<div class="input-group input-group-icon">' +
     '<label>' +
     t('ui.launchers.icon') +
     '</label>' +
@@ -472,7 +472,7 @@ function showEditTerminalModal(terminalId) {
     escapeAttr(terminal.name) +
     '" />' +
     '</div>' +
-    '<div class="input-group" style="max-width: 80px">' +
+    '<div class="input-group input-group-icon">' +
     '<label>' +
     t('ui.launchers.icon') +
     '</label>' +

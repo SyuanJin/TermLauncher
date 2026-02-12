@@ -573,7 +573,7 @@ export function showAddDirectoryModal(defaultGroupId = 'default') {
   const content =
     '<div class="modal-form">' +
     '<div class="input-row">' +
-    '<div class="input-group" style="max-width: 80px"><label>' +
+    '<div class="input-group input-group-icon"><label>' +
     t('ui.addDirectory.icon') +
     '</label><input type="text" id="modalDirIcon" placeholder="📁" maxlength="2" class="icon-input" title="' +
     t('ui.addDirectory.iconHint') +
@@ -681,7 +681,7 @@ export function showEditDirectoryModal(dirId) {
   const content =
     '<div class="modal-form">' +
     '<div class="input-row">' +
-    '<div class="input-group" style="max-width: 80px"><label>' +
+    '<div class="input-group input-group-icon"><label>' +
     t('ui.addDirectory.icon') +
     '</label><input type="text" id="modalDirIcon" value="' +
     escapeAttr(dir.icon || '') +
