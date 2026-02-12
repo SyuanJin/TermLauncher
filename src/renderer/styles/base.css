@@ -26,6 +26,13 @@ body {
 }
 
 /* 全局滾動條樣式 - 精緻風格 */
+/* 標準屬性（Firefox 及現代瀏覽器） */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+/* Webkit 瀏覽器（Chrome/Edge/Electron） */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
