@@ -176,8 +176,15 @@ async function init() {
   // 初始化 Toast 通知
   initToast();
 
-  await renderAll();
+  // 設定事件監聽（必須在 renderAll 之前或獨立於其錯誤）
+  // 確保即使渲染失敗，基本互動（Tab 切換、關閉按鈕）仍可運作
   setupEventListeners();
+
+  try {
+    await renderAll();
+  } catch (err) {
+    console.error('[App] renderAll failed:', err);
+  }
 
   // 初始化鍵盤快捷鍵
   initKeyboardShortcuts();
