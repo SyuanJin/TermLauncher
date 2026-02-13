@@ -7,12 +7,7 @@ import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { t, changeLocale, getAvailableLocales } from '../i18n.js';
 import { openModal, openConfirmModal } from './modal.js';
-import {
-  renderGroupFilter,
-  renderGroupSelect,
-  renderDirectories,
-  renderTerminalSelect,
-} from './directories.js';
+import { renderGroupFilter, renderDirectories } from './directories.js';
 import { renderRecentList } from './recent.js';
 import { renderGroupsTab } from './groups.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
@@ -106,8 +101,7 @@ export async function changeLanguage() {
   await changeLocale(language);
 
   renderGroupFilter();
-  renderGroupSelect();
-  renderTerminalSelect();
+
   renderDirectories();
   renderGroupsTab();
   renderLaunchersTab();
@@ -478,8 +472,7 @@ export async function resetAllSettings() {
         setConfig(result.config);
         await renderSettings();
         renderGroupFilter();
-        renderGroupSelect();
-        renderTerminalSelect();
+
         renderDirectories();
         renderGroupsTab();
         renderLaunchersTab();
@@ -689,8 +682,7 @@ export function importConfig() {
       if (result.success) {
         setConfig(result.config);
         renderGroupFilter();
-        renderGroupSelect();
-        renderTerminalSelect();
+
         renderDirectories();
         await renderSettings();
         renderGroupsTab();

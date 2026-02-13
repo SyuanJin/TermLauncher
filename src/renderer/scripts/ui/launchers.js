@@ -7,7 +7,7 @@ import { api } from '../api.js';
 import { showToast } from './toast.js';
 import { t } from '../i18n.js';
 import { openModal } from './modal.js';
-import { renderTerminalSelect, renderDirectories } from './directories.js';
+import { renderDirectories } from './directories.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { initTerminalsDragDrop } from './dragDrop.js';
 import { getTerminalDisplayName } from '../utils/terminal.js';
@@ -356,7 +356,6 @@ async function toggleTerminalHidden(terminalId) {
 
   terminal.hidden = !terminal.hidden;
   await saveConfig();
-  renderTerminalSelect();
 }
 
 /**
@@ -445,7 +444,7 @@ export function showAddTerminalModal() {
 
       await saveConfig();
       renderTerminalsList();
-      renderTerminalSelect();
+
       showToast(t('toast.terminalAdded'), 'success');
       return true;
     },
@@ -547,7 +546,7 @@ function showEditTerminalModal(terminalId) {
         };
         await saveConfig();
         renderTerminalsList();
-        renderTerminalSelect();
+
         renderDirectories();
         showToast(t('toast.terminalUpdated'), 'success');
       }
@@ -619,7 +618,7 @@ function showDeleteTerminalModal(terminalId) {
       await saveConfig();
 
       renderTerminalsList();
-      renderTerminalSelect();
+
       renderDirectories();
       showToast(t('toast.terminalDeleted'), 'success');
       return true;
