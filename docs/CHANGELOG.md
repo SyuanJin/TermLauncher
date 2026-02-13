@@ -5,10 +5,11 @@
 ### ✨ 新功能
 
 - MCP Server - 新增 Model Context Protocol 伺服器，允許 AI 助手透過標準化協議查詢與管理目錄、群組、啟動器
+- MCP 配置 UI - 複製設定改為頁籤式程式碼區塊，支援 JSON 與 CLI 格式切換
 - 版本更新提示 - 新增非強制版本更新檢查功能
 - macOS/Linux 預設啟動器 - 各平台新增對應的預設啟動器配置
 - 托盤快速啟動 - 系統托盤選單新增最愛與最近使用快速啟動子選單
-- 無障礙支援 - ARIA 屬性、Modal 焦點陷阱與還原、Toast aria-live、prefers-reduced-motion、語系切換同步 HTML lang
+- 無障礙支援 - ARIA 屬性與 role 語義修正、Modal 焦點陷阱與還原、Toast aria-live、prefers-reduced-motion、語系切換同步 HTML lang
 
 ### 🔒 安全性
 
@@ -17,6 +18,7 @@
 - IPC 驗證強化 - log-renderer-error/validate-paths 參數驗證，validate-paths 陣列上限 500
 - 匯入配置驗證 - 基本匯入加入結構驗證
 - 路徑驗證改進 - 允許獨立 `$`，阻擋 `${` 展開語法
+- 安全 spawn - macOS/Linux 簡單指令優先使用無 shell 模式
 - 依賴安全 - electron-builder 24.x → 26.x（修復 tar 高危漏洞）
 
 ### ⚡ 效能優化
@@ -36,17 +38,22 @@
 - 修正視窗背景色未依已儲存主題設定
 - 修正 `ms-windows-store:` 協議未通過 URL 驗證
 - 修正 `shell.openExternal` 未 await 且未處理錯誤
-- 修正 CSS 缺失變數與重複定義
+- 修正 CSS 缺失變數、重複定義、遺漏樣式規則與 Firefox scrollbar 相容性
+- 修正 MCP port 輸入元素 HTML 重複 class 屬性導致樣式失效
+- 修正 MCP 複製按鈕 title 與 Toast 關閉按鈕 aria-label 未國際化
 - 修正 logger 循環引用導致序列化失敗
+- 修正 deprecated API 用法（`substr()`→`substring()`、`parseInt` radix）與 Promise 錯誤處理
 - 移除外部 Google Fonts 依賴，改用系統字體堆疊
 
 ### 🔧 重構改進
 
 - IPC handlers 改用 async file I/O
-- 提取共用工具函式（openTerminal、getGroupDisplayName、getTerminalIcon/Name、escapeHtml）
-- 清理未使用程式碼（parseCommand、未用 exports、CSS classes、stale comments、ESLint warnings）
-- CI 加入 format check、ESLint、測試覆蓋率；Release workflow 擴展跨平台打包與版本一致性檢查
-- 新增 IPC validators、i18n、terminal.js、配置遷移測試
+- 提取共用工具函式（openTerminal、getGroupDisplayName、getTerminalIcon/Name、escapeHtml、notifyConfigChanged）
+- CSS 主題化強化 - 硬編碼色彩值提取為 CSS 變數、inline styles 改用 CSS class
+- 程式碼清理 - 移除未使用程式碼（parseCommand、exports、CSS classes、comments、ESLint warnings），重構驗證器架構
+- ESLint 配置重命名 .mjs 修正模組類型警告
+- CI 加入 format check、ESLint、測試覆蓋率與門檻；Release workflow 擴展跨平台打包與版本一致性檢查
+- 新增 IPC validators、i18n、terminal.js、配置遷移、config.js 模組、MCP 工具整合測試
 
 ### 📚 文檔
 
@@ -54,6 +61,7 @@
 - ARCHITECTURE.md / CLAUDE.md 補齊前端 utils 模組、跨平台配置路徑
 - RELEASE.md 更新跨平台打包描述
 - UI_DESIGN.md 修正字體優先順序
+- PRD.md / UI_DESIGN.md / ARCHITECTURE.md 版本同步至 2.4.0
 
 ## 🚀 v2.3.0 - 啟動器系統重構 (2026-02-11)
 
