@@ -306,21 +306,6 @@ async function removeFromRecent(id) {
 }
 
 /**
- * 清除所有最近使用紀錄
- */
-export async function clearAllRecent() {
-  const config = getConfig();
-
-  config.directories.forEach(dir => {
-    dir.lastUsed = null;
-  });
-
-  await saveConfig();
-  renderRecentList();
-  showToast(t('toast.recentCleared'), 'success');
-}
-
-/**
  * 設定最近使用 Tab 的事件監聽
  */
 export function setupRecentEvents() {
