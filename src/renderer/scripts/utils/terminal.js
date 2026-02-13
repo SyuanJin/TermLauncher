@@ -129,13 +129,12 @@ export function getErrorActions(result, dir) {
         };
         break;
       case 'internal':
-        onClick = () => {
+        onClick = async () => {
           if (action.value === 'open-terminal-settings') {
             switchTab('settings');
           } else if (action.value === 'edit-directory' && dir) {
-            // 觸發編輯目錄事件
-            const event = new CustomEvent('edit-directory', { detail: { dirId: dir.id } });
-            window.dispatchEvent(event);
+            const { showEditDirectoryModal } = await import('../ui/directories.js');
+            showEditDirectoryModal(dir.id);
           }
         };
         break;
