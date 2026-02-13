@@ -393,7 +393,7 @@ function importConfigAdvanced(importData, options = {}) {
   }
 
   const currentConfig = loadConfig();
-  const newConfig = { ...currentConfig };
+  const newConfig = JSON.parse(JSON.stringify(currentConfig));
 
   // 匯入終端
   const terminalIdMap = new Map();
