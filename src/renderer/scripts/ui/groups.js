@@ -6,7 +6,7 @@ import { getConfig, saveConfig } from '../state.js';
 import { showToast } from './toast.js';
 import { t } from '../i18n.js';
 import { openModal } from './modal.js';
-import { renderGroupFilter, renderGroupSelect, renderDirectories } from './directories.js';
+import { renderGroupFilter, renderDirectories } from './directories.js';
 import { initGroupsDragDrop } from './dragDrop.js';
 import { escapeHtml, escapeAttr } from '../utils/escape.js';
 import { getElement } from '../utils/dom-cache.js';
@@ -262,7 +262,7 @@ export function showAddGroupModal() {
       await saveConfig();
       renderGroupsTab();
       renderGroupFilter();
-      renderGroupSelect();
+
       showToast(t('toast.groupAdded'), 'success');
       return true;
     },
@@ -331,7 +331,7 @@ function showEditGroupModal(groupId) {
       await saveConfig();
       renderGroupsTab();
       renderGroupFilter();
-      renderGroupSelect();
+
       renderDirectories();
       showToast(t('toast.groupUpdated'), 'success');
       return true;
@@ -393,7 +393,7 @@ function showDeleteGroupModal(groupId) {
 
       renderGroupsTab();
       renderGroupFilter();
-      renderGroupSelect();
+
       renderDirectories();
       showToast(t('toast.groupDeleted'), 'success');
       return true;
