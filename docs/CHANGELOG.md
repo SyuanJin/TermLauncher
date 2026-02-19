@@ -27,6 +27,7 @@
 - 配置讀取快取 - 記憶體快取消除重複磁碟讀取
 - 事件委託 - UI 列表改用事件委託取代逐項綁定
 - 配置原子寫入 - 改用 write-to-tmp + rename 防止寫入中損壞
+- 托盤排序優化 - 移除不必要的 Date 包裝簡化最近使用排序
 
 ### 🐛 問題修復
 
@@ -38,26 +39,30 @@
 - 修正視窗背景色未依已儲存主題設定
 - 修正 `ms-windows-store:` 協議未通過 URL 驗證
 - 修正 `shell.openExternal` 未 await 且未處理錯誤
-- 修正 CSS 缺失變數、重複定義、遺漏樣式規則與 Firefox scrollbar 相容性
+- 修正 CSS 缺失變數、重複定義、遺漏樣式規則（含 export/import modal、portable-notice、.btn-icon.edit:hover）與 Firefox scrollbar 相容性
 - 修正 MCP port 輸入元素 HTML 重複 class 屬性導致樣式失效
 - 修正 MCP 複製按鈕 title 與 Toast 關閉按鈕 aria-label 未國際化
 - 修正 logger 循環引用導致序列化失敗
 - 修正 deprecated API 用法（`substr()`→`substring()`、`parseInt` radix）與 Promise 錯誤處理
 - 移除外部 Google Fonts 依賴，改用系統字體堆疊
+- 修正進階匯入使用淺拷貝導致快取資料污染
+- 修正 terminal.js 無效事件派發，改用直接函式呼叫
+- 修正 renderAll() 錯誤導致事件監聽器未初始化
+- 修正 clearRecentHistory 使用 delete 而非設為 null 造成行為不一致
 
 ### 🔧 重構改進
 
 - IPC handlers 改用 async file I/O
-- 提取共用工具函式（openTerminal、getGroupDisplayName、getTerminalIcon/Name、escapeHtml、notifyConfigChanged）
+- 提取共用工具函式（openTerminal、getGroupDisplayName、getTerminalIcon/Name、escapeHtml、notifyConfigChanged），移除重複 isFavorite
 - CSS 主題化強化 - 硬編碼色彩值提取為 CSS 變數、inline styles 改用 CSS class
-- 程式碼清理 - 移除未使用程式碼（parseCommand、exports、CSS classes、comments、ESLint warnings），重構驗證器架構
+- 程式碼清理 - 移除未使用程式碼（parseCommand、exports、CSS classes、comments、ESLint warnings）與孤兒函式/失效 import，重構驗證器架構
 - ESLint 配置重命名 .mjs 修正模組類型警告
-- CI 加入 format check、ESLint、測試覆蓋率與門檻；Release workflow 擴展跨平台打包與版本一致性檢查
+- CI 加入 format check、ESLint、測試覆蓋率與門檻、Prettier endOfLine 設定；Release workflow 擴展跨平台打包、測試步驟與版本一致性檢查
 - 新增 IPC validators、i18n、terminal.js、配置遷移、config.js 模組、MCP 工具整合測試
 
 ### 📚 文檔
 
-- README 新增 macOS/Linux 下載資訊與未簽署應用提示
+- README 修正不準確描述、補充 build scripts 說明、新增 macOS/Linux 下載資訊與未簽署應用提示
 - ARCHITECTURE.md / CLAUDE.md 補齊前端 utils 模組、跨平台配置路徑
 - RELEASE.md 更新跨平台打包描述
 - UI_DESIGN.md 修正字體優先順序
