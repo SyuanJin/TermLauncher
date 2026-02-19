@@ -113,12 +113,23 @@ describe('validatePathSafety', () => {
 });
 
 describe('escapePathForShell', () => {
+  // Windows 平台上即使 format='unix'，也使用雙引號（因為命令在 Windows shell 中執行）
+  const isWindows = process.platform === 'win32';
+
   it('Unix 格式應該使用單引號包裹', () => {
-    expect(escapePathForShell('/mnt/c/Users', 'unix')).toBe("'/mnt/c/Users'");
+    if (isWindows) {
+      expect(escapePathForShell('/mnt/c/Users', 'unix')).toBe('"/mnt/c/Users"');
+    } else {
+      expect(escapePathForShell('/mnt/c/Users', 'unix')).toBe("'/mnt/c/Users'");
+    }
   });
 
-  it('Unix 格式應該轉義內部單引號', () => {
-    expect(escapePathForShell("/mnt/c/User's", 'unix')).toBe("'/mnt/c/User'\\''s'");
+  it('Unix 格式應該轉義內部引號', () => {
+    if (isWindows) {
+      expect(escapePathForShell("/mnt/c/User's", 'unix')).toBe('"/mnt/c/User\'s"');
+    } else {
+      expect(escapePathForShell("/mnt/c/User's", 'unix')).toBe("'/mnt/c/User'\\''s'");
+    }
   });
 
   it('Windows 格式應該使用雙引號包裹', () => {
@@ -130,7 +141,11 @@ describe('escapePathForShell', () => {
   });
 
   it('含空格的路徑應該被正確包裹', () => {
-    expect(escapePathForShell('/mnt/c/Program Files', 'unix')).toBe("'/mnt/c/Program Files'");
+    if (isWindows) {
+      expect(escapePathForShell('/mnt/c/Program Files', 'unix')).toBe('"/mnt/c/Program Files"');
+    } else {
+      expect(escapePathForShell('/mnt/c/Program Files', 'unix')).toBe("'/mnt/c/Program Files'");
+    }
     expect(escapePathForShell('C:\\Program Files', 'windows')).toBe('"C:\\Program Files"');
   });
 });

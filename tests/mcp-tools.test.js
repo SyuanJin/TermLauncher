@@ -6,6 +6,12 @@
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs';
+import os from 'os';
+import path from 'path';
+
+// 跨平台路徑常數
+const tmpDir = os.tmpdir();
+const homeDir = os.homedir();
 
 const { invalidateConfigCache, configPath, loadConfig } = require('../src/main/config.js');
 
@@ -25,7 +31,7 @@ function createTestConfig() {
         id: 1,
         name: 'Project A',
         icon: '📁',
-        path: '/tmp',
+        path: tmpDir,
         terminalId: 'term-1',
         group: 'default',
         lastUsed: 1000000,
@@ -35,7 +41,7 @@ function createTestConfig() {
         id: 2,
         name: 'Project B',
         icon: '📂',
-        path: '/home',
+        path: homeDir,
         terminalId: 'term-1',
         group: 'work',
         lastUsed: 2000000,
@@ -138,8 +144,10 @@ describe('MCP Tools', () => {
     });
 
     it('add_project 應新增專案', async () => {
-      // 使用真實存在的路徑
-      const result = await handlers.add_project({ name: 'New Project', path: '/var' });
+      // 使用真實存在的跨平台路徑
+      const testDir = path.join(tmpDir, 'termlauncher-test');
+      if (!fs.existsSync(testDir)) fs.mkdirSync(testDir, { recursive: true });
+      const result = await handlers.add_project({ name: 'New Project', path: testDir });
       expect(result.isError).toBeUndefined();
       const data = parseResult(result);
       expect(data.id).toBe(3);
@@ -152,25 +160,28 @@ describe('MCP Tools', () => {
     });
 
     it('add_project 應拒絕空白名稱', async () => {
-      const result = await handlers.add_project({ name: '   ', path: '/tmp' });
+      const result = await handlers.add_project({ name: '   ', path: tmpDir });
       expect(result.isError).toBe(true);
     });
 
     it('add_project 應拒絕不安全路徑', async () => {
-      const result = await handlers.add_project({ name: 'Bad', path: '/tmp/; rm -rf /' });
+      const result = await handlers.add_project({
+        name: 'Bad',
+        path: path.join(tmpDir, '; rm -rf /'),
+      });
       expect(result.isError).toBe(true);
     });
 
     it('add_project 應拒絕不存在的路徑', async () => {
       const result = await handlers.add_project({
         name: 'Missing',
-        path: '/tmp/nonexistent_test_path_xyz',
+        path: path.join(tmpDir, 'nonexistent_test_path_xyz'),
       });
       expect(result.isError).toBe(true);
     });
 
     it('add_project 應拒絕重複路徑', async () => {
-      const result = await handlers.add_project({ name: 'Dup', path: '/tmp' });
+      const result = await handlers.add_project({ name: 'Dup', path: tmpDir });
       expect(result.isError).toBe(true);
     });
 
