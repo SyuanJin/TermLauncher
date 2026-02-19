@@ -80,6 +80,7 @@ function setupIpcHandlers() {
     if (dirIndex !== -1) {
       config.directories[dirIndex].lastUsed = Date.now();
       saveConfig(config);
+      updateTrayMenu();
     }
 
     // 取得終端配置
@@ -214,7 +215,9 @@ function setupIpcHandlers() {
         const data = await fsPromises.readFile(result.filePaths[0], 'utf-8');
         const importData = JSON.parse(data);
 
-        return importConfigAdvanced(importData, options);
+        const importResult = importConfigAdvanced(importData, options);
+        if (importResult.success) updateTrayMenu();
+        return importResult;
       } catch (err) {
         return { success: false, errors: [err.message] };
       }
@@ -426,6 +429,7 @@ function setupIpcHandlers() {
       // 深拷貝預設設定
       const newConfig = JSON.parse(JSON.stringify(defaultConfig));
       saveConfig(newConfig);
+      updateTrayMenu();
       return { success: true, config: newConfig };
     } catch (err) {
       logger.error('Failed to reset config', err);
