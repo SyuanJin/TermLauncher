@@ -185,6 +185,8 @@ src/
 | stop-mcp-server  | handle | 停止 MCP 伺服器     |
 | get-mcp-status   | handle | 取得 MCP 伺服器狀態 |
 
+<a id="mcp-subsystem"></a>
+
 ## MCP 子系統
 
 **Model Context Protocol (MCP)** 允許 AI 應用程式透過標準化協議存取 TermLauncher 功能。
@@ -192,22 +194,40 @@ src/
 ### 架構
 
 - **伺服器實作**：`src/main/mcp/index.js`
-- **通訊協議**：Stdio (標準輸入/輸出)
-- **工具模組**：`src/main/mcp/tools/` (目錄、群組、啟動器操作)
+- **通訊協議**：Streamable HTTP（無狀態模式）
+- **預設埠號**：`23549`
+- **端點**：`http://127.0.0.1:<port>/mcp`
+- **工具模組**：`src/main/mcp/tools/`
 
-### 功能
+### 配置 AI 助手
 
-- 查詢與管理目錄、群組、啟動器
-- 開啟終端並切換到指定目錄
-- 探測系統已安裝的啟動器
-- 匯出/匯入配置
+**JSON 配置格式（如 Claude Desktop）：**
 
-### 使用方式
+```json
+{
+  "mcpServers": {
+    "termlauncher": {
+      "url": "http://127.0.0.1:23549/mcp"
+    }
+  }
+}
+```
+
+**Claude Code CLI：**
 
 ```bash
-# 透過 Claude Desktop 或其他 MCP 客戶端連接
-termlauncher.exe --mcp
+claude mcp add termlauncher --transport http http://127.0.0.1:23549/mcp
 ```
+
+### 可用工具
+
+| 分類   | 工具                                                               | 功能         |
+| ------ | ------------------------------------------------------------------ | ------------ |
+| 專案   | `list_projects`, `add_project`, `update_project`, `remove_project` | 目錄 CRUD    |
+| 啟動器 | `list_launchers`, `open_in`, `detect_installed_launchers`          | 啟動器操作   |
+| 群組   | `list_groups`, `add_group`, `remove_group`                         | 群組管理     |
+| 最愛   | `list_favorites`, `toggle_favorite`                                | 最愛管理     |
+| 最近   | `list_recent`                                                      | 最近使用查詢 |
 
 ## 安全機制
 

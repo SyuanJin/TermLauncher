@@ -36,6 +36,7 @@ TermLauncher 是一個跨平台桌面應用，讓你能夠快速以任意應用�
 | **鍵盤快捷鍵**   | 全域快捷鍵與應用內快捷鍵                             |
 | **主題切換**     | 深色/淺色主題                                        |
 | **多語系**       | 繁體中文、English                                    |
+| **MCP 整合**     | 透過 MCP 協議讓 AI 助手操控 TermLauncher             |
 
 ## 鍵盤快捷鍵
 
@@ -112,6 +113,18 @@ Windows 路徑會自動轉換為 WSL 格式：
 ```
 D:\Projects\my-app  →  /mnt/d/Projects/my-app
 ```
+
+## MCP 整合
+
+TermLauncher 內建 [MCP（Model Context Protocol）](https://modelcontextprotocol.io/) 伺服器，讓 AI 助手（如 Claude）能直接管理專案目錄、啟動應用程式。
+
+### 啟用方式
+
+1. 開啟 **設定** 分頁
+2. 啟用 **MCP Server**
+3. 設定埠號（預設 `23549`）
+
+詳細的配置方式與可用工具清單請參閱 [技術架構文檔](docs/ARCHITECTURE.md#mcp-子系統)。
 
 ## 文檔
 

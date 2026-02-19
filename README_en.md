@@ -36,6 +36,7 @@ TermLauncher is a cross-platform desktop application that lets you quickly open 
 | **Keyboard Shortcuts**     | Global hotkey and in-app shortcuts                                              |
 | **Theme Switching**        | Dark / Light theme                                                              |
 | **Multi-Language**         | 繁體中文, English                                                               |
+| **MCP Integration**        | Let AI assistants control TermLauncher via MCP protocol                         |
 
 ## Keyboard Shortcuts
 
@@ -112,6 +113,18 @@ Windows paths are automatically converted to WSL format:
 ```
 D:\Projects\my-app  →  /mnt/d/Projects/my-app
 ```
+
+## MCP Integration
+
+TermLauncher includes a built-in [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server, allowing AI assistants (such as Claude) to manage project directories and launch applications directly.
+
+### How to Enable
+
+1. Open the **Settings** tab
+2. Enable **MCP Server**
+3. Set the port number (default: `23549`)
+
+For configuration details and available tools, see the [Architecture Document](docs/ARCHITECTURE.md#mcp-subsystem).
 
 ## Documentation
 
