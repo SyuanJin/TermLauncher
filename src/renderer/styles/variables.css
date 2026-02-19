@@ -31,6 +31,10 @@
   --scrollbar-track: #161b22;
   --scrollbar-thumb: #30363d;
   --scrollbar-thumb-hover: #484f58;
+  --code-block-header-bg: rgba(0, 0, 0, 0.3);
+  --code-block-body-bg: rgba(0, 0, 0, 0.4);
+  --btn-hover-bg: rgba(255, 255, 255, 0.08);
+  --btn-hover-border: rgba(255, 255, 255, 0.25);
 }
 
 /* 淺色主題 */
@@ -59,4 +63,8 @@
   --scrollbar-track: #f6f8fa;
   --scrollbar-thumb: #d0d7de;
   --scrollbar-thumb-hover: #afb8c1;
+  --code-block-header-bg: #eaeef2;
+  --code-block-body-bg: #f6f8fa;
+  --btn-hover-bg: rgba(0, 0, 0, 0.05);
+  --btn-hover-border: rgba(0, 0, 0, 0.15);
 }

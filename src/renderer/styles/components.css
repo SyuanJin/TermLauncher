@@ -2025,7 +2025,7 @@ body.hide-tab-text .tab {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--code-block-header-bg);
   padding: 0 4px 0 0;
   border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
@@ -2078,8 +2078,8 @@ body.hide-tab-text .tab {
 
 .mcp-copy-btn:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: var(--btn-hover-bg);
+  border-color: var(--btn-hover-border);
 }
 
 .mcp-copy-btn.copied {
@@ -2088,7 +2088,7 @@ body.hide-tab-text .tab {
 }
 
 .mcp-config-body {
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--code-block-body-bg);
   padding: 14px 16px;
   overflow-x: auto;
 }
