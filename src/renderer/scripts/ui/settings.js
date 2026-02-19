@@ -492,7 +492,8 @@ export async function checkForUpdatesManual() {
   const btn = document.getElementById('btnCheckUpdate');
   if (btn) {
     btn.disabled = true;
-    btn.querySelector('span:last-child').textContent = t('toast.updateChecking');
+    const btnText = btn.querySelector('span:last-child');
+    if (btnText) btnText.textContent = t('toast.updateChecking');
   }
 
   try {
@@ -519,7 +520,8 @@ export async function checkForUpdatesManual() {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.querySelector('span:last-child').textContent = t('ui.settings.about.checkUpdate');
+      const btnTextRestore = btn.querySelector('span:last-child');
+      if (btnTextRestore) btnTextRestore.textContent = t('ui.settings.about.checkUpdate');
     }
   }
 }
